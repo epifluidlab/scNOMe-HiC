@@ -1,6 +1,6 @@
 # FILES — data_processing/gm12878_cellline
 
-15 files. See `README.md` for the run order and the input/output of each step.
+5 files. See `README.md` for the run order and the input/output of each step.
 Every file was copied unmodified from the original working directories; the
 "Origin" column records where each came from.
 
@@ -25,38 +25,32 @@ Every file was copied unmodified from the original working directories; the
 
 | File | What it is | Origin |
 |---|---|---|
-| `make_qc_notebook.py` | Generator that writes `qc_plots.ipynb`. Edit this and re-run, rather than editing the notebook by hand. | `$GM/` |
-| `qc_plots.ipynb` | Per-cell QC metrics, threshold filtering, and summary plots. Produces `QC/cellline_passed.txt` (180 of 188 cells) and the `figures/cellline_*` PDFs. Outputs preserved. | `$GM/` |
-| `make_qc_excel.py` | Builds `QC/cellline_qc_table.xlsx` (3 sheets, human-readable headers) and the snake_case `.tsv`. Bisulfite conversion is reported as non-CpG methylation % (ACT trinucleotide rate). Needs pandas + openpyxl. | `$GM/` |
-
-## 03_pseudobulk_methylation
-
-Run in the order listed. All gated on `QC/cellline_passed.txt`.
-
-| File | What it is | Origin |
-|---|---|---|
-| `merge_calmd_passed.sh` | Merges the 180 QC-passing `{prefix}.calmd.bam` into `merged.sorted.bam`, coordinate-sorted and indexed. Logs any missing BAMs. | `$GM/` |
-| `call_methylation_array.sh` | SLURM array (`1-23`, one chromosome per task). Runs `bissnp_nomehic_usage.pl` on the pooled BAM — the same caller as the pipeline's `bistools` rule — re-genotyping SNPs at pooled depth. Skips chromosomes already complete. | `$GM/pseudobulk_methylation/` |
-| `merge_methylation.sh` | Concatenates the 23 per-chromosome BEDs into genome-wide `{GCH,HCG}.6plus2.bed.gz`, then bins to 1/50/100/250 kb via the pipeline's `calcmethylation.py`. | `$GM/pseudobulk_methylation/` |
-| `make_bedgraph_bigwig.sh` | Per-site BEDs → 4-column bedGraph (col 7 = methylation %) → bigWig. Collapses exact-duplicate coordinates by averaging so `bedGraphToBigWig` accepts the input. | `$GM/pseudobulk_methylation/` |
-
-## 04_single_cell_matrices
-
-| File | What it is | Origin |
-|---|---|---|
-| `make_table.sh` | Scans `07.bistools_snakemake/methylation/` and writes the two-column `sample_table_hcg.tsv` (cell, path). Edit the context and `OUT` to produce `sample_table_gch.tsv`, which `collapse.sh` also needs. | `$GM/` |
-| `collapse.sh` | Five `methylation_collapse.py` invocations producing `GCH_{250kb,gene,1kb}.txt` and `HCG_{250kb,gene}.txt`. | `$GM/` |
-| `methylation_collapse.py` | Collapses per-cell 6plus2 BEDs into cell × bin matrices over a supplied bin BED. | `$GM/` |
-| `collapse.ipynb` | Interactive inspection of the collapsed matrices. Outputs preserved. | `$GM/` |
+| `qc_plots.ipynb` | Per-cell QC metrics, threshold filtering, and summary plots. Run top to bottom in Jupyter. Produces `QC/cellline_passed.txt` (180 of 188 cells) and the `figures/cellline_*` PDFs. Outputs preserved. | `$GM/` |
 
 ## Deliberately not included
 
 - **The Snakemake workflow itself** — lives at
   `github.com/epifluidlab/sc_NOMeHiC_pipeline`, commit `a0456b9`. Pinned in
   `README.md` rather than duplicated.
+- **`make_qc_notebook.py`** — the generator that wrote `qc_plots.ipynb`. Tooling for
+  authoring the notebook, not part of the method; the notebook itself is what runs.
+- **`make_qc_excel.py`** — formats the QC metrics into a spreadsheet for reading.
+  Presentation only; the QC numbers it reads are already produced by the notebook.
 - **`hic_comparison/scripts/`** (10 files: pseudobulk-vs-bulk `.hic` builds, SCC
   analysis) and **`ctcf_cgi_profiles/`** (7 files: CTCF/CGI deepTools profiles) —
   these generate figure panels, so they belong under `main_figures/` or
   `supplementary_figures/`.
 - Recovery, validation and superseded-parameter scripts from the original working
   directory. They record operational history, not the method.
+
+## Still to come
+
+Downstream of the QC gate, pending review:
+
+- **Pseudobulk methylation** — merge QC-passing BAMs, re-call with Bis-SNP at pooled
+  depth by chromosome, merge and bin, then build bedGraph/bigWig tracks.
+  (`merge_calmd_passed.sh`, `call_methylation_array.sh`, `merge_methylation.sh`,
+  `make_bedgraph_bigwig.sh`)
+- **Cell × bin matrices** — collapse per-cell 6plus2 BEDs into `{GCH,HCG}_{250kb,gene}`
+  and `GCH_1kb` matrices. (`make_table.sh`, `collapse.sh`, `methylation_collapse.py`,
+  `collapse.ipynb`)

@@ -4,13 +4,16 @@ GM12878 4-plex scNOMe-HiC: **188 cells** (47 libraries `scNH_GM_4plex_*_S*` × 4
 barcodes ATCACG / CGATGT / GCCAAT / TGACCA), aligned to **hg38**.
 **180 cells pass QC** and carry through to all downstream products.
 
-Raw reads → per-cell methylation, accessibility and contact matrices → pseudobulk
-tracks. Figure panels are built from these outputs under `../../main_figures/` and
+Raw reads → per-cell methylation, accessibility and contact matrices → QC-filtered
+cell set. Figure panels are built from these outputs under `../../main_figures/` and
 `../../supplementary_figures/`.
+
+> Downstream steps (pseudobulk methylation tracks, cell × bin matrix collapse) are
+> still to be added.
 
 ## The pipeline itself is a separate repository
 
-Steps 01–02 are thin callers for the shared Snakemake workflow, which is **not
+Step 01 is a thin caller for the shared Snakemake workflow, which is **not
 duplicated here**:
 
 | | |
@@ -67,83 +70,30 @@ SLURM profile, which submits each rule as its own child job (`-j 1000`).
 
 ### 02_qc — cell filtering
 
-**`make_qc_notebook.py`** generates **`qc_plots.ipynb`**; edit the generator and
-re-run it rather than hand-editing the notebook. Then run the notebook top to bottom.
+**`qc_plots.ipynb`** — run top to bottom in Jupyter. Builds the per-cell aggregate
+tables, applies the thresholds from `00_config/`, and plots the QC summary.
 
 - *in*: `04.alignment_snakemake/{prefix}.summary.txt.gz`,
   `07.bistools_snakemake/qc/{prefix}/*.calmd.trinuc_methy.{chrM,chr21}.txt.gz`,
   `07.bistools_snakemake/methylation/{prefix}/*.{GCH,HCG}.6plus2.bed.gz`,
-  `08.methylation_snakemake/*`, plus thresholds from `00_config/`
-- *out*: `QC/cellline_passed.txt` (**180 cells** — the gate for everything below),
+  `08.methylation_snakemake/*`
+- *out*: `QC/cellline_passed.txt` (**180 cells** — the gate for everything downstream),
   `QC/cellline_prefixes_used.txt`, `QC/cellline_qc_summary.txt`,
   `QC/cellline.{gch_hcg_count,chrM,chr21}.txt`, `QC/methylation_matrices/`,
   and the `figures/cellline_*` PDFs
 
-**`make_qc_excel.py`** builds the reader-facing QC table.
+Bisulfite conversion is assessed as **non-CpG methylation %** (the ACT trinucleotide
+rate from the `trinuc_methy` tables); low = good conversion.
 
-- *in*: the alignment summaries + `QC/cellline.*` aggregates
-- *out*: `QC/cellline_qc_table.xlsx` (sheets: Per-cell QC 188 / QC passed 180 /
-  Summary stats) and `QC/cellline_qc_table.tsv` (snake_case columns for downstream use)
-- Bisulfite conversion is reported as **non-CpG methylation %** (the ACT
-  trinucleotide rate); low = good conversion.
-- Needs pandas + openpyxl: run with the `scwgbs` env python.
-
-### 03 and 04 — two parallel branches, both gated on `QC/cellline_passed.txt`
-
-### 03_pseudobulk_methylation — pool cells, re-call at pooled depth
-
-Calling on the pooled BAM re-genotypes SNPs at full depth, which per-cell summing
-cannot do. Run in order:
-
-1. **`merge_calmd_passed.sh`** (sbatch)
-   - *in*: `QC/cellline_passed.txt`, `04.alignment_snakemake/{prefix}.calmd.bam`
-   - *out*: `04.alignment_snakemake/merged.sorted.bam` + `.bai`, plus
-     `merge_input_list.txt` / `merge_missing.txt`
-2. **`call_methylation_array.sh`** (sbatch, `--array=1-23`, one chromosome per task)
-   - *in*: `merged.sorted.bam`
-   - *out*: `pseudobulk_methylation/<chr>/gm_pseudobulk_merged.<chr>.cyt.filtered.sort.{GCH,HCG}.6plus2.bed.gz`
-   - Uses the same `Bis-SNP/bissnp_nomehic_usage.pl` caller as the pipeline's
-     `bistools` rule, split by `--interval`. Duplicates are flag-marked but present;
-     BisSNP/GATK skips them, so pooled PCR duplicates are not double-counted.
-     Re-running skips chromosomes whose outputs already exist.
-3. **`merge_methylation.sh`** (sbatch, after the array completes)
-   - *in*: the 23 per-chromosome BEDs
-   - *out*: genome-wide `gm_pseudobulk_merged.{GCH,HCG}.6plus2.bed.gz` and binned
-     `gm_pseudobulk_merged.{GCH,HCG}.{1kb,50kb,100kb,250kb}_methylation.txt.gz`
-     (binned with the pipeline's `calcmethylation.py`, same as the per-cell rule)
-4. **`make_bedgraph_bigwig.sh`** (sbatch) — genome-browser / deepTools tracks
-   - *in*: `gm_pseudobulk_merged.{GCH,HCG}.6plus2.bed.gz`
-   - *out*: `gm_pseudobulk_merged.{GCH,HCG}.methlevel.{bedgraph,bw}`
-   - Value is column 7 (methylation %, 0–100), no coverage filter; exact-duplicate
-     coordinates are collapsed by averaging so `bedGraphToBigWig` accepts the input.
-
-### 04_single_cell_matrices — cell × bin matrices
-
-1. **`make_table.sh`**
-   - *in*: `07.bistools_snakemake/methylation/*/*.HCG.6plus2.bed`
-   - *out*: `sample_table_hcg.tsv` (two columns: cell, path)
-   - As written it emits the HCG table; change `*.HCG.` / `OUT` to produce
-     `sample_table_gch.tsv`, which `collapse.sh` also requires.
-2. **`collapse.sh`** → **`methylation_collapse.py`**
-   - *in*: `sample_table_{gch,hcg}.tsv`, hg38 chrom sizes, gencode v36 GTF, and the
-     bin BEDs `genome_bins_{250kb,gene,1kb.no_blacklist}.bed`
-   - *out*: `GCH_250kb.txt`, `GCH_gene.txt`, `GCH_1kb.txt`, `HCG_250kb.txt`,
-     `HCG_gene.txt` — the cell × bin matrices the figure code consumes
-3. **`collapse.ipynb`** — interactive inspection of the collapsed matrices.
-
-## Final outputs
-
-What the rest of the paper reads:
+## Outputs
 
 | Product | Path |
 |---|---|
-| QC-passing cell list (180) | `QC/cellline_passed.txt` |
-| Per-cell QC table | `QC/cellline_qc_table.{xlsx,tsv}` |
-| Per-cell methylation/accessibility | `08.methylation_snakemake/*.{GCH,HCG}.{1kb,50kb,100kb,250kb}_methylation.txt.gz` |
+| QC-passing cell list (180 of 188) | `QC/cellline_passed.txt` |
+| Per-cell QC metrics | `QC/cellline_qc_summary.txt` |
+| Per-cell methylation / accessibility | `08.methylation_snakemake/*.{GCH,HCG}.{1kb,50kb,100kb,250kb}_methylation.txt.gz` |
 | Per-cell contact matrices | `06.hiccluster_snakemake/*.hic_matrix.txt.gz` |
-| Cell × bin matrices | `{GCH,HCG}_{250kb,gene}.txt.gz`, `GCH_1kb.txt.gz` |
-| Pseudobulk per-site methylation | `pseudobulk_methylation/gm_pseudobulk_merged.{GCH,HCG}.6plus2.bed.gz` |
-| Pseudobulk tracks | `pseudobulk_methylation/gm_pseudobulk_merged.{GCH,HCG}.methlevel.bw` |
+| Per-cell per-site methylation | `07.bistools_snakemake/methylation/*/*.{GCH,HCG}.6plus2.bed.gz` |
 
 Per-cell `{GCH,HCG}.strand.6plus2` BEDs and `hic_matrix.txt.gz` are the files
 deposited as GEO processed data.
