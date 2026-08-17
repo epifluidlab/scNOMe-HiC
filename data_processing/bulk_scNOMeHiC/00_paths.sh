@@ -1,0 +1,58 @@
+#!/bin/bash
+# 00_paths.sh — shared paths/vars for the bulk NOMe-HiC processing scripts.
+# Source this from the numbered scripts: `source 00_paths.sh`
+#
+# Strategy: run the single-cell sc_NOMeHiC Snakemake pipeline on a BULK sample
+# by splitting each replicate's trimmed FASTQ into chunks treated as pipeline
+# "cells" (prefix=repN, index=chunkNNN). Alignment + methylation calling fan out
+# in parallel across SLURM; the final .hic is built from the 3-rep merged,
+# per-library deduped BAM (step 10). Demultiplexing is SKIPPED (start_from: trimmed).
+
+# ---- repo (scripts/tracking live here) ----
+export REPO="/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch"
+
+# ---- scratch (all heavy outputs live here, NOT in the repo) ----
+export DL="/scratch/jmj7858/scnomehic/bulk_gm"                 # raw downloaded fq.gz
+export TRIMWHOLE="${DL}/trimmed_whole"                         # per-rep trimmed (pre-chunk)
+export WORK="${DL}/pipeline"                                   # snakemake workdir
+export CHUNK="${WORK}/03.trimmed_fastq_snakemake"              # chunked, pipeline-named cells
+export HICDIR="${WORK}/hic_merged"                             # PBAT flow only -- unused by this chain
+export METHMERGE="${WORK}/methylation_merged"                  # PBAT flow only -- unused by this chain
+
+# ---- pipeline + tools ----
+export PIPELINE="/gpfs/projects/b1198/epifluidlab/yoshii/software/sc_NOMeHiC_pipeline"
+export SCNOMEHIC_ENV="/projects/b1198/epifluidlab/yoshii/software/conda/envs/scnomehic"
+export TRIMGALORE_DIR="/gpfs/projects/b1198/epifluidlab/yoshii/software/TrimGalore-0.6.7"
+export BISHIC="/gpfs/projects/b1198/epifluidlab/yoshii/software/bisulfiteHic"
+export JUICER_JAR="/gpfs/projects/b1198/epifluidlab/yoshii/software/juicer/juicer_tools.jar"
+
+# ---- reference ----
+export REF="/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set"
+export DPNII="${REF}.fa_DpnII.txt"
+
+# ---- replicate -> raw fastq basename map ----
+# index 1..3 used by the SLURM arrays
+export REP1_BASE="GM12878_bT_WGBS_rep1"
+export REP2_BASE="GM12878_bT_WGBS_rep2"
+export REP3_BASE="GM12878_bT_WGBS_rep3"
+
+# ---- chunking ----
+export CHUNK_READS=20000000   # read-pairs per chunk (seqkit split2 -s)
+
+# ---- non-PBAT bulk flow (scripts 04-10) ----
+# Different protocol: align chunks WITHOUT -pbat, merge per replicate, bamprocess
+# per replicate (dedup per library), then merge all 3 reps and call methylation.
+# Kept in separate dirs so the existing -pbat snakemake outputs are untouched.
+export ALN_NOPBAT="${WORK}/04b.alignment_nopbat"     # per-chunk BAMs, aligned w/o -pbat
+export BAMPROC_REP="${WORK}/05b.bamprocess_perrep"   # per-rep merged + bamprocessed calmd BAMs
+export METHCALL="${WORK}/06b.methylation_merged"     # 3-rep merged BAM + bissnp methylation
+export CHUNK_LIST="${ALN_NOPBAT}/chunk_list.txt"     # manifest: one "repN.chunkNNN" per line
+
+# ---- SLURM ----
+export SLURM_ACCT="b1042"
+export SLURM_PART="genomics"
+
+# helper: put scnomehic env + trim_galore on PATH (scnomehic env is the core env)
+activate_scnomehic() {
+    export PATH="${SCNOMEHIC_ENV}/bin:${TRIMGALORE_DIR}:${PATH}"
+}

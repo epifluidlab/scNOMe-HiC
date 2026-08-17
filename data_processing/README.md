@@ -10,7 +10,7 @@ and `../supplementary_figures/` from the tables these pipelines emit.
 | `gm12878_cellline/` | GM12878 cell line, 188 cells / 180 pass QC, hg38 — **migrated** | `../../sc_nomehic_cellline/gm_sc_new/` |
 | `mixture_cellline/` | GM12878 / IMR90 mixture | `../../sc_nomehic_cellline/` |
 | `meningioma/` | primary meningioma | `../../meningioma_scnomehic/` |
-| `bulk_scNOMeHiC/` | bulk scNOMe-HiC libraries | <!-- FILL --> |
+| `bulk_scNOMeHiC/` | bulk NOMe-HiC GM12878, 3 reps from SRA — the bulk arm of the Fig. 1 comparison — **migrated** | `../../sc_nomehic_cellline/bulk_gm_from_scratch/` |
 | `bulk_others/` | published bulk datasets for comparison | <!-- FILL --> |
 
 Each dataset folder documents, in its own `README.md`, the order the steps run in
