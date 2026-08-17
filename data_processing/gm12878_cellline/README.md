@@ -4,8 +4,8 @@ GM12878 4-plex scNOMe-HiC: **188 cells** (47 libraries `scNH_GM_4plex_*_S*` × 4
 barcodes ATCACG / CGATGT / GCCAAT / TGACCA), aligned to **hg38**.
 **180 cells pass QC** and carry through to all downstream products.
 
-Raw reads → per-cell methylation, accessibility and contact matrices → QC-filtered
-cell set. Figure panels are built from these outputs under `../../main_figures/` and
+Raw reads → per-cell methylation and accessibility → QC-filtered cell set. Figure
+panels are built from these outputs under `../../main_figures/` and
 `../../supplementary_figures/`.
 
 > Downstream steps (pseudobulk methylation tracks, cell × bin matrix collapse) are
@@ -22,8 +22,8 @@ duplicated here**:
 | Commit used | `a0456b972f07690ef0425cc852583660c036f277` |
 | Provides | `Snakefile`, `rules/{GCHnorm,hiccluster,scnomehic_analysis}.smk`, `scripts/{calcmethylation.py,qc_analysis.py,count_fragment.py,methy_tab_to_pbetabinom.R,bed6plus2bw.pl}`, conda envs, SLURM profile |
 
-Clone it, then run the scripts in `01_pipeline/` against it. `00_config/` holds the
-two config files that parameterize it for this dataset.
+Clone it, then run the script in `01_pipeline/` against it, parameterized by
+`00_config/config.main_run.yaml`.
 
 External tools referenced by the config: Bhmem (`bisulfiteHic`, built 2026-05-11),
 Bis-SNP (`Bis-SNP.latest.jar` = BisSNP-1.2.bisqc_walkers, 2026-05-13), Picard,
@@ -34,19 +34,16 @@ Bis-tools. References: `GCA_000001405.15_GRCh38_no_alt_analysis_set`,
 
 ### 00_config — dataset parameters
 
-Two configs, because two different entry points were used:
+**`config.main_run.yaml`** is the single config for this dataset, and the
+authoritative record of the run: `workdir`, references and tool paths,
+`start_from: raw`, adapter clipping (15/15 5′, 5/5 3′), methylation bin sizes
+(1/50/100/250 kb), and the QC thresholds.
 
-- **`config.main_run.yaml`** — the config that drove the main pipeline run
-  (`--configfile` of `run_pipeline_gm_sc_new.sh`). Sets `workdir`, `start_from: raw`,
-  adapter clipping (15/15 5′, 5/5 3′), methylation bin sizes (1/50/100/250 kb), and
-  the QC thresholds. **This is the authoritative record of the run** — in the original
-  layout it lived inside the pipeline repo, where it is overwritten per dataset.
-- **`config.hicmatrix.yaml`** — the smaller config used only by
-  `gm_hicmatrix_driver.sh`. It predates the main run and omits `bissnp_jar` (the
-  driver injects it on the command line).
+In the original layout this file lived *inside* the pipeline repo, where it is
+overwritten for each new dataset — hence keeping it here.
 
-QC thresholds (both configs): `fragnum > 80000`, `noncpg < 5`, `GCH > 1e6`,
-`HCG > 150000`, `transrate > 0.7`, `cis1kbnum > 2000`.
+QC thresholds: `fragnum > 80000`, `noncpg < 5`, `GCH > 1e6`, `HCG > 150000`,
+`transrate > 0.7`, `cis1kbnum > 2000`.
 
 ### 01_pipeline — run the Snakemake workflow
 
@@ -60,13 +57,6 @@ SLURM profile, which submits each rule as its own child job (`-j 1000`).
   `{prefix}.summary.txt.gz`) → `07.bistools_snakemake/` (Bis-SNP; per-cell
   `{GCH,HCG}.6plus2.bed.gz`, trinucleotide QC) → `08.methylation_snakemake/`
   (per-cell `{GCH,HCG}.{1kb,50kb,100kb,250kb}_methylation.txt.gz`)
-
-**`gm_hicmatrix_driver.sh`** — per-cell Hi-C contact matrices (rules `scbam2hic` +
-`hicprocess` only; no imputation or embedding).
-
-- *in*: `04.alignment_snakemake/{prefix}.calmd.bam`, cell list `QC/cellline_prefixes_used.txt`
-- *out*: `06.hiccluster_snakemake/{prefix}.hic_matrix.txt.gz` (188 cells)
-- `bash gm_hicmatrix_driver.sh -n` for a dry run.
 
 ### 02_qc — cell filtering
 
@@ -92,11 +82,19 @@ rate from the `trinuc_methy` tables); low = good conversion.
 | QC-passing cell list (180 of 188) | `QC/cellline_passed.txt` |
 | Per-cell QC metrics | `QC/cellline_qc_summary.txt` |
 | Per-cell methylation / accessibility | `08.methylation_snakemake/*.{GCH,HCG}.{1kb,50kb,100kb,250kb}_methylation.txt.gz` |
-| Per-cell contact matrices | `06.hiccluster_snakemake/*.hic_matrix.txt.gz` |
 | Per-cell per-site methylation | `07.bistools_snakemake/methylation/*/*.{GCH,HCG}.6plus2.bed.gz` |
+| Aligned per-cell reads (input to Hi-C) | `04.alignment_snakemake/*.calmd.bam` |
 
-Per-cell `{GCH,HCG}.strand.6plus2` BEDs and `hic_matrix.txt.gz` are the files
-deposited as GEO processed data.
+## A note on Hi-C contacts
+
+There is no per-cell contact-matrix step here, and none is needed. The GM12878
+pseudobulk and bulk `.hic` files are built **directly from the per-cell
+`calmd.bam`** — `samtools view -q30 -f1 -F1804` → `sam2juicer_new.py` →
+`juicer pre -f DpnII` — in the Hi-C comparison code, which lives with the figure
+that uses it. Nothing in the analysis or figure code reads the pipeline's
+`06.hiccluster_snakemake/*.hic_matrix.txt.gz`; that rule set (schicluster
+imputation and embedding) is used for the mouse cortex dataset, not for this
+homogeneous cell line.
 
 ## Notes on paths
 
