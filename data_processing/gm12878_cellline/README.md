@@ -4,12 +4,13 @@ GM12878 4-plex scNOMe-HiC: **188 cells** (47 libraries `scNH_GM_4plex_*_S*` × 4
 barcodes ATCACG / CGATGT / GCCAAT / TGACCA), aligned to **hg38**.
 **180 cells pass QC** and carry through to all downstream products.
 
-Raw reads → per-cell methylation and accessibility → QC-filtered cell set. Figure
-panels are built from these outputs under `../../main_figures/` and
-`../../supplementary_figures/`.
+This folder covers everything up to **data generation**. The figure panels are
+built from these outputs by the notebooks in `../../main_figures/fig1/`.
 
-> Downstream steps (pseudobulk methylation tracks, cell × bin matrix collapse) are
-> still to be added.
+Raw reads → per-cell methylation, accessibility and contacts → QC gate → two
+parallel products: a **pseudobulk** in three modalities (the single-cell arm of the
+Figure 1 comparison against bulk NOMe-HiC, processed in `../bulk_scNOMeHiC/`), and
+**cell × bin matrices** for single-cell analyses.
 
 ## The pipeline itself is a separate repository
 
@@ -27,7 +28,8 @@ Clone it, then run the script in `01_pipeline/` against it, parameterized by
 
 External tools referenced by the config: Bhmem (`bisulfiteHic`, built 2026-05-11),
 Bis-SNP (`Bis-SNP.latest.jar` = BisSNP-1.2.bisqc_walkers, 2026-05-13), Picard,
-Bis-tools. References: `GCA_000001405.15_GRCh38_no_alt_analysis_set`,
+Bis-tools, juicer_tools. References:
+`GCA_000001405.15_GRCh38_no_alt_analysis_set`,
 `Homo_sapiens_assembly38.dbsnp138.vcf`, DpnII restriction sites.
 
 ## Run order
@@ -67,7 +69,7 @@ tables, applies the thresholds from `00_config/`, and plots the QC summary.
   `07.bistools_snakemake/qc/{prefix}/*.calmd.trinuc_methy.{chrM,chr21}.txt.gz`,
   `07.bistools_snakemake/methylation/{prefix}/*.{GCH,HCG}.6plus2.bed.gz`,
   `08.methylation_snakemake/*`
-- *out*: `QC/cellline_passed.txt` (**180 cells** — the gate for everything downstream),
+- *out*: `QC/cellline_passed.txt` (**180 cells** — the gate for everything below),
   `QC/cellline_prefixes_used.txt`, `QC/cellline_qc_summary.txt`,
   `QC/cellline.{gch_hcg_count,chrM,chr21}.txt`, `QC/methylation_matrices/`,
   and the `figures/cellline_*` PDFs
@@ -75,7 +77,68 @@ tables, applies the thresholds from `00_config/`, and plots the QC summary.
 Bisulfite conversion is assessed as **non-CpG methylation %** (the ACT trinucleotide
 rate from the `trinuc_methy` tables); low = good conversion.
 
+### 03 and 04 — two parallel branches, both gated on `QC/cellline_passed.txt`
+
+### 03_pseudobulk — pool the 180 cells into a bulk-equivalent, in 3 modalities
+
+This is the single-cell arm of the Figure 1 comparison. Pooling and re-calling at
+full depth (rather than summing per-cell calls) re-genotypes SNPs at pooled
+coverage, which per-cell summing cannot do.
+
+Steps 01–03 deliberately mirror `../bulk_scNOMeHiC/` steps 07–09 — merge, scatter
+Bis-SNP by chromosome, concatenate and bin — so the two arms of the comparison are
+processed identically. Step 04 uses the same good-reads filter as the bulk `.hic`.
+
+1. **`01_merge_calmd_passed.sh`** (sbatch)
+   - *in*: `QC/cellline_passed.txt`, `04.alignment_snakemake/{prefix}.calmd.bam`
+   - *out*: `04.alignment_snakemake/merged.sorted.bam` + `.bai`
+2. **`02_call_methylation_array.sh`** (sbatch, `--array=1-23`, one chromosome per task)
+   - *in*: `merged.sorted.bam`
+   - *out*: `pseudobulk_methylation/<chr>/gm_pseudobulk_merged.<chr>.cyt.filtered.sort.{GCH,HCG}.6plus2.bed.gz`
+   - Same `Bis-SNP/bissnp_nomehic_usage.pl` caller as the pipeline's `bistools`
+     rule, split by `--interval`. Duplicates are flag-marked but present; BisSNP
+     skips them, so pooled PCR duplicates are not double-counted. Re-running skips
+     chromosomes already complete.
+3. **`03_merge_methylation.sh`** (sbatch, after the array completes)
+   - *in*: the 23 per-chromosome BEDs
+   - *out*: **`gm_pseudobulk_merged.{GCH,HCG}.6plus2.bed.gz`** ← *accessibility +
+     methylation, 2 of the 3 modalities*, plus binned
+     `{1kb,50kb,100kb,250kb}_methylation.txt.gz` (binned with the pipeline's
+     `calcmethylation.py`, same as the per-cell rule)
+4. **`04_build_pseudobulk_hic.sh`** (sbatch)
+   - *in*: per-cell `04.alignment_snakemake/*_sorted_by_name.calmd.bam` (all 188)
+   - *out*: **`hic_comparison/gm_pseudobulk.dedup.mapQ30.hic`** ← *3rd modality*
+   - Per-cell `samtools view -q30 -f1 -F1804` → `sam2juicer_new.py` → 8-column
+     short → sort → `juicer_tools pre -f DpnII`. The good-reads filter is applied
+     **before** sam2juicer, byte-for-byte matching the bulk, so both arms exclude
+     PCR duplicates. An earlier build that omitted this included ~56 % duplicate
+     reads and is not used.
+   - Per-cell processing runs in parallel, which keeps sam2juicer's orphan buffer small.
+5. **`05_make_bedgraph_bigwig.sh`** (sbatch) — genome-browser / deepTools tracks
+   - *in*: `gm_pseudobulk_merged.{GCH,HCG}.6plus2.bed.gz`
+   - *out*: `gm_pseudobulk_merged.{GCH,HCG}.methlevel.{bedgraph,bw}`
+   - Value is column 7 (methylation %, 0–100), no coverage filter; exact-duplicate
+     coordinates are collapsed by averaging so `bedGraphToBigWig` accepts the input.
+
+### 04_single_cell_matrices — cell × bin matrices
+
+1. **`01_make_table.sh`**
+   - *in*: `07.bistools_snakemake/methylation/*/*.HCG.6plus2.bed`
+   - *out*: `sample_table_hcg.tsv` (two columns: cell, path)
+   - As written it emits the HCG table; change `*.HCG.` and `OUT` to produce
+     `sample_table_gch.tsv`, which `02_collapse.sh` also requires.
+2. **`02_collapse.sh`** → **`methylation_collapse.py`**
+   - *in*: `sample_table_{gch,hcg}.tsv`, hg38 chrom sizes, gencode v36 GTF, and the
+     bin BEDs `genome_bins_{250kb,gene,1kb.no_blacklist}.bed`
+   - *out*: `GCH_250kb.txt`, `GCH_gene.txt`, `GCH_1kb.txt`, `HCG_250kb.txt`,
+     `HCG_gene.txt`
+   - `methylation_collapse.py` is invoked by name from `02_collapse.sh`, so it
+     keeps its original filename.
+3. **`collapse.ipynb`** — interactive inspection of the collapsed matrices.
+
 ## Outputs
+
+What the figure code reads:
 
 | Product | Path |
 |---|---|
@@ -83,15 +146,20 @@ rate from the `trinuc_methy` tables); low = good conversion.
 | Per-cell QC metrics | `QC/cellline_qc_summary.txt` |
 | Per-cell methylation / accessibility | `08.methylation_snakemake/*.{GCH,HCG}.{1kb,50kb,100kb,250kb}_methylation.txt.gz` |
 | Per-cell per-site methylation | `07.bistools_snakemake/methylation/*/*.{GCH,HCG}.6plus2.bed.gz` |
-| Aligned per-cell reads (input to Hi-C) | `04.alignment_snakemake/*.calmd.bam` |
+| **Pseudobulk accessibility** | `pseudobulk_methylation/gm_pseudobulk_merged.GCH.6plus2.bed.gz` (1.5 G) |
+| **Pseudobulk methylation** | `pseudobulk_methylation/gm_pseudobulk_merged.HCG.6plus2.bed.gz` (194 M) |
+| **Pseudobulk contacts** | `hic_comparison/gm_pseudobulk.dedup.mapQ30.hic` (1.5 G) |
+| Pseudobulk tracks | `pseudobulk_methylation/gm_pseudobulk_merged.{GCH,HCG}.methlevel.bw` |
+| Cell × bin matrices | `{GCH,HCG}_{250kb,gene}.txt`, `GCH_1kb.txt` |
 
-## A note on Hi-C contacts
+The three bold rows are the single-cell arm of the Figure 1 comparison; their bulk
+counterparts come from `../bulk_scNOMeHiC/`.
 
-There is no per-cell contact-matrix step here, and none is needed. The GM12878
-pseudobulk and bulk `.hic` files are built **directly from the per-cell
-`calmd.bam`** — `samtools view -q30 -f1 -F1804` → `sam2juicer_new.py` →
-`juicer pre -f DpnII` — in the Hi-C comparison code, which lives with the figure
-that uses it. Nothing in the analysis or figure code reads the pipeline's
+## A note on per-cell Hi-C contact matrices
+
+There is no per-cell contact-matrix step here, and none is needed. The pseudobulk
+`.hic` is built in `03_pseudobulk/04_` directly from the per-cell `calmd.bam`.
+Nothing in the analysis or figure code reads the pipeline's
 `06.hiccluster_snakemake/*.hic_matrix.txt.gz`; that rule set (schicluster
 imputation and embedding) is used for the mouse cortex dataset, not for this
 homogeneous cell line.

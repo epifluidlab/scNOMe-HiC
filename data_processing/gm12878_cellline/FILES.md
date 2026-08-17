@@ -1,49 +1,88 @@
 # FILES — data_processing/gm12878_cellline
 
-3 files. See `README.md` for the run order and the input/output of each step.
-Every file was copied unmodified from the original working directories; the
-"Origin" column records where each came from.
+12 files. See `README.md` for the run order and the input/output of each step.
 
 `$GM` = `/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new`
 `$PIPE` = `/gpfs/projects/b1198/epifluidlab/yoshii/software/sc_NOMeHiC_pipeline`
 
+## 00_config
+
 | File | What it is | Origin |
 |---|---|---|
-| `00_config/config.main_run.yaml` | The Snakemake config for this dataset: workdir, references, tool paths, `start_from: raw`, adapter clipping, methylation bin sizes (1/50/100/250 kb), QC thresholds. Authoritative record of the run. | `$PIPE/configs/config.yaml` |
-| `01_pipeline/run_pipeline_gm_sc_new.sh` | SLURM driver (`sbatch`) for the full per-cell chain: demux → trim → align (Bhmem) → bamprocess → bisqc → bistools (Bis-SNP) → methylation. Runs Snakemake with the SLURM profile, which submits each rule as a child job. | `/gpfs/projects/b1042/.../scnomehic/codes/` — **scratch**, rescued here |
-| `02_qc/qc_plots.ipynb` | Per-cell QC metrics, threshold filtering, and summary plots. Run top to bottom in Jupyter. Produces `QC/cellline_passed.txt` (180 of 188 cells) and the `figures/cellline_*` PDFs. Outputs preserved. | `$GM/` |
+| `config.main_run.yaml` | The Snakemake config for this dataset: workdir, references, tool paths, `start_from: raw`, adapter clipping, methylation bin sizes (1/50/100/250 kb), QC thresholds. Authoritative record of the run. | `$PIPE/configs/config.yaml` |
+
+## 01_pipeline
+
+| File | What it is | Origin |
+|---|---|---|
+| `run_pipeline_gm_sc_new.sh` | SLURM driver (`sbatch`) for the full per-cell chain: demux → trim → align (Bhmem) → bamprocess → bisqc → bistools (Bis-SNP) → methylation. Runs Snakemake with the SLURM profile, which submits each rule as a child job. | `/gpfs/projects/b1042/.../scnomehic/codes/` — **scratch**, rescued here |
+
+## 02_qc
+
+| File | What it is | Origin |
+|---|---|---|
+| `qc_plots.ipynb` | Per-cell QC metrics, threshold filtering, and summary plots. Run top to bottom in Jupyter. Produces `QC/cellline_passed.txt` (180 of 188 cells) and the `figures/cellline_*` PDFs. Outputs preserved. | `$GM/` |
+
+## 03_pseudobulk
+
+Pools the 180 QC-passing cells into a bulk-equivalent in three modalities — the
+single-cell arm of the Figure 1 comparison. Run in the order listed.
+
+| File | What it is | Origin |
+|---|---|---|
+| `01_merge_calmd_passed.sh` | Merges the 180 QC-passing `{prefix}.calmd.bam` into `merged.sorted.bam`, coordinate-sorted and indexed. Logs any missing BAMs. | `$GM/merge_calmd_passed.sh` |
+| `02_call_methylation_array.sh` | SLURM array (`1-23`, one chromosome per task). Runs `bissnp_nomehic_usage.pl` on the pooled BAM — the same caller as the pipeline's `bistools` rule — re-genotyping SNPs at pooled depth. Skips chromosomes already complete. | `$GM/pseudobulk_methylation/` |
+| `03_merge_methylation.sh` | Concatenates the 23 per-chromosome BEDs into genome-wide `{GCH,HCG}.6plus2.bed.gz` (**2 of the 3 modalities**), then bins to 1/50/100/250 kb via the pipeline's `calcmethylation.py`. | `$GM/pseudobulk_methylation/` |
+| `04_build_pseudobulk_hic.sh` | Builds the pseudobulk contact map (**3rd modality**): per-cell `samtools view -q30 -f1 -F1804` → `sam2juicer_new.py` → 8-col short → sort → `juicer_tools pre -f DpnII`. The good-reads filter runs *before* sam2juicer, matching the bulk exactly so both arms exclude PCR duplicates. | `$GM/hic_comparison/scripts/build_pseudobulk_dedup_hic.sh` |
+| `05_make_bedgraph_bigwig.sh` | Per-site BEDs → 4-column bedGraph (col 7 = methylation %) → bigWig tracks. Collapses exact-duplicate coordinates by averaging so `bedGraphToBigWig` accepts the input. | `$GM/pseudobulk_methylation/` |
+
+## 04_single_cell_matrices
+
+| File | What it is | Origin |
+|---|---|---|
+| `01_make_table.sh` | Scans `07.bistools_snakemake/methylation/` and writes the two-column `sample_table_hcg.tsv` (cell, path). Edit the context and `OUT` to produce `sample_table_gch.tsv`, which `02_collapse.sh` also needs. | `$GM/make_table.sh` |
+| `02_collapse.sh` | Five `methylation_collapse.py` invocations producing `GCH_{250kb,gene,1kb}.txt` and `HCG_{250kb,gene}.txt`. | `$GM/collapse.sh` |
+| `methylation_collapse.py` | Collapses per-cell 6plus2 BEDs into cell × bin matrices over a supplied bin BED. **Keeps its original filename** — `02_collapse.sh` invokes it by name. | `$GM/` |
+| `collapse.ipynb` | Interactive inspection of the collapsed matrices. Outputs preserved. | `$GM/` |
+
+## Renumbering
+
+Files in `03_pseudobulk/` and `04_single_cell_matrices/` were prefixed with their
+run order; the originals carried no numbering and were spread across three
+directories (`$GM/`, `$GM/pseudobulk_methylation/`, `$GM/hic_comparison/scripts/`).
+
+Renaming meant updating what the scripts say about themselves. **Only these were
+changed:**
+
+- `Submit: sbatch <name>` lines, to match the new filenames
+- `01_merge_calmd_passed.sh`: "Run `qc_plots.ipynb` first" → `../02_qc/qc_plots.ipynb`,
+  and a comment pointing at a sibling working directory that is not in this repo
+- `04_build_pseudobulk_hic.sh`: its two references to scripts not included here —
+  the bulk comparison point now reads `../../bulk_scNOMeHiC/10_hic_from_merged.sh`,
+  and the superseded pseudobulk builders are described rather than named
+
+Commands, parameters, and data paths are untouched. All scripts pass `bash -n`.
 
 ## Deliberately not included
 
 - **The Snakemake workflow itself** — lives at
   `github.com/epifluidlab/sc_NOMeHiC_pipeline`, commit `a0456b9`. Pinned in
   `README.md` rather than duplicated.
-- **`gm_hicmatrix_driver.sh` and its config** (`$GM/configs/config.yaml`) — built
-  per-cell `06.hiccluster_snakemake/*.hic_matrix.txt.gz`. Nothing in the analysis or
-  figure code reads those files: the pseudobulk and bulk `.hic` are built straight
-  from the per-cell `calmd.bam` via `sam2juicer_new.py` + `juicer pre`, on a
-  separate path. That config also carried a broken `bisulfitehic` path, so its run
-  produced 188 empty files — see the session note. Dropping it leaves one working
-  config for this dataset.
+- **The superseded pseudobulk Hi-C builders** — `build_pseudobulk_hic.sh` and
+  `finalize_pseudobulk_hic.sh` / `_v2` / `_v3`. The first ran sam2juicer directly on
+  calmd BAMs that still contained marked duplicates, so it included ~56 % PCR
+  duplicates while the bulk excluded them; the rest are format and performance
+  iterations of it.
+- **`gm_hicmatrix_driver.sh` and its config** — built per-cell
+  `06.hiccluster_snakemake/*.hic_matrix.txt.gz`, which nothing in the analysis or
+  figure code reads. That config also carried a broken `bisulfitehic` path, so its
+  run produced 188 empty files — see the session note.
 - **`make_qc_notebook.py`** — the generator that wrote `qc_plots.ipynb`. Tooling for
-  authoring the notebook, not part of the method; the notebook itself is what runs.
+  authoring the notebook, not part of the method.
 - **`make_qc_excel.py`** — formats the QC metrics into a spreadsheet for reading.
-  Presentation only; the QC numbers it reads are already produced by the notebook.
-- **`hic_comparison/scripts/`** (10 files: pseudobulk-vs-bulk `.hic` builds, SCC
-  analysis) and **`ctcf_cgi_profiles/`** (7 files: CTCF/CGI deepTools profiles) —
-  these generate figure panels, so they belong under `main_figures/` or
-  `supplementary_figures/`.
+- **`hic_comparison/scripts/` dump and SCC code** (`dump_2.5Mb.sh`,
+  `scc_analysis.py`, `build_bulk_*.sh`, `validate_pairfilter*.sh`) and
+  **`ctcf_cgi_profiles/`** — these consume the outputs above to make figure panels,
+  so they belong under `main_figures/` or `supplementary_figures/`.
 - Recovery, validation and superseded-parameter scripts from the original working
   directory. They record operational history, not the method.
-
-## Still to come
-
-Downstream of the QC gate, pending review:
-
-- **Pseudobulk methylation** — merge QC-passing BAMs, re-call with Bis-SNP at pooled
-  depth by chromosome, merge and bin, then build bedGraph/bigWig tracks.
-  (`merge_calmd_passed.sh`, `call_methylation_array.sh`, `merge_methylation.sh`,
-  `make_bedgraph_bigwig.sh`)
-- **Cell × bin matrices** — collapse per-cell 6plus2 BEDs into `{GCH,HCG}_{250kb,gene}`
-  and `GCH_1kb` matrices. (`make_table.sh`, `collapse.sh`, `methylation_collapse.py`,
-  `collapse.ipynb`)
