@@ -15,6 +15,12 @@ sample, so each replicate's trimmed FASTQ is **split into ~20 M-read-pair chunks
 each staged as a pipeline "cell" (`prefix=repN`, `index=chunkNNN`) — 53 chunks in
 total. Alignment then fans out across SLURM. Demultiplexing is skipped.
 
+Chunking is a **parallelization strategy, not part of the method**: chunks are
+merged back per replicate before any deduplication or methylation calling, so
+splitting affects wall-clock time only, not the results. Steps 03–06 are where
+that machinery lives; the biological flow is trim → align → deduplicate per
+replicate → merge replicates → call methylation → bin → build contact map.
+
 Deduplication is done **per replicate**, which is the correct unit: `markdup`
 identifies PCR duplicates within a sequencing library, so the three replicates
 must be deduplicated separately before being merged.
