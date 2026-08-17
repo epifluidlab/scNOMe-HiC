@@ -1,64 +1,9 @@
-# =====================================================================
-# scNOMeHiC_code is a CODE-ONLY repository.
-#
-# Strategy: ignore everything, then re-allow known source extensions.
-# This is deliberate -- the source working directories mix code with
-# BAMs, .cool, bigwigs and gzipped matrices, so an allowlist is the
-# only reliable way to keep data out of the history.
-#
-# If you genuinely need to commit a small file whose extension is not
-# allowed below, force it:  git add -f path/to/file
-# =====================================================================
+# Only auto-generated junk. Everything in this repo is copied in deliberately,
+# so nothing else is filtered -- if a file is here, it is meant to be committed.
 
-# --- ignore everything ---
-*
-
-# --- but descend into directories ---
-!*/
-
-# --- repo bookkeeping ---
-!.gitignore
-!.gitkeep
-
-# --- documentation ---
-!*.md
-!LICENSE
-
-# --- source code ---
-!*.py
-!*.ipynb
-!*.R
-!*.r
-!*.Rmd
-!*.sh
-!*.bash
-!*.pl
-!*.awk
-
-# --- workflow definitions ---
-!Snakefile
-!*.smk
-!*.snakefile
-!Makefile
-!*.nf
-
-# --- configuration / environment ---
-!*.yaml
-!*.yml
-!*.json
-!*.toml
-!*.cfg
-!*.ini
-!requirements*.txt
-
-# --- never commit, even if an allowed extension matches ---
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
 .Rhistory
-.RData
 .Rproj.user/
-logs/
-slurm-*.out
-hs_err_pid*.log
 .DS_Store

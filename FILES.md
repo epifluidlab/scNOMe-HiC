@@ -4,7 +4,7 @@
 |---|---|
 | `README.md` | Repository overview, layout conventions, data availability. |
 | `FILES.md` | This file. Index of top-level entries. Each subfolder keeps its own `FILES.md`. |
-| `.gitignore` | Allowlist-style ignore rules. Everything is ignored except known source extensions, so data files cannot be committed by accident. |
+| `.gitignore` | Minimal — only auto-generated junk (`__pycache__`, `.ipynb_checkpoints`, …). Everything in this repo is copied in deliberately, so nothing else is filtered. |
 | `env/` | Conda environment YAMLs, `requirements.txt`, recorded R `sessionInfo()`. |
 | `data_processing/` | Per-dataset processing code: raw reads → analysis-ready matrices. |
 | `main_figures/` | Code producing main-text figure panels, one folder per figure. |
