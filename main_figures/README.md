@@ -5,7 +5,7 @@ analysis-ready tables (produced under `../data_processing/`) into published pane
 
 | Folder | Figure | Source working dir |
 |---|---|---|
-| `fig1/` | <!-- FILL: panel description --> | `../../scnomehic_paper/fig1/` |
+| `fig1/` | Single-cell pseudobulk vs bulk NOMe-HiC across three modalities: HCG methylation, GCH accessibility, Hi-C contacts — **migrated** | `../../sc_nomehic_cellline/` |
 | `fig2/` | <!-- FILL: panel description --> | `../../scnomehic_paper/fig2/` |
 
 Add `fig3/`, `fig4/`, … as those sections are migrated.
