@@ -77,9 +77,9 @@ tables, applies the thresholds from `00_config/`, and plots the QC summary.
 Bisulfite conversion is assessed as **non-CpG methylation %** (the ACT trinucleotide
 rate from the `trinuc_methy` tables); low = good conversion.
 
-### 03 and 04 — two parallel branches, both gated on `QC/cellline_passed.txt`
-
 ### 03_pseudobulk — pool the 180 cells into a bulk-equivalent, in 3 modalities
+
+Gated on `QC/cellline_passed.txt`.
 
 This is the single-cell arm of the Figure 1 comparison. Pooling and re-calling at
 full depth (rather than summing per-cell calls) re-genotypes SNPs at pooled
@@ -120,22 +120,6 @@ processed identically. Step 04 uses the same good-reads filter as the bulk `.hic
    - Value is column 7 (methylation %, 0–100), no coverage filter; exact-duplicate
      coordinates are collapsed by averaging so `bedGraphToBigWig` accepts the input.
 
-### 04_single_cell_matrices — cell × bin matrices
-
-1. **`01_make_table.sh`**
-   - *in*: `07.bistools_snakemake/methylation/*/*.HCG.6plus2.bed`
-   - *out*: `sample_table_hcg.tsv` (two columns: cell, path)
-   - As written it emits the HCG table; change `*.HCG.` and `OUT` to produce
-     `sample_table_gch.tsv`, which `02_collapse.sh` also requires.
-2. **`02_collapse.sh`** → **`methylation_collapse.py`**
-   - *in*: `sample_table_{gch,hcg}.tsv`, hg38 chrom sizes, gencode v36 GTF, and the
-     bin BEDs `genome_bins_{250kb,gene,1kb.no_blacklist}.bed`
-   - *out*: `GCH_250kb.txt`, `GCH_gene.txt`, `GCH_1kb.txt`, `HCG_250kb.txt`,
-     `HCG_gene.txt`
-   - `methylation_collapse.py` is invoked by name from `02_collapse.sh`, so it
-     keeps its original filename.
-3. **`collapse.ipynb`** — interactive inspection of the collapsed matrices.
-
 ## Outputs
 
 What the figure code reads:
@@ -150,10 +134,11 @@ What the figure code reads:
 | **Pseudobulk methylation** | `pseudobulk_methylation/gm_pseudobulk_merged.HCG.6plus2.bed.gz` (194 M) |
 | **Pseudobulk contacts** | `hic_comparison/gm_pseudobulk.dedup.mapQ30.hic` (1.5 G) |
 | Pseudobulk tracks | `pseudobulk_methylation/gm_pseudobulk_merged.{GCH,HCG}.methlevel.bw` |
-| Cell × bin matrices | `{GCH,HCG}_{250kb,gene}.txt`, `GCH_1kb.txt` |
 
 The three bold rows are the single-cell arm of the Figure 1 comparison; their bulk
-counterparts come from `../bulk_scNOMeHiC/`.
+counterparts come from `../bulk_scNOMeHiC/`. The Figure 1 R notebook reads those
+`.6plus2.bed.gz` files directly and does its own binning, so the per-bin
+`*_methylation.txt.gz` tables are produced but not required by the figure.
 
 ## A note on per-cell Hi-C contact matrices
 

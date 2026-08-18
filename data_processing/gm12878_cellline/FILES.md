@@ -1,6 +1,6 @@
 # FILES — data_processing/gm12878_cellline
 
-12 files. See `README.md` for the run order and the input/output of each step.
+10 files. See `README.md` for the run order and the input/output of each step.
 
 `$GM` = `/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new`
 `$PIPE` = `/gpfs/projects/b1198/epifluidlab/yoshii/software/sc_NOMeHiC_pipeline`
@@ -36,20 +36,11 @@ single-cell arm of the Figure 1 comparison. Run in the order listed.
 | `04_build_pseudobulk_hic.sh` | Builds the pseudobulk contact map (**3rd modality**): per-cell `samtools view -q30 -f1 -F1804` → `sam2juicer_new.py` → 8-col short → sort → `juicer_tools pre -f DpnII`. The good-reads filter runs *before* sam2juicer, matching the bulk exactly so both arms exclude PCR duplicates. | `$GM/hic_comparison/scripts/build_pseudobulk_dedup_hic.sh` |
 | `05_make_bedgraph_bigwig.sh` | Per-site BEDs → 4-column bedGraph (col 7 = methylation %) → bigWig tracks. Collapses exact-duplicate coordinates by averaging so `bedGraphToBigWig` accepts the input. | `$GM/pseudobulk_methylation/` |
 
-## 04_single_cell_matrices
-
-| File | What it is | Origin |
-|---|---|---|
-| `01_make_table.sh` | Scans `07.bistools_snakemake/methylation/` and writes the two-column `sample_table_hcg.tsv` (cell, path). Edit the context and `OUT` to produce `sample_table_gch.tsv`, which `02_collapse.sh` also needs. | `$GM/make_table.sh` |
-| `02_collapse.sh` | Five `methylation_collapse.py` invocations producing `GCH_{250kb,gene,1kb}.txt` and `HCG_{250kb,gene}.txt`. | `$GM/collapse.sh` |
-| `methylation_collapse.py` | Collapses per-cell 6plus2 BEDs into cell × bin matrices over a supplied bin BED. **Keeps its original filename** — `02_collapse.sh` invokes it by name. | `$GM/` |
-| `collapse.ipynb` | Interactive inspection of the collapsed matrices. Outputs preserved. | `$GM/` |
-
 ## Renumbering
 
-Files in `03_pseudobulk/` and `04_single_cell_matrices/` were prefixed with their
-run order; the originals carried no numbering and were spread across three
-directories (`$GM/`, `$GM/pseudobulk_methylation/`, `$GM/hic_comparison/scripts/`).
+Files in `03_pseudobulk/` were prefixed with their run order; the originals carried
+no numbering and were spread across three directories (`$GM/`,
+`$GM/pseudobulk_methylation/`, `$GM/hic_comparison/scripts/`).
 
 Renaming meant updating what the scripts say about themselves. **Only these were
 changed:**
@@ -80,6 +71,15 @@ Commands, parameters, and data paths are untouched. All scripts pass `bash -n`.
 - **`make_qc_notebook.py`** — the generator that wrote `qc_plots.ipynb`. Tooling for
   authoring the notebook, not part of the method.
 - **`make_qc_excel.py`** — formats the QC metrics into a spreadsheet for reading.
+- **The cell × bin matrix collapse** — `make_table.sh`, `collapse.sh`,
+  `methylation_collapse.py`, `collapse.ipynb`. These ran and produced
+  `GCH_{250kb,gene,1kb}.txt.gz` and `HCG_{250kb,gene}.txt.gz` in the working
+  directory, but **nothing consumes them.** An exhaustive search of every notebook,
+  script and R file in `scnomehic_paper/` and `sc_nomehic_cellline/` found no
+  reference to them. The apparent hits are filename collisions: `fig2` builds its
+  own 250 kb pseudobulk straight from the per-cell 6plus2 beds and names the output
+  `*_250kb`; `subset_clustering` reads `methylation_matrices/` from a *different*
+  dataset's working directory; `s2_new` builds its own tables.
 - **`hic_comparison/scripts/` dump and SCC code** (`dump_2.5Mb.sh`,
   `scc_analysis.py`, `build_bulk_*.sh`, `validate_pairfilter*.sh`) and
   **`ctcf_cgi_profiles/`** — these consume the outputs above to make figure panels,
