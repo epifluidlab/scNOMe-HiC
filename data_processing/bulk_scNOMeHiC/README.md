@@ -57,6 +57,9 @@ numbered scripts — edit it first when moving to another system.
 | 08 | `08_call_methylation_scatter.sh` | array 1-25; Bis-SNP per chromosome on the merged BAM |
 | 09 | `09_merge_beds_and_bin.sh` | concat per-chr → genome-wide `{GCH,HCG}.6plus2.bed.gz`, then bin at 1/50/100/250 kb |
 | 10 | `10_hic_from_merged.sh` | merged BAM → good-reads filter → `sam2juicer_new.py` → `juicer_tools pre` → `bulk_GM12878_merged.mapQ30.hic` |
+| 11 | `11_dump_multires.sh` | `.hic` → per-chromosome text at 2.5 Mb / 1 Mb / 500 kb — **see the note below** |
+| 12 | `12_dump_pseudobulk_dedup.sh` | dedup pseudobulk `.hic` → same three resolutions, prefix `gm_pseudobulk_dedup` |
+| 13 | `13_dump_250kb.sh` | bulk + dedup pseudobulk `.hic` → 250 kb |
 
 ### Note on step 07
 
@@ -70,6 +73,28 @@ Run `07_` for the merged BAM, then run `08_` and `09_`. Every stage is
 resume-guarded on the presence of its outputs, so `07_`'s steps (2) and (3) skip
 themselves once `09_` has produced the beds and tables.
 
+### Steps 11–13: juicer dumps
+
+The Figure 1 Hi-C notebook does not read `.hic` files — it reads per-chromosome
+text matrices produced by `juicer_tools dump observed NONE`. Steps 11–13 produce
+them for **both** arms of the comparison into one shared directory,
+`$WORK/hic_comparison/dumps/`, named `{prefix}_{resolution}_{chr}.txt`. The
+notebook selects arms by prefix: `newbulk` and `gm_pseudobulk_dedup`.
+
+Resolutions: 2.5 Mb, 1 Mb, 500 kb (steps 11–12) and 250 kb (step 13), chr1–22 + X.
+
+**Note on step 11.** It dumps the bulk (prefix `newbulk`) *and*
+`gm_pseudobulk.mapQ30.hic` — the **original** pseudobulk, which still contains
+marked PCR duplicates. That second half is not used: the notebook reads
+`gm_pseudobulk_dedup`, produced by step 12 from the deduplicated
+`gm_pseudobulk.dedup.mapQ30.hic`. The script is kept as it ran; only its bulk half
+feeds the figure.
+
+The pseudobulk `.hic` inputs for steps 12–13 come from
+`../gm12878_cellline/03_pseudobulk/04_build_pseudobulk_hic.sh`. The dumps live here
+rather than there because all three scripts write into this pipeline's shared dumps
+directory, and step 13 dumps both arms in a single script.
+
 ## Outputs
 
 All heavy outputs live on scratch (`$WORK` = `/scratch/jmj7858/scnomehic/bulk_gm/pipeline/`),
@@ -81,9 +106,11 @@ never in this repository.
 | Methylation | `06b.methylation_merged/bulk_GM12878_merged.cyt.filtered.sort.HCG.6plus2.bed.gz` (222 M) |
 | Hi-C | `06c.hic_merged_nopbat/bulk_GM12878_merged.mapQ30.hic` (4.7 G) |
 | Binned tables | `06b.methylation_merged/bulk_GM12878_merged.{GCH,HCG}.{1kb,50kb,100kb,250kb}_methylation.txt.gz` |
+| Hi-C dumps (both arms) | `hic_comparison/dumps/{newbulk,gm_pseudobulk_dedup}_{2.5Mb,1Mb,500kb,250kb}_{chr}.txt` |
 
-Those three modality files are what the Figure 1 comparison reads, alongside their
-pseudobulk counterparts.
+The GCH and HCG beds are read directly by the Figure 1 R notebook, which does its
+own binning — so the per-bin tables above are produced but not required by the
+figure. The Hi-C dumps are what the Figure 1 Python notebook reads.
 
 ## Notes on paths
 

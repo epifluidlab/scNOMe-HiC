@@ -1,6 +1,6 @@
 # FILES — data_processing/bulk_scNOMeHiC
 
-12 files. See `README.md` for the run order and the input/output of each step.
+15 files. See `README.md` for the run order and the input/output of each step.
 
 Source: `/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch`
 
@@ -17,12 +17,16 @@ Source: `/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_fro
 | `08_call_methylation_scatter.sh` | SLURM array 1-25 (chr1-22, X, Y, M). Bis-SNP non-directional wrapper on the merged BAM, one chromosome per task via `--interval`, each writing to its own subdirectory. Replaces the single-threaded call that would have taken ~94 h. | `13b_call_methylation_scatter.sh` |
 | `09_merge_beds_and_bin.sh` | Two phases: concatenate the per-chromosome 6plus2 beds into genome-wide GCH/HCG per-base beds (cheap, runs first so downstream work is never blocked), then bin each context at 1/50/100/250 kb with `calcmethylation.py` (memory-hungry — 128 G, after a 16 G run was OOM-killed). | `13c_merge_beds_and_bin.sh` |
 | `10_hic_from_merged.sh` | Builds the bulk `.hic` from the merged, already-deduplicated BAM: good-reads filter (`-q 30 -f 1 -F 1804`) → `sam2juicer_new.py -f DpnII` → sort → `juicer_tools pre -q 30`. Resume-guarded at each stage. | `13d_hic_from_merged.sh` |
+| `11_dump_multires.sh` | `juicer_tools dump observed NONE` at 2.5 Mb / 1 Mb / 500 kb, chr1-22 + X, into the shared `hic_comparison/dumps/`. Dumps the bulk (prefix `newbulk`) **and** the original, duplicate-containing `gm_pseudobulk.mapQ30.hic` — only the bulk half is used, see README. | `08_dump_gm_hic.sh` |
+| `12_dump_pseudobulk_dedup.sh` | Same three resolutions for the **deduplicated** pseudobulk `gm_pseudobulk.dedup.mapQ30.hic`, prefix `gm_pseudobulk_dedup`. This is the pseudobulk arm the figure actually reads. | `09_dump_pseudobulk_dedup.sh` |
+| `13_dump_250kb.sh` | Adds the 250 kb resolution for both arms in one script (`newbulk` + `gm_pseudobulk_dedup`). | `10_dump_250kb.sh` |
 
 ## Renumbering
 
 The originals were numbered in the order they were *written*, across two attempts
 at the protocol (`01`–`05` for the `-pbat` pass, `11`–`13d` for the corrected
-non-PBAT pass). They are renumbered here `00`–`10` in **run order**.
+non-PBAT pass), with the juicer dumps numbered `08`–`10` from yet another series.
+They are renumbered here `00`–`13` in **run order**.
 
 Renaming the files meant updating what they say about themselves, so these edits
 were made — and nothing else:
@@ -47,11 +51,13 @@ Commands, parameters, and file paths are untouched. The originals remain in
   `-pbat` dropped the chr22 MAPQ ≥ 30 pass rate to 20 % (vs 69 % without it).
 - **The failed direct-S3 download** — `download_array.sh`, `files.tsv`; the
   buckets are requester-pays and returned 403.
-- **Comparison and dump scripts** — `14_persite_for_notebook.sh`,
-  `_concat_{bulk,pbulk}_HCG.sh`, `06_scc_analysis.py`, `06_dump_and_scc.sh`,
-  `08_dump_gm_hic.sh`, `08b_dump_kr.sh`, `09_dump_pseudobulk_dedup.sh`,
-  `10_dump_250kb.sh`, and the `07_*` notebook-wiring scripts. These build the
-  Figure 1 comparison from the outputs above, so they belong in the figure folder.
+- **Comparison scripts that the current notebooks no longer need** —
+  `14_persite_for_notebook.sh` and `_concat_{bulk,pbulk}_HCG.sh` converted the
+  6plus2 beds to a 5-column per-site format for an earlier version of the R
+  notebook; the current one reads the beds directly. `06_scc_analysis.py` and
+  `06_dump_and_scc.sh` computed SCC standalone; the current Python notebook
+  computes HiCRep SCC itself. `08b_dump_kr.sh` dumps KR-normalized matrices, which
+  the figure does not use. The `07_*` scripts wired an older notebook to new inputs.
 - **Monitoring helpers** — `final_monitor.sh`, `health_probe.sh`,
   `progress_check.sh`, `verify_and_dryrun.sh`, `verify_restart.sh`, `wait_job.sh`.
   Operational, not method.
