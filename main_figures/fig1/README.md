@@ -8,14 +8,17 @@ Both arms are produced entirely by `../../data_processing/`; these notebooks onl
 read those outputs and plot. Two notebooks rather than one, because the panels use
 different languages.
 
-| Notebook | Kernel | Panels |
+| Notebook | Kernel | Published panel |
 |---|---|---|
-| `fig1_methylation_accessibility.ipynb` | R 4.4.2 (`nomehic_r`) | per-locus HCG methylation, per-locus and 250 kb GCH accessibility |
-| `fig1_hic_comparison.ipynb` | Python 3.12.8 (`scnomehic_python`) | chr1 contact-matrix heatmap, HiCRep SCC |
+| `fig1_methylation_accessibility.ipynb` | R 4.4.2 (`nomehic_r`) | `newbulk_locus_HCG_methylation_minCT_10.pdf`, `newbulk_acc_250kb_GCH_quantileNorm.pdf` |
+| `fig1_hic_comparison.ipynb` | Python 3.12.8 (`scnomehic_python`) | `gm_heatmap_chr1_combined_main_dot.pdf` |
+
+Both notebooks have been trimmed to the cells on the path to those panels — see
+[Trimming](#trimming).
 
 ## Inputs
 
-### `fig1_methylation_accessibility.ipynb` (R)
+### `fig1_methylation_accessibility.ipynb` (R, 4 code cells)
 
 Reads the per-site `.6plus2.bed.gz` files **directly** and does its own binning and
 coverage filtering — it does not use the pre-binned `*_methylation.txt.gz` tables.
@@ -28,7 +31,10 @@ coverage filtering — it does not use the pre-binned `*_methylation.txt.gz` tab
 | `BK_GCH` | `bulk_GM12878_merged.cyt.filtered.sort.GCH.6plus2.bed.gz` | ↑ same |
 | `BLACKLIST` | `reference/hg38/hg38-blacklist.v2.bed` | external reference |
 
-### `fig1_hic_comparison.ipynb` (Python)
+Cell order: setup (loads `m_hcg`, `m_gch`) → HCG locus panel → 250 kb GCH raw
+(builds `m`) → 250 kb GCH quantile-normalized.
+
+### `fig1_hic_comparison.ipynb` (Python, 8 code cells)
 
 Reads per-chromosome juicer **text dumps**, not `.hic` files. Arms are selected by
 filename prefix: `BULK = "newbulk"`, `PSEUDO = "gm_pseudobulk_dedup"`.
@@ -39,29 +45,46 @@ filename prefix: `BULK = "newbulk"`, `PSEUDO = "gm_pseudobulk_dedup"`.
 | `dumps/gm_pseudobulk_dedup_{2.5Mb,1Mb,500kb}_{chr}.txt` | `bulk_scNOMeHiC/12_dump_pseudobulk_dedup.sh` |
 | `dumps/{both}_250kb_{chr}.txt` | `bulk_scNOMeHiC/13_dump_250kb.sh` |
 
-`CHROM_MAIN = chr1` is the chromosome shown in the heatmap. SCC is computed with
-**HiCRep inside the notebook** — it builds temporary `.cool` files to IC-balance
-before scoring, so no external SCC script is involved.
+Cell order: setup → helper definitions (`load_matrix`, `ic_balance`, `prep_pair`,
+`compute_scc`) → chr1 heatmap → five SCC cells.
 
-## Outputs
+## Panels
 
-`fig1_methylation_accessibility.ipynb` → `figures/`
+**Published in Figure 1:**
 
-- `newbulk_locus_HCG_methylation_minCT_10.pdf` — per-locus HCG, min coverage 10
-- `newbulk_locus_GCH_accessibility_minCT_5_10_15_20.pdf` — per-locus GCH across
-  coverage thresholds
-- `newbulk_acc_250kb_GCH.pdf` and five variants — 250 kb GCH accessibility, raw vs
-  quantile-normalized, with and without bin/locus blacklisting
+- `newbulk_locus_HCG_methylation_minCT_10.pdf` — per-locus CpG methylation,
+  pseudobulk vs bulk, minimum coverage 10
+- `newbulk_acc_250kb_GCH_quantileNorm.pdf` — 250 kb GpC accessibility,
+  quantile-normalized
+- `gm_heatmap_chr1_combined_main_dot.pdf` — chr1 contact matrix, upper triangle
+  bulk / lower triangle pseudobulk, IC-balanced at 1 Mb with low-coverage bins
+  dropped, rendered at 2400 dpi
 
-`fig1_hic_comparison.ipynb` → `figures/`
+**Also produced, not placed in Figure 1:**
 
-- `gm_scc_rawclip_by_resolution.pdf`, `gm_scc_IC_by_resolution.pdf` — SCC across
-  2.5 Mb / 1 Mb / 500 kb / 250 kb
-- `gm_scc_raw_vs_IC_1Mb.pdf`, `gm_scc_rawclip_vs_ICclip_1Mb.pdf`,
-  `gm_scc_raw_clip95_only_1Mb.pdf` — normalization comparisons at 1 Mb
+- `newbulk_acc_250kb_GCH.pdf` — the un-normalized 250 kb panel. Its cell builds the
+  `m` matrix that the quantile-normalized panel requires, so it stays.
+- `gm_scc_*.pdf` (five) — the SCC calculation. Retained because chr1 SCC is quoted
+  here; the SCC figure comparing three resolutions belongs to **Supplementary
+  Figure S1**, which will get its own notebook.
 
-The chr1 heatmap renders inline; unlike the SCC panels it has no `savefig` call, so
-it needs one added if the panel is to be exported as a file.
+## Trimming
+
+Both notebooks were reduced to the cells leading to the published panels. Retained
+cells keep their source **and outputs** byte-identical; only the cells listed below
+were removed.
+
+`fig1_methylation_accessibility.ipynb` — 12 → 4 code cells. Dropped: the
+minimum-coverage sweep variants (`minCT_5_10_15_20`, `minCT_10_20_50_100`, and its
+quantile-normalized twin) and the bin- and locus-blacklist variants, along with the
+two cells that built `df_binBL` / `df_locusBL`.
+
+`fig1_hic_comparison.ipynb` — 11 → 8 code cells. Dropped: the all-chromosome
+multi-page heatmap PDF and two empty cells. That cell also defined
+`BIN_HEATMAP = 1_000_000`, which the chr1 heatmap needs, so that line was moved
+into the heatmap cell (the only source change made to any retained cell).
+
+The removed cells remain in git history and in the original working directories.
 
 ## Running
 
