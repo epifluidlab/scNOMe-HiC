@@ -29,10 +29,33 @@ coverage filtering — it does not use the pre-binned `*_methylation.txt.gz` tab
 | `PB_GCH` | `gm_pseudobulk_merged.GCH.6plus2.bed.gz` | ↑ same |
 | `BK_HCG` | `bulk_GM12878_merged.cyt.filtered.sort.HCG.6plus2.bed.gz` | `bulk_scNOMeHiC/09_merge_beds_and_bin.sh` |
 | `BK_GCH` | `bulk_GM12878_merged.cyt.filtered.sort.GCH.6plus2.bed.gz` | ↑ same |
-| `BLACKLIST` | `reference/hg38/hg38-blacklist.v2.bed` | external reference |
 
-Cell order: setup (loads `m_hcg`, `m_gch`) → HCG locus panel → 250 kb GCH raw
-(builds `m`) → 250 kb GCH quantile-normalized.
+No other inputs — the four beds are all it reads. (An ENCODE blacklist was used by
+blacklist-filtered variants during development; those were dropped, so the notebook
+no longer needs it.)
+
+Cell order: setup (loads `m_hcg`, `m_gch`) → HCG locus panel → 250 kb binning
+(builds `m`, preparation only) → 250 kb GCH quantile-normalized panel.
+
+### Why the accessibility panel is quantile-normalized
+
+| | n | Pearson | Spearman |
+|---|---|---|---|
+| raw 250 kb | 11,670 | 0.622 | 0.756 |
+| quantile-normalized | 11,670 | 0.743 | **0.756** |
+
+Quantile normalization here replaces each value by the cross-sample mean of its
+order statistic, so it is strictly rank-preserving. Spearman is therefore unchanged
+to three decimals — a useful check that the normalization is behaving — while
+Pearson is free to move.
+
+Pearson rose because in the raw data it sat well below Spearman, the signature of a
+relationship that is monotone but not linear: the two arms agree on the ordering of
+bins, but a pseudobulk pooled from 180 cells and a deeply sequenced bulk library
+have differently shaped marginal distributions. Normalizing onto a common marginal
+straightens that relationship, and Pearson converges to Spearman (0.743 vs 0.756).
+The raw Pearson was depressed by a scale artifact rather than by biological
+disagreement.
 
 ### `fig1_hic_comparison.ipynb` (Python, 6 code cells)
 
@@ -76,8 +99,6 @@ depends on.
 
 **Also produced, not placed in Figure 1:**
 
-- `newbulk_acc_250kb_GCH.pdf` — the un-normalized 250 kb panel. Its cell builds the
-  `m` matrix that the quantile-normalized panel requires, so it stays.
 - `gm_scc_raw_clip95_only_1Mb.pdf` — SCC at 1 Mb, publication styling.
 - `gm_scc_rawclip_by_resolution.pdf` — SCC at 1 Mb / 500 kb / 250 kb. This is the
   panel destined for **Supplementary Figure S1**, kept here because the
@@ -89,10 +110,19 @@ Both notebooks were reduced to the cells leading to the published panels. Retain
 cells keep their source **and outputs** byte-identical; only the cells listed below
 were removed.
 
-`fig1_methylation_accessibility.ipynb` — 12 → 4 code cells. Dropped: the
-minimum-coverage sweep variants (`minCT_5_10_15_20`, `minCT_10_20_50_100`, and its
-quantile-normalized twin) and the bin- and locus-blacklist variants, along with the
-two cells that built `df_binBL` / `df_locusBL`.
+`fig1_methylation_accessibility.ipynb` — 12 → 4 code cells, in two passes.
+
+First pass dropped the minimum-coverage sweep variants (`minCT_5_10_15_20`,
+`minCT_10_20_50_100`, and its quantile-normalized twin) and the bin- and
+locus-blacklist variants together with the two cells that built `df_binBL` /
+`df_locusBL`. The ENCODE blacklist was used only by those variants, so it is no
+longer an input.
+
+Second pass reduced the un-normalized 250 kb cell to **data preparation only**. The
+published accessibility panel is the quantile-normalized one, but its cell opens
+with `stopifnot(exists("m"))`, so the binning that builds `m` had to stay. The
+binning expression is carried over verbatim; the correlation report, the
+`smoothScatter` panel and `newbulk_acc_250kb_GCH.pdf` were removed.
 
 `fig1_hic_comparison.ipynb` — 11 → 6 code cells, in two passes.
 
