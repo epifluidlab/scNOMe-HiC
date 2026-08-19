@@ -33,11 +33,30 @@ supplementary_figures/    One folder per supplementary figure
 Each folder carries its own `README.md` (what the analysis does, how to run it)
 and `FILES.md` (what every individual file in that folder is).
 
+## The processing pipeline
+
+The scNOMe-HiC Snakemake workflow is a standalone tool, released and described
+separately, and is **not duplicated in this repository**:
+
+<https://github.com/epifluidlab/sc_NOMeHiC_pipeline> — commit `a0456b9`
+
+It takes raw FASTQ through demultiplexing, trimming, alignment (Bhmem),
+BAM processing, QC, methylation calling (Bis-SNP) and per-bin methylation tables.
+What lives here instead is, per dataset, the config that parameterizes it plus the
+shell scripts that invoke it — so `data_processing/<dataset>/` records exactly how
+the tool was run, and the tool itself records how each step works.
+
+One exception: the bulk NOMe-HiC sample under `data_processing/bulk_scNOMeHiC/`
+carries its own alignment and methylation-calling scripts, because that library's
+protocol required aligning **without** `-pbat`, which the shared pipeline's
+`rule mapping` hardcodes. See that folder's README.
+
 ## Layout conventions
 
 - `data_processing/<dataset>/` holds everything that turns raw reads into the
-  analysis-ready tables: Snakemake workflows, alignment and methylation-calling
-  scripts, QC, normalization, and matrix construction.
+  analysis-ready tables: pipeline config and drivers, QC, pseudobulk construction,
+  and — where a dataset needed them — its own alignment and methylation-calling
+  scripts. Steps are numbered in run order.
 - `main_figures/figN/` and `supplementary_figures/figSN/` hold only the code that
   turns those analysis-ready tables into published panels.
 - Where a figure folder needed exploratory or superseded code preserved for the
