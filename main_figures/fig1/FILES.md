@@ -6,7 +6,7 @@ input.
 | File | What it is | Origin |
 |---|---|---|
 | `fig1_methylation_accessibility.ipynb` | R 4.4.2, 4 code cells (3 with outputs). Pseudobulk vs bulk NOMe-HiC for CpG methylation and GpC accessibility. Reads the per-site 6plus2 beds directly, applies the hg38 blacklist, and bins to 250 kb itself. Publishes `newbulk_locus_HCG_methylation_minCT_10.pdf` and `newbulk_acc_250kb_GCH_quantileNorm.pdf`. | `sc_nomehic_cellline/single_cell_vs_bulk.ipynb` |
-| `fig1_hic_comparison.ipynb` | Python 3.12.8, 8 code cells (6 with outputs). chr1 contact-matrix heatmap (bulk above the diagonal, pseudobulk below, IC-balanced at 1 Mb, 2400 dpi) plus the HiCRep SCC calculation. Reads juicer text dumps and builds temporary `.cool` files for balancing. Publishes `gm_heatmap_chr1_combined_main_dot.pdf`. | `sc_nomehic_cellline/snakemake/hic_comparison_gm_clean.ipynb` |
+| `fig1_hic_comparison.ipynb` | Python 3.12.8, 6 code cells (3 with outputs). chr1 contact-matrix heatmap (bulk above the diagonal, pseudobulk below, IC-balanced at 1 Mb, 2400 dpi) plus the HiCRep SCC calculation. Reads juicer text dumps and builds temporary `.cool` files for balancing. Publishes `gm_heatmap_chr1_combined_main_dot.pdf`. | `sc_nomehic_cellline/snakemake/hic_comparison_gm_clean.ipynb` |
 
 ## Trimming
 
@@ -16,12 +16,17 @@ panels. Retained cells keep their source **and outputs** byte-identical.
 | Notebook | Cells | Removed |
 |---|---|---|
 | R | 12 → 4 | minimum-coverage sweep variants (`minCT_5_10_15_20`, `minCT_10_20_50_100`, and its quantile-normalized twin); bin- and locus-blacklist variants plus the two cells building `df_binBL` / `df_locusBL` |
-| Python | 11 → 8 | the all-chromosome multi-page heatmap PDF, and two empty cells |
+| Python | 11 → 6 | the all-chromosome multi-page heatmap PDF, two empty cells, and the SCC method exploration (raw vs IC, the apples-to-apples re-clip, IC across resolutions) |
 
-**One source change was made to a retained cell.** The dropped Python cell also
+**Two source changes were made.** The dropped Python cell also
 defined `BIN_HEATMAP = 1_000_000`, which the chr1 heatmap requires, so that line
-was moved into the heatmap cell with a comment noting where it came from. Verified
-afterwards that every function and variable is still defined before first use.
+was moved into the heatmap cell with a comment noting where it came from. And the
+SCC computation was rewritten as one cell producing only the published
+`SCC_raw_clip95` column, because the publication boxplot read `keep_c` from a
+dropped exploration cell — the raw arm's calls are identical, so the values are
+unchanged. Verified afterwards that every function and variable is still defined
+before first use. The rewritten cell carries no stored output; the panels it feeds
+keep theirs.
 
 Removed cells remain in git history and in the original working directories.
 
@@ -30,9 +35,10 @@ Removed cells remain in git history and in the original working directories.
 - **`newbulk_acc_250kb_GCH.pdf`** — the un-normalized 250 kb accessibility panel.
   Its cell builds the `m` matrix that the published quantile-normalized panel
   requires (`stopifnot(exists("m"))`), so the cell cannot be dropped.
-- **`gm_scc_*.pdf`** (five panels) — the SCC calculation. Kept because chr1 SCC is
-  quoted from this notebook. The SCC *figure* comparing three resolutions belongs
-  to **Supplementary Figure S1**, which will get its own notebook.
+- **`gm_scc_raw_clip95_only_1Mb.pdf`** and **`gm_scc_rawclip_by_resolution.pdf`** —
+  the SCC calculation, on raw contacts with a 95th-percentile clip. Kept because
+  chr1 SCC is quoted from this notebook; the three-resolution panel is destined for
+  **Supplementary Figure S1**, which will get its own notebook.
 
 ## A note on the heatmap filename
 

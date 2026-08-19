@@ -34,7 +34,7 @@ coverage filtering — it does not use the pre-binned `*_methylation.txt.gz` tab
 Cell order: setup (loads `m_hcg`, `m_gch`) → HCG locus panel → 250 kb GCH raw
 (builds `m`) → 250 kb GCH quantile-normalized.
 
-### `fig1_hic_comparison.ipynb` (Python, 8 code cells)
+### `fig1_hic_comparison.ipynb` (Python, 6 code cells)
 
 Reads per-chromosome juicer **text dumps**, not `.hic` files. Arms are selected by
 filename prefix: `BULK = "newbulk"`, `PSEUDO = "gm_pseudobulk_dedup"`.
@@ -46,7 +46,21 @@ filename prefix: `BULK = "newbulk"`, `PSEUDO = "gm_pseudobulk_dedup"`.
 | `dumps/{both}_250kb_{chr}.txt` | `bulk_scNOMeHiC/13_dump_250kb.sh` |
 
 Cell order: setup → helper definitions (`load_matrix`, `ic_balance`, `prep_pair`,
-`compute_scc`) → chr1 heatmap → five SCC cells.
+`compute_scc`) → chr1 heatmap → SCC computation → SCC at 1 Mb → SCC across
+resolutions.
+
+**The SCC measure is raw contacts with a 95th-percentile clip**, not IC-balanced:
+
+```python
+sc_r, bk_r = prep_pair(chrom, BIN_SCC, balance=False)      # raw
+compute_scc(clip95(sc_r), clip95(bk_r), chrom, BIN_SCC)
+```
+
+chr4 is excluded as an outlier. Note this differs from the chr1 heatmap, which
+*is* IC-balanced — balancing makes the heatmap visually comparable, while SCC is
+scored on raw counts with only the outlier clip. SCC also keeps all bins
+(`drop_lowcov=False`): removing bins would corrupt the genomic distances HiCRep
+depends on.
 
 ## Panels
 
@@ -64,9 +78,10 @@ Cell order: setup → helper definitions (`load_matrix`, `ic_balance`, `prep_pai
 
 - `newbulk_acc_250kb_GCH.pdf` — the un-normalized 250 kb panel. Its cell builds the
   `m` matrix that the quantile-normalized panel requires, so it stays.
-- `gm_scc_*.pdf` (five) — the SCC calculation. Retained because chr1 SCC is quoted
-  here; the SCC figure comparing three resolutions belongs to **Supplementary
-  Figure S1**, which will get its own notebook.
+- `gm_scc_raw_clip95_only_1Mb.pdf` — SCC at 1 Mb, publication styling.
+- `gm_scc_rawclip_by_resolution.pdf` — SCC at 1 Mb / 500 kb / 250 kb. This is the
+  panel destined for **Supplementary Figure S1**, kept here because the
+  calculation lives with the Figure 1 comparison; S1 will get its own notebook.
 
 ## Trimming
 
@@ -79,10 +94,21 @@ minimum-coverage sweep variants (`minCT_5_10_15_20`, `minCT_10_20_50_100`, and i
 quantile-normalized twin) and the bin- and locus-blacklist variants, along with the
 two cells that built `df_binBL` / `df_locusBL`.
 
-`fig1_hic_comparison.ipynb` — 11 → 8 code cells. Dropped: the all-chromosome
-multi-page heatmap PDF and two empty cells. That cell also defined
-`BIN_HEATMAP = 1_000_000`, which the chr1 heatmap needs, so that line was moved
-into the heatmap cell (the only source change made to any retained cell).
+`fig1_hic_comparison.ipynb` — 11 → 6 code cells, in two passes.
+
+First pass dropped the all-chromosome multi-page heatmap PDF and two empty cells;
+that cell also defined `BIN_HEATMAP = 1_000_000`, which the chr1 heatmap needs, so
+that line moved into the heatmap cell.
+
+Second pass removed the SCC method exploration — raw vs IC-balanced, the
+apples-to-apples re-clip, and IC across resolutions — keeping only the published
+raw + 95th-percentile-clip measure. The published boxplot read `keep_c` from one of
+the dropped cells, so the computation was rewritten as a single cell that builds
+only the `SCC_raw_clip95` column. The raw arm is untouched: same
+`prep_pair(..., balance=False)`, same `clip95`, same `compute_scc`, so the values
+are unchanged. Verified that `prep_pair` returns `None` only when a dump is empty —
+a check made before the balance branch — so removing the balanced arm cannot change
+which chromosomes are included.
 
 The removed cells remain in git history and in the original working directories.
 
