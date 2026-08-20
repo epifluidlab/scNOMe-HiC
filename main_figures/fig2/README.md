@@ -12,8 +12,8 @@ Inputs come from `../../data_processing/mixture_cellline/` (single cells) and
 | `fig2_accessibility.ipynb` | R (`scnomehic_diff`) | `fig2_gch250kb_pseudobulk_2row_heatmap.pdf`, `fig2_gch250kb_2row_colorbars.pdf` |
 | `fig2_methylation.ipynb` | R (`scnomehic_diff`) | `metilene_dmr_pseudobulk_heatmap.pdf`, `metilene_dmr_colorbar.pdf` |
 
-> **These three notebooks are copied whole and not yet trimmed** to the published
-> panels — see [Planned trimming](#planned-trimming).
+> `fig2_umap.ipynb` is trimmed; the other two are copied whole — see
+> [Trimming](#trimming).
 
 The APA panel (`APA_2xN_insitu_diffloops.pdf`) has not been migrated yet.
 
@@ -75,9 +75,25 @@ Verified against the code, pending review:
 
 | Notebook | Cells | Keep |
 |---|---|---|
+| `fig2_umap.ipynb` | **32 → 22, done** | §1–§8.5 plus §9 |
 | `fig2_methylation.ipynb` | 17 → 3 | 0 (path constants), **13** (panel + statistics), **15** (colorbar) |
 | `fig2_accessibility.ipynb` | 26 → ~4 | setup, **20** (ρ = 0.767), **22** (panel), **24** (colorbars; needs `lim`/`zl` from 22) |
-| `fig2_umap.ipynb` | 32 → TBD | depends on which UMAP panel is final |
+
+### `fig2_umap.ipynb`, applied
+
+Dropped §8.6 / §8.6b / §8.6c (GCH gene_tss and 250 kb scatters), §8.8 / §8.8b
+(5 kb GCH), §8.7 (Hi-C contact heatmap) and §8.7a (standalone joint embedding),
+plus empty cells. §9 is kept — it writes the cell-type labels the pseudobulk
+builders depend on.
+
+Dropping §8.7a is safe: the four-panel figure in §8b computes the joint embedding
+**inline** from `HCG.svd` / `hic_harmony` / `gch_harmony`, guarded by
+`if (!exists("joint_umap"))`, so it never depended on §8.7a having run.
+
+All 31 cell outputs are preserved. Comments that pointed at the excluded
+exploration notebook were rewritten to stand alone — the parameter justification
+(Hi-C ARI 0.927 vs 0.857) and the Harmony RNG-replay caveat were kept, since both
+explain non-obvious choices.
 
 Cell 13 reads only its own input and loads its own libraries; cell 22 re-reads its
 two inputs and re-derives the bin selection. Neither published path touches the
