@@ -41,7 +41,7 @@ and joint.
 | `methylation_matrix_{HCG,GCH}_250kb.tsv.gz` | `mixture_cellline/02_qc/` |
 | `hicluster_250kb_embed_dir/...svd20.hdf5` | `mixture_cellline/01_pipeline/02_hicluster_launch.sh` |
 | `QC/cellline_passed.txt`, `cellline_qc_summary.txt` | `mixture_cellline/02_qc/qc_plots.ipynb` |
-| `bulk_methylation_{GM12878,IMR90}.txt.gz` | bulk reference, for §8 cell-type calling |
+| `bulk_methylation_{GM12878,IMR90}.txt.gz` | `bulk_others/02_process/03_build_bulk_methylation_bins.py` |
 
 It intersects the matrices against the QC list itself, then filters bins on the
 resulting 441-cell submatrix.
