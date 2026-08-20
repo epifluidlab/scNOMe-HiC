@@ -75,23 +75,30 @@ Verified against the code, pending review:
 
 | Notebook | Cells | Keep |
 |---|---|---|
-| `fig2_umap.ipynb` | **32 → 21, done** | §1–§8.5b plus §9 |
+| `fig2_umap.ipynb` | **32 → 19, done** | §1–§7 plus §9 |
 | `fig2_methylation.ipynb` | 17 → 3 | 0 (path constants), **13** (panel + statistics), **15** (colorbar) |
 | `fig2_accessibility.ipynb` | 26 → ~4 | setup, **20** (ρ = 0.767), **22** (panel), **24** (colorbars; needs `lim`/`zl` from 22) |
 
 ### `fig2_umap.ipynb`, applied
 
-Dropped §8.6 / §8.6b / §8.6c (GCH gene_tss and 250 kb scatters), §8.8 / §8.8b
-(5 kb GCH), §8.7 (Hi-C contact heatmap) and §8.7a (standalone joint embedding),
-plus empty cells. §9 is kept — it writes the cell-type labels the pseudobulk
-builders depend on.
+Everything after the per-modality UMAPs was dropped: §8.5 / §8.5b (differential-bin
+heatmap and its scatter), §8.6 / §8.6b / §8.6c (GCH gene_tss and 250 kb scatters),
+§8.8 / §8.8b (5 kb GCH), §8.7 (Hi-C contact heatmap) and §8.7a (standalone joint
+embedding) — none of them became a published panel. Their markdown headers and one
+empty code cell went too.
+
+§9 is the exception, kept because it writes the cell-type labels
+(`annotation/cell_type_table.tsv`) that the pseudobulk builders depend on. It stands
+alone: the only name it shares with the removed sections is `ct_palette`, and it
+carries its own `if (!exists("ct_palette"))` fallback.
 
 Dropping §8.7a is safe: the four-panel figure in §8b computes the joint embedding
 **inline** from `HCG.svd` / `hic_harmony` / `gch_harmony`, guarded by
 `if (!exists("joint_umap"))`, so it never depended on §8.7a having run.
 
-The seven markdown headers belonging to those sections were removed with them, as
-was one empty code cell. All 31 cell outputs are preserved. Comments that pointed at the excluded
+The 24 outputs on the retained cells are preserved. Verified afterwards that every
+`stopifnot(exists(...))` guard in the notebook is still satisfied by an earlier
+cell, and that no `§8.x` reference remains. Comments that pointed at the excluded
 exploration notebook were rewritten to stand alone — the parameter justification
 (Hi-C ARI 0.927 vs 0.857) and the Harmony RNG-replay caveat were kept, since both
 explain non-obvious choices.
