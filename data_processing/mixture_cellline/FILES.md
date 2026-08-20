@@ -8,8 +8,8 @@
 | File | What it is | Origin |
 |---|---|---|
 | `00_config/config.yaml` | Snakemake config: `start_from: trimmed`, references and tool paths, methylation bin sizes, QC thresholds including the `cisnum_max_threshold: 3000000` doublet cap. | `$S/config.yaml` |
-| `01_pipeline/01_run_pipeline.sh` | Snakemake driver against the shared pipeline (SLURM profile, `-j 1000`): align → bamprocess → QC → Bis-SNP → per-bin methylation for all 639 cells. | `$S/run_pipeline.sh` |
-| `01_pipeline/02_hicluster_launch.sh` | Runs the `hicluster_selected` target → the 250 kb Hi-C embedding used by the UMAP notebook. | `$S/hicluster_driver_launch.sh` |
+| `01_pipeline/01_run_pipeline.sh` | Snakemake driver against the shared pipeline (SLURM profile, `-j 1000`): align → bamprocess → QC → Bis-SNP → per-bin methylation for all 639 cells. Same template as every other dataset's driver. | rewritten from `$S/run_pipeline.sh` |
+| `01_pipeline/02_hicluster.sh` | Runs the `hicluster_selected` target → the 100 kb and 250 kb Hi-C embeddings; the UMAP notebook uses 250 kb. Same template as `01_run_pipeline.sh`, plus the target. | rewritten from `$S/hicluster_driver_launch.sh` |
 | `02_qc/qc_plots.ipynb` | The canonical QC (Python). Applies the config thresholds incl. the doublet cap → `QC/cellline_passed.txt` (441 of 639), and builds the cells × bins methylation matrices under `QC/methylation_matrices/`. Outputs preserved. | `$S/qc_plots.ipynb` |
 | `02_qc/rebuild_methylation_matrices.py` | Standalone equivalent of the notebook's matrix-building step — per-cell `*_methylation.txt.gz` → pivot on bin id → one matrix per (context, bin size). **Edited: `USE_QC_PASSED_ONLY` False → True** so it builds over the 441 QC-passing cells, matching the notebook. | `$S/scripts/` |
 | `03_pseudobulk/01_build_sc_pseudobulk_gch_250kb.{py,sh}` | Read-weighted GpC pseudobulk per cell type over 250 kb bins (Σmeth/Σtotal) → `sc_pseudobulk_GCH_250kb.tsv.gz`. Needs cell-type labels. | `$F/` |
@@ -17,7 +17,12 @@
 
 ## Edits made
 
-Two, both forced by the move:
+The two drivers were **rewritten onto the repo-wide template** so every dataset is
+run the same way — see `../gm12878_cellline/FILES.md` for the before/after table.
+In short: `--rerun-triggers mtime` dropped (it suppressed re-runs after config
+changes), tool paths made overridable, and submission standardised on `sbatch`.
+
+Then two edits forced by the move:
 
 - `rebuild_methylation_matrices.py`: `USE_QC_PASSED_ONLY = True` (was `False`). As
   shipped it built matrices over all 639 cells; the notebook filters to 441. The UMAP

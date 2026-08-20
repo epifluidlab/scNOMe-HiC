@@ -56,9 +56,13 @@ way. This is the only place the published config departs from the config as run.
 
 ### 01_pipeline — run the Snakemake workflow
 
-**`run_pipeline_gm_sc_new.sh`** — `sbatch` driver for the full per-cell chain.
-A lightweight long-walltime allocation (genomicslong, 7 d) runs Snakemake with the
+**`01_run_pipeline.sh`** — `sbatch` driver for the full per-cell chain. A
+lightweight long-walltime allocation (genomicslong, 7 d) runs Snakemake with the
 SLURM profile, which submits each rule as its own child job (`-j 1000`).
+
+This driver is **identical across datasets** apart from its job name and which
+config it points at — see `../mixture_cellline/01_pipeline/01_run_pipeline.sh`.
+`sbatch 01_run_pipeline.sh` to run, `bash 01_run_pipeline.sh -n` to dry-run.
 
 - *in*: `00.raw_data/` paired FASTQs + `index.txt` barcode list
 - *out*: `01.demul_fastq_snakemake/` → `02.fastqc_out_snakemake/` →

@@ -15,7 +15,7 @@
 
 | File | What it is | Origin |
 |---|---|---|
-| `run_pipeline_gm_sc_new.sh` | SLURM driver (`sbatch`) for the full per-cell chain: demux → trim → align (Bhmem) → bamprocess → bisqc → bistools (Bis-SNP) → methylation. Runs Snakemake with the SLURM profile, which submits each rule as a child job. | `/gpfs/projects/b1042/.../scnomehic/codes/` — **scratch**, rescued here |
+| `01_run_pipeline.sh` | SLURM driver (`sbatch`) for the full per-cell chain: demux → trim → align (Bhmem) → bamprocess → bisqc → bistools (Bis-SNP) → methylation. Identical to the mixture's driver apart from job name and config path. | rewritten from `/gpfs/projects/b1042/.../scnomehic/codes/run_pipeline_gm_sc_new.sh` (**scratch**, rescued) |
 
 ## 02_qc
 

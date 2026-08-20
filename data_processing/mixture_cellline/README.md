@@ -40,7 +40,9 @@ clean depth signature for them. All other thresholds match the other datasets.
 
 - **`01_run_pipeline.sh`** — Snakemake driver against the shared pipeline: align →
   bamprocess → QC → bistools (Bis-SNP) → per-bin methylation, for all 639 cells.
-- **`02_hicluster_launch.sh`** — runs the `hicluster_selected` target, producing the
+  Identical to `../gm12878_cellline/01_pipeline/01_run_pipeline.sh` apart from its
+  job name and config. `sbatch 01_run_pipeline.sh`, or `bash … -n` to dry-run.
+- **`02_hicluster.sh`** — runs the `hicluster_selected` target, producing the
   250 kb Hi-C embedding (`hicluster_250kb_embed_dir/...svd20.hdf5`) that the UMAP
   notebook consumes. Unlike GM12878, this dataset does use the hiccluster branch —
   it is the one that needs clustering.
