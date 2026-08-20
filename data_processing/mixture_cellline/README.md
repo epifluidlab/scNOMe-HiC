@@ -15,6 +15,8 @@ Same shared workflow as the other datasets — see
 <https://github.com/epifluidlab/sc_NOMeHiC_pipeline> (commit `a0456b9`) and the
 note in `../README.md`.
 
+To run this from scratch on your own machine, see **[../../RUNNING.md](../../RUNNING.md)**.
+
 **This dataset starts from `trimmed`, not `raw`.** `00_config/config.yaml` sets
 `trimmed_data: /scratch/jmj7858/scnomehic/cellline_fastq`, so demultiplexing and
 trimming happened before this chain. That scratch directory has since been purged,

@@ -25,6 +25,8 @@ duplicated here**:
 Clone it, then run the script in `01_pipeline/` against it, parameterized by
 `00_config/config.main_run.yaml`.
 
+To run this from scratch on your own machine, see **[../../RUNNING.md](../../RUNNING.md)**.
+
 External tools referenced by the config: Bhmem (`bisulfiteHic`, built 2026-05-11),
 Bis-SNP (`Bis-SNP.latest.jar` = BisSNP-1.2.bisqc_walkers, 2026-05-13), Picard,
 Bis-tools, juicer_tools. References:

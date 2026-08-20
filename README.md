@@ -51,6 +51,12 @@ carries its own alignment and methylation-calling scripts, because that library'
 protocol required aligning **without** `-pbat`, which the shared pipeline's
 `rule mapping` hardcodes. See that folder's README.
 
+## Running it
+
+**See [RUNNING.md](RUNNING.md)** for prerequisites, the config keys you must change,
+and the two entry points: raw multiplexed FASTQ (default, demultiplexes for you) or
+GEO-downloaded reads (already demultiplexed).
+
 ## Layout conventions
 
 - `data_processing/<dataset>/` holds everything that turns raw reads into the

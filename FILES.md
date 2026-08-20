@@ -3,6 +3,7 @@
 | Path | What it is |
 |---|---|
 | `README.md` | Repository overview, layout conventions, data availability. |
+| `RUNNING.md` | How to run the pipeline from scratch: prerequisites, machine-specific config keys, and the raw-FASTQ vs GEO entry points. |
 | `FILES.md` | This file. Index of top-level entries. Each subfolder keeps its own `FILES.md`. |
 | `.gitignore` | Minimal — only auto-generated junk (`__pycache__`, `.ipynb_checkpoints`, …). Everything in this repo is copied in deliberately, so nothing else is filtered. |
 | `env/` | Conda environment YAMLs, `requirements.txt`, recorded R `sessionInfo()`. |
