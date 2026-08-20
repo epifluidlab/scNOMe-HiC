@@ -5,7 +5,7 @@ copied whole. See `README.md` for inputs, the run order, and the trims.
 
 | File | What it is | Origin |
 |---|---|---|
-| `fig2_umap.ipynb` | R, **22 code cells** (trimmed from 32), kernel `scnomehic`. SVD → Harmony → Leiden + UMAP over HCG, GCH, Hi-C and a joint embedding; §8–9 call cell types against bulk methylation and **write the cell-type labels the pseudobulk builders need**. Outputs preserved. | `sc_nomehic_cellline/snakemake/subset_clustering/250kb/subset_final_snakemake.ipynb` |
+| `fig2_umap.ipynb` | R, **21 code cells** (trimmed from 32), kernel `scnomehic`. SVD → Harmony → Leiden + UMAP over HCG, GCH, Hi-C and a joint embedding; §8–9 call cell types against bulk methylation and **write the cell-type labels the pseudobulk builders need**. Outputs preserved. | `sc_nomehic_cellline/snakemake/subset_clustering/250kb/subset_final_snakemake.ipynb` |
 | `fig2_accessibility.ipynb` | R, 26 code cells, kernel `scnomehic_diff`. Bulk-vs-pseudobulk GpC accessibility at 250 kb. Published panels are the two-row heatmap and its colorbars; the earlier parts (DiffBind, per-peak sc GCH, RWR imputation) are development. Outputs preserved. | `scnomehic_paper/fig2/codes/fig2_accessibility.ipynb` |
 | `fig2_methylation.ipynb` | R, 17 code cells, kernel `scnomehic_diff`. Published panels are the metilene-DMR heatmap and its colorbar; the earlier parts are the methylKit 250 kb branch. Outputs preserved. | `scnomehic_paper/fig2/codes/fig2_methylation_250kb.ipynb` |
 

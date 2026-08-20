@@ -75,7 +75,7 @@ Verified against the code, pending review:
 
 | Notebook | Cells | Keep |
 |---|---|---|
-| `fig2_umap.ipynb` | **32 → 22, done** | §1–§8.5 plus §9 |
+| `fig2_umap.ipynb` | **32 → 21, done** | §1–§8.5b plus §9 |
 | `fig2_methylation.ipynb` | 17 → 3 | 0 (path constants), **13** (panel + statistics), **15** (colorbar) |
 | `fig2_accessibility.ipynb` | 26 → ~4 | setup, **20** (ρ = 0.767), **22** (panel), **24** (colorbars; needs `lim`/`zl` from 22) |
 
@@ -90,7 +90,8 @@ Dropping §8.7a is safe: the four-panel figure in §8b computes the joint embedd
 **inline** from `HCG.svd` / `hic_harmony` / `gch_harmony`, guarded by
 `if (!exists("joint_umap"))`, so it never depended on §8.7a having run.
 
-All 31 cell outputs are preserved. Comments that pointed at the excluded
+The seven markdown headers belonging to those sections were removed with them, as
+was one empty code cell. All 31 cell outputs are preserved. Comments that pointed at the excluded
 exploration notebook were rewritten to stand alone — the parameter justification
 (Hi-C ARI 0.927 vs 0.857) and the Harmony RNG-replay caveat were kept, since both
 explain non-obvious choices.
