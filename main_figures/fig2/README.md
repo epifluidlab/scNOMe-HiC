@@ -87,7 +87,24 @@ Verified against the code, pending review:
 |---|---|---|
 | `fig2_umap.ipynb` | **32 → 19, done** | §1–§7 plus §9 |
 | `fig2_methylation.ipynb` | **17 → 5, done** | §1 setup, §2/§2b metilene characterization, §3 panel + statistics, §3b colorbar |
-| `fig2_accessibility.ipynb` | 26 → ~4 | setup, **20** (ρ = 0.767), **22** (panel), **24** (colorbars; needs `lim`/`zl` from 22) |
+| `fig2_accessibility.ipynb` | **26 → 4, done** | §1 setup, §2 heatmap + ρ = 0.767, §3 published panel, §3b colorbars |
+
+### `fig2_accessibility.ipynb`, applied
+
+Removed §1–§6: the DiffBind/DESeq2 bulk differential-accessibility analysis, the
+per-peak single-cell GCH heatmaps, and the RWR imputation. None became a published
+panel — the published figure ranks 250 kb bins by bulk ATAC signal, not by DiffBind
+peaks. §7, the genome-wide scatter, went too; the correlation quoted for the panel
+comes from §2.
+
+That left the setup cell loading DiffBind, GenomicRanges and Rsamtools for nothing,
+plus `zscore_cols` and three `diff_accessibility` paths — all verified unused by the
+kept cells before removal. Setup now loads only ggplot2/patchwork/scales/data.table
+and defines `FIG2`. The title described the DiffBind pipeline end-to-end and was
+rewritten; sections renumbered §1–§3b.
+
+One stored output was cleared: the old setup cell carried an **error** trace, and its
+source no longer matches. No figure output was touched.
 
 ### `fig2_methylation.ipynb`, applied
 
