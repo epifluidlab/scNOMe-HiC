@@ -7,10 +7,9 @@ barcodes ATCACG / CGATGT / GCCAAT / TGACCA), aligned to **hg38**.
 This folder covers everything up to **data generation**. The figure panels are
 built from these outputs by the notebooks in `../../main_figures/fig1/`.
 
-Raw reads → per-cell methylation, accessibility and contacts → QC gate → two
-parallel products: a **pseudobulk** in three modalities (the single-cell arm of the
-Figure 1 comparison against bulk NOMe-HiC, processed in `../bulk_scNOMeHiC/`), and
-**cell × bin matrices** for single-cell analyses.
+Raw reads → per-cell methylation, accessibility and contacts → QC gate →
+**pseudobulk** in three modalities: the single-cell arm of the Figure 1 comparison
+against bulk NOMe-HiC, which is processed in `../bulk_scNOMeHiC/`.
 
 ## The pipeline itself is a separate repository
 
@@ -44,8 +43,14 @@ authoritative record of the run: `workdir`, references and tool paths,
 In the original layout this file lived *inside* the pipeline repo, where it is
 overwritten for each new dataset — hence keeping it here.
 
-QC thresholds: `fragnum > 80000`, `noncpg < 5`, `GCH > 1e6`, `HCG > 150000`,
+QC thresholds: `fragnum > 100000`, `noncpg < 5`, `GCH > 1e6`, `HCG > 150000`,
 `transrate > 0.7`, `cis1kbnum > 2000`.
+
+`fragnum_threshold` was **80,000 when this dataset was run** and has been raised to
+100,000 here so all four datasets share one value. The change is inert: the lowest
+`fragnum` among the 180 passing cells is 1,565,866 — about 15× either cutoff — and
+no cell falls between 80,000 and 100,000, so the passing set is identical either
+way. This is the only place the published config departs from the config as run.
 
 ### 01_pipeline — run the Snakemake workflow
 

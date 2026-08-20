@@ -103,7 +103,7 @@ methylation_bin_sizes:
 #   gene_body: /gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/genome_bins_gene_body.bed
 
 # qc analysis thresholds
-fragnum_threshold: 80000
+fragnum_threshold: 100000
 noncpg_threshold: 5
 GCH_threshold: 1000000
 HCG_threshold: 150000
