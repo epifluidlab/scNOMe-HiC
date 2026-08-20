@@ -49,17 +49,27 @@ clean depth signature for them. All other thresholds match the other datasets.
 
 ### 02_qc — QC gate **and** cell × bin matrices
 
-- **`qc_plots.ipynb`** — the canonical QC. Applies the config thresholds (including
-  the doublet cap) and writes `QC/cellline_passed.txt` (**441 cells**). Its later
-  cells also build the cells × bins methylation matrices under
-  `QC/methylation_matrices/`, at 50 kb / 100 kb / 250 kb plus gene body and TSS.
-- **`rebuild_methylation_matrices.py`** — standalone equivalent of that
-  matrix-building step, for rebuilding without opening the notebook. Reads the
-  per-cell `08.methylation_snakemake/*_methylation.txt.gz`, pivots on bin id, and
-  writes one matrix per (context, bin size).
-  `USE_QC_PASSED_ONLY = True` so it builds over the 441 QC-passing cells, matching
-  the notebook. (The UMAP notebook intersects against the QC list itself, so either
-  setting yields the same embedding — but this keeps the two in step.)
+Run in this order:
+
+1. **`qc_plots.ipynb`** — the canonical QC. Applies the config thresholds (including
+   the doublet cap) and writes `QC/cellline_passed.txt` (**441 cells**). It also
+   contains a matrix-building cell, superseded by the script below.
+2. **`rebuild_methylation_matrices.sh`** → **`rebuild_methylation_matrices.py`** —
+   builds the cells × bins matrices the UMAP consumes. Reads the per-cell
+   `08.methylation_snakemake/*_methylation.txt.gz`, pivots on bin id, and writes one
+   matrix per (context, bin size) to `QC/methylation_matrices/`.
+
+   ```bash
+   sbatch rebuild_methylation_matrices.sh          # 250 kb — what the UMAP needs
+   ```
+
+   **This script, not the notebook, is what produced the matrices in use.** After the
+   June re-methylation rerun the matrices were regenerated with it; the notebook cell
+   is the older copy of the same logic and was not re-run.
+
+   `USE_QC_PASSED_ONLY = True` builds over the 441 QC-passing cells. The original run
+   used `False` (all 639), but the UMAP notebook intersects against the QC list before
+   filtering bins, so the embedding is identical either way.
 
 `methylation_matrix_{HCG,GCH}_250kb.tsv.gz` are the direct UMAP inputs.
 
