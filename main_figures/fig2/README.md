@@ -55,9 +55,14 @@ keeps DMRs with ≥20 pooled reads per cell type, **filters to those where the
 single-cell and bulk deltas agree in sign**, and plots the 200 most different per
 direction by |sc Δβ|.
 
-The heatmap is therefore conditioned on direction agreement — 3,890 covered DMRs →
-3,804 consistent → 400 plotted. The direction scatter in the same section shows all
-3,890 coloured by consistency and is the unbiased view.
+Selection: 3,890 covered DMRs → 3,804 direction-consistent → 400 plotted.
+
+**The direction filter does not change which regions are selected.** The 86
+inconsistent DMRs have |sc Δβ| ≤ 0.257, whereas the selection cutoffs are 0.681
+(GM-hyper) and 0.724 (IMR-hyper) — none can reach the top 200, so the same 400 are
+picked with or without it. Verified directly against the pseudobulk table. The
+filter removes only DMRs with weak single-cell signal, so the panel is not
+conditioned on agreement in any way that matters.
 
 ## Reported statistics
 
