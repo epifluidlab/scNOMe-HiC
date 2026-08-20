@@ -87,6 +87,15 @@ heatmap and its scatter), §8.6 / §8.6b / §8.6c (GCH gene_tss and 250 kb scatt
 embedding) — none of them became a published panel. Their markdown headers and one
 empty code cell went too.
 
+Sections were then renumbered 1–9 in execution order (the old §7.5 annotation became
+§7, the old §7 UMAPs became §8), the notebook retitled from its old filename, and every
+numeric parameter claim in the prose checked against the code — **the code is the record
+of what ran, so comments were corrected to match it, never the reverse.** Four claims
+were wrong: the header table contradicted the code on all three modality rows, the §5a
+comment said 3 PCs where the code uses 5, and two §6c comments named `build_emb(6400)`
+where the code caches `11547`. Sweep statistics quoted in the prose come from an earlier
+380-cell cohort and are now labelled as such — the notebook itself runs on 441.
+
 §9 is the exception, kept because it writes the cell-type labels
 (`annotation/cell_type_table.tsv`) that the pseudobulk builders depend on. It stands
 alone: the only name it shares with the removed sections is `ct_palette`, and it
