@@ -6,7 +6,7 @@ analysis-ready tables (produced under `../data_processing/`) into published pane
 | Folder | Figure | Source working dir |
 |---|---|---|
 | `fig1/` | Single-cell pseudobulk vs bulk NOMe-HiC across three modalities: HCG methylation, GCH accessibility, Hi-C contacts — **migrated** | `../../sc_nomehic_cellline/` |
-| `fig2/` | <!-- FILL: panel description --> | `../../scnomehic_paper/fig2/` |
+| `fig2/` | Cell-type mixture vs ground truth: UMAP, accessibility and methylation heatmaps — **migrated** (APA panel pending) | `../../scnomehic_paper/fig2/`, `../../sc_nomehic_cellline/snakemake/` |
 
 Add `fig3/`, `fig4/`, … as those sections are migrated.
 

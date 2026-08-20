@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH -A b1042
+#SBATCH -p genomics
+#SBATCH -t 01:00:00
+#SBATCH -N 1
+#SBATCH --mem=32G
+#SBATCH --cpus-per-task=8
+#SBATCH --job-name=sc_pbulk_metdmr
+#SBATCH --output=logs/sc_pseudobulk_metilene_dmr.%j.out
+#SBATCH --error=logs/sc_pseudobulk_metilene_dmr.%j.err
+
+set -eo pipefail
+source /projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh
+conda activate scnomehic
+set -u
+cd /gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig2; mkdir -p logs
+export NCPU=8 N_PER_DIR=2000
+echo "=== $(date) | host $(hostname) ==="
+python "$(dirname "$(readlink -f "$0")")/02_build_sc_pseudobulk_metilene_dmr.py"
+echo "=== done $(date) ==="
