@@ -54,13 +54,13 @@ Run in this order:
 1. **`qc_plots.ipynb`** — the canonical QC. Applies the config thresholds (including
    the doublet cap) and writes `QC/cellline_passed.txt` (**441 cells**). It also
    contains a matrix-building cell, superseded by the script below.
-2. **`rebuild_methylation_matrices.sh`** → **`rebuild_methylation_matrices.py`** —
+2. **`build_methylation_matrices.sh`** → **`build_methylation_matrices.py`** —
    builds the cells × bins matrices the UMAP consumes. Reads the per-cell
    `08.methylation_snakemake/*_methylation.txt.gz`, pivots on bin id, and writes one
    matrix per (context, bin size) to `QC/methylation_matrices/`.
 
    ```bash
-   sbatch rebuild_methylation_matrices.sh          # 250 kb — what the UMAP needs
+   sbatch build_methylation_matrices.sh          # 250 kb — what the UMAP needs
    ```
 
    **This script, not the notebook, is what produced the matrices in use.** After the

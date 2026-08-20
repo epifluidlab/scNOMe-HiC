@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-"""Rebuild cells x bins methylation matrices for HCG and GCH at multiple bin sizes.
+"""Build cells x bins methylation matrices for HCG and GCH at multiple bin sizes.
 
-Mirrors qc_plots.ipynb cell 16. Reads per-cell *_methylation.txt.gz files
+Same logic as the matrix-building cell in qc_plots.ipynb. Reads per-cell *_methylation.txt.gz files
 from 08.methylation_snakemake/, pivots on bin_id, writes one matrix per
 (context, bin_label) pair to QC/methylation_matrices/.
 
 Usage:
-    rebuild_methylation_matrices.py [250kb 100kb ...]
+    build_methylation_matrices.py [250kb 100kb ...]
     (defaults to all four: 250kb, 100kb x HCG, GCH)
 """
 import sys

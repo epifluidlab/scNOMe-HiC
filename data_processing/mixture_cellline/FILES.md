@@ -11,8 +11,8 @@
 | `01_pipeline/01_run_pipeline.sh` | Snakemake driver against the shared pipeline (SLURM profile, `-j 1000`): align → bamprocess → QC → Bis-SNP → per-bin methylation for all 639 cells. Same template as every other dataset's driver. | rewritten from `$S/run_pipeline.sh` |
 | `01_pipeline/02_hicluster.sh` | Runs the `hicluster_selected` target → the 100 kb and 250 kb Hi-C embeddings; the UMAP notebook uses 250 kb. Same template as `01_run_pipeline.sh`, plus the target. | rewritten from `$S/hicluster_driver_launch.sh` |
 | `02_qc/qc_plots.ipynb` | The canonical QC (Python). Applies the config thresholds incl. the doublet cap → `QC/cellline_passed.txt` (441 of 639). Also contains a matrix-building cell, superseded by the script below. Outputs preserved. | `$S/qc_plots.ipynb` |
-| `02_qc/rebuild_methylation_matrices.py` | Builds the cells × bins matrices: per-cell `*_methylation.txt.gz` → pivot on bin id → one matrix per (context, bin size). **This is what produced the matrices in use** — they were regenerated with it after the June re-methylation rerun, while the notebook's equivalent cell was not re-run. **Edited: `USE_QC_PASSED_ONLY` False → True.** | `$S/scripts/` |
-| `02_qc/rebuild_methylation_matrices.sh` | SLURM wrapper calling the above; defaults to 250 kb, the resolution the UMAP notebook reads. Written for this repo — the original was invoked by hand. | new |
+| `02_qc/build_methylation_matrices.py` | Builds the cells × bins matrices: per-cell `*_methylation.txt.gz` → pivot on bin id → one matrix per (context, bin size). **This is what produced the matrices in use** — they were regenerated with it after the June re-methylation rerun, while the notebook's equivalent cell was not re-run. **Edited: `USE_QC_PASSED_ONLY` False → True.** | `$S/scripts/` |
+| `02_qc/build_methylation_matrices.sh` | SLURM wrapper calling the above; defaults to 250 kb, the resolution the UMAP notebook reads. Written for this repo — the original was invoked by hand. | new |
 | `03_pseudobulk/01_build_sc_pseudobulk_gch_250kb.{py,sh}` | Read-weighted GpC pseudobulk per cell type over 250 kb bins (Σmeth/Σtotal) → `sc_pseudobulk_GCH_250kb.tsv.gz`. Needs cell-type labels. | `$F/` |
 | `03_pseudobulk/02_build_sc_pseudobulk_metilene_dmr.{py,sh}` | Same pooling over the metilene DMRs from `../bulk_others/03_differential/`, joined with bulk WGBS means → `sc_pseudobulk_metilene_dmr_top2000.tsv.gz`. | `$F/` |
 
@@ -25,14 +25,14 @@ changes), tool paths made overridable, and submission standardised on `sbatch`.
 
 Then two edits forced by the move:
 
-- `rebuild_methylation_matrices.py`: `USE_QC_PASSED_ONLY = True` (was `False`). The
+- `build_methylation_matrices.py`: `USE_QC_PASSED_ONLY = True` (was `False`). The
   original run built matrices over all 639 cells — the files on disk have 639 rows.
   The UMAP notebook intersects against `cellline_passed.txt` and only then filters
   bins, so restricting the matrix up front yields an identical embedding; it just
   makes the published artifact match the 441-cell analysis. This is the one place the
   script departs from the run.
-- `rebuild_methylation_matrices.sh` is **new** — the original script was run by hand
-  (`python scripts/rebuild_methylation_matrices.py 250kb 100kb`). The wrapper gives it
+- `build_methylation_matrices.sh` is **new** — the original script was run by hand
+  (`python scripts/build_methylation_matrices.py 250kb 100kb`). The wrapper gives it
   the same submit-and-forget shape as every other step here.
 - The two `.sh` wrappers called `python codes/<name>.py`, a path relative to the old
   analysis directory. They now locate the `.py` beside themselves

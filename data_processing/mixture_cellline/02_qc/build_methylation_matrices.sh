@@ -6,8 +6,8 @@
 #SBATCH --mem=64G
 #SBATCH --cpus-per-task=4
 #SBATCH --job-name=meth_matrix
-#SBATCH --output=logs/rebuild_methylation_matrices.%j.out
-#SBATCH --error=logs/rebuild_methylation_matrices.%j.err
+#SBATCH --output=logs/build_methylation_matrices.%j.out
+#SBATCH --error=logs/build_methylation_matrices.%j.err
 # ─────────────────────────────────────────────────────────────────────────────
 # Build the cells x bins methylation matrices that the Figure 2 UMAP notebook
 # reads. For each context (HCG, GCH) and each bin size requested, writes:
@@ -23,8 +23,8 @@
 # (together with the Hi-C embedding from 01_pipeline/02_hicluster.sh).
 #
 # Submit from the dataset workdir (the SBATCH log paths are relative to it):
-#   sbatch rebuild_methylation_matrices.sh            # 250kb  (what the UMAP needs)
-#   sbatch rebuild_methylation_matrices.sh 250kb 100kb
+#   sbatch build_methylation_matrices.sh            # 250kb  (what the UMAP needs)
+#   sbatch build_methylation_matrices.sh 250kb 100kb
 #
 # The original run also built 100 kb, for the companion subset_clustering/100kb
 # analysis that is not part of this repository.
@@ -43,6 +43,6 @@ echo "=== $(date) | host $(hostname) ==="
 echo "    workdir : $WORK"
 echo "    bins    : ${BINS[*]}"
 
-python "$(dirname "$(readlink -f "$0")")/rebuild_methylation_matrices.py" "${BINS[@]}"
+python "$(dirname "$(readlink -f "$0")")/build_methylation_matrices.py" "${BINS[@]}"
 
 echo "=== done $(date) ==="
