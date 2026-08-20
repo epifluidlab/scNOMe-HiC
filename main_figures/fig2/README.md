@@ -51,8 +51,13 @@ resulting 441-cell submatrix.
 z-scored bulk ATAC difference, and plots the top 1,000 as a two-row heatmap.
 
 **`fig2_methylation.ipynb`** — reads `sc_pseudobulk_metilene_dmr_top2000.tsv.gz`,
-keeps DMRs with ≥20 pooled reads per cell type, and plots the 400 most different
-(200 per direction).
+keeps DMRs with ≥20 pooled reads per cell type, **filters to those where the
+single-cell and bulk deltas agree in sign**, and plots the 200 most different per
+direction by |sc Δβ|.
+
+The heatmap is therefore conditioned on direction agreement — 3,890 covered DMRs →
+3,804 consistent → 400 plotted. The direction scatter in the same section shows all
+3,890 coloured by consistency and is the unbiased view.
 
 ## Reported statistics
 
@@ -76,8 +81,19 @@ Verified against the code, pending review:
 | Notebook | Cells | Keep |
 |---|---|---|
 | `fig2_umap.ipynb` | **32 → 19, done** | §1–§7 plus §9 |
-| `fig2_methylation.ipynb` | 17 → 3 | 0 (path constants), **13** (panel + statistics), **15** (colorbar) |
+| `fig2_methylation.ipynb` | **17 → 5, done** | §1 setup, §2/§2b metilene characterization, §3 panel + statistics, §3b colorbar |
 | `fig2_accessibility.ipynb` | 26 → ~4 | setup, **20** (ρ = 0.767), **22** (panel), **24** (colorbars; needs `lim`/`zl` from 22) |
+
+### `fig2_methylation.ipynb`, applied
+
+The entire methylKit branch was removed — §1–§6, which selected differential 250 kb
+tiles with methylKit and built five heatmaps and scatters from them. None became a
+published panel; the published figure uses the de-novo metilene DMRs instead.
+
+That left six setup constants dead (`SCROOT`, `DMR`, `OUTFIG`, `N_TOP_BIN`, `QVAL`,
+`DIFF_MIN` — all methylKit parameters), so the setup cell now defines only the
+libraries, the seed and `FIG2`. The title described the methylKit pipeline
+end-to-end and was rewritten for the metilene one; sections renumbered §1–§3b.
 
 ### `fig2_umap.ipynb`, applied
 
