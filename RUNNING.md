@@ -6,7 +6,8 @@ the per-cell pipeline.
 
 **By default the pipeline starts from raw multiplexed FASTQ and performs
 demultiplexing itself.** If you obtained the reads from GEO they are already
-demultiplexed — skip to [Entry point B](#entry-point-b--reads-from-geo-already-demultiplexed).
+demultiplexed — use `start_from: "demultiplexed"`, described in
+[Entry point B](#4-entry-point-b--reads-from-geo-already-demultiplexed).
 
 ---
 
@@ -16,7 +17,11 @@ demultiplexed — skip to [Entry point B](#entry-point-b--reads-from-geo-already
 
 ```bash
 git clone https://github.com/epifluidlab/sc_NOMeHiC_pipeline
-cd sc_NOMeHiC_pipeline && git checkout a0456b9      # the commit used for this paper
+cd sc_NOMeHiC_pipeline
+# a0456b9 is the commit the paper's results were produced with.
+# Use a later commit if you need Entry point B (start_from: "demultiplexed"),
+# which was added in 0b94c56 and changes no processing step.
+git checkout a0456b9
 ```
 
 **Environments** — the pipeline ships conda definitions in its `envs/`. The main env
@@ -92,59 +97,46 @@ bash data_processing/<dataset>/01_pipeline/01_run_pipeline.sh
 
 ## 4. Entry point B — reads from GEO (already demultiplexed)
 
-GEO carries **per-cell** FASTQs, so demultiplexing has already happened. Those files
-correspond to the pipeline's post-demultiplex, **pre-trim** stage, so you need to
-trim them yourself and then start the workflow in `trimmed` mode.
+GEO carries **per-cell** FASTQs, so demultiplexing has already been done — but they
+have not been trimmed. Use `start_from: "demultiplexed"`, which skips demultiplexing
+and picks the workflow up at trimming:
 
-**Step 1 — trim, with the same parameters the pipeline uses.** For each cell:
-
-```bash
-trim_galore --paired_end \
-    --clip_R1 15 --clip_R2 15 \
-    --three_prime_clip_R1 5 --three_prime_clip_R2 5 \
-    -j 16 -o <trimmed_dir> --gzip --fastqc \
-    <cell>.R1.fastq.gz <cell>.R2.fastq.gz
+```yaml
+start_from: "demultiplexed"
+demul_data: "01.demul_fastq_snakemake"   # where your per-cell fastqs are
+# fileindex is OPTIONAL here; set it only to restrict to specific barcodes
 ```
 
-Those four clipping values must match `clip_r1`, `clip_r2`, `three_prime_clip_r1`
-and `three_prime_clip_r2` in the config. `data_processing/bulk_scNOMeHiC/02_trim.sh`
-is a working example of the same invocation.
-
-**Step 2 — name the outputs as the workflow expects**, in `trimmed_data`:
+Name the files:
 
 ```
-{prefix}.{index}.R1_val_1.fq.gz
-{prefix}.{index}.R2_val_2.fq.gz
+{prefix}.{index}.R1.fastq.gz
+{prefix}.{index}.R2.fastq.gz
 ```
 
 `{prefix}` is the library and `{index}` the cell barcode — e.g.
-`scNH_GM_4plex_1_S1.ATCACG.R1_val_1.fq.gz`. trim_galore produces the `_val_1` /
-`_val_2` suffixes automatically; rename the stem to `{prefix}.{index}` if the GEO
-filenames differ.
+`scNH_GM_4plex_1_S1.ATCACG.R1.fastq.gz`. Rename the GEO filenames to this pattern if
+they differ; the barcodes are auto-derived from the filenames, so no `fileindex` is
+needed unless you want to process a subset.
 
-**Step 3 — switch the config:**
+Then run the same driver as in Entry point A. Trimming uses **the same
+`trim_galore` parameters as raw mode** (`clip_R1`/`clip_R2` and the two
+`three_prime_clip` values from the config), so everything from alignment onward is
+identical to a run started from raw data.
 
-```yaml
-start_from:   "trimmed"
-trimmed_data: "/path/to/your/trimmed"
-# optional: restrict to specific cells, otherwise all pairs found are used
-# fastq_prefixes_file: "prefixes.txt"
-```
+Cells can also be selected explicitly with `fastq_prefixes` (inline list) or
+`fastq_prefixes_file` (one per line), exactly as in `trimmed` mode.
 
-In `trimmed` mode the demultiplex and FastQC steps are skipped and the workflow
-begins at alignment. Cells are resolved from `fastq_prefixes`, else
-`fastq_prefixes_file`, else auto-discovered from `trimmed_data`.
-
-Then run the same driver as in Entry point A.
-
----
+> **This mode requires pipeline commit `0b94c56` or later.** The results in this
+> paper were produced with `a0456b9`, which predates it; the mode only adds an entry
+> point and does not change any processing step.
 
 ## 5. Per-dataset entry points as published
 
 | Dataset | `start_from` as run | Note |
 |---|---|---|
 | `gm12878_cellline` | `raw` | Full chain including demultiplexing — the default path. |
-| `mixture_cellline` | `trimmed` | Its raw→trimmed step predates this record and the trimmed FASTQs lived on scratch. To run it from scratch, switch to `raw` and supply `data` + `fileindex`, or trim as in Entry point B. |
+| `mixture_cellline` | `trimmed` | Its raw→trimmed step predates this record and the trimmed FASTQs lived on scratch. To run it from scratch, switch to `raw` and supply `data` + `fileindex`, or use `demultiplexed` if you have per-cell reads. |
 | `bulk_scNOMeHiC` | `trimmed` | Bulk libraries are trimmed and split into chunks by that folder's own steps 02–03 before the workflow is invoked. |
 
 ---
