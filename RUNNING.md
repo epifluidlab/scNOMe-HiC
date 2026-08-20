@@ -131,6 +131,30 @@ Cells can also be selected explicitly with `fastq_prefixes` (inline list) or
 > paper were produced with `a0456b9`, which predates it; the mode only adds an entry
 > point and does not change any processing step.
 
+## 4b. A note on the snakemake flags in the drivers
+
+The drivers pass `--rerun-incomplete` and, for the mixture, `--rerun-triggers mtime`.
+**On a clean run from scratch both are no-ops** — nothing exists yet, so every job
+runs either way. They matter only when resuming.
+
+- **`--rerun-incomplete`** — redoes outputs left half-written by a killed or
+  timed-out job. Required to resume at all; snakemake otherwise refuses to start.
+  It never skips work, so there is no reason to remove it.
+- **`--rerun-triggers mtime`** — narrows snakemake's default (which in v8 is all of
+  `code, input, mtime, params, software-env`) down to file timestamps alone. It
+  exists so that editing a rule does not invalidate and re-run hundreds of
+  already-finished cells on a long HPC run.
+
+  ⚠️ **If you change a parameter in the config and expect the affected steps to
+  rerun, drop this flag** — with it, snakemake only notices newer input files, not
+  changed parameters, and your outputs will silently stay stale. Use `--forcerun
+  <rule>` or `--forceall` to force the work.
+
+The two published drivers take opposite approaches, which is worth knowing if you
+run both: `gm12878_cellline` uses `--forceall` (regenerate everything), while
+`mixture_cellline` uses `--rerun-triggers mtime` (regenerate as little as possible).
+For a reproduction run, `--forceall` is the safer choice.
+
 ## 5. Per-dataset entry points as published
 
 | Dataset | `start_from` as run | Note |
