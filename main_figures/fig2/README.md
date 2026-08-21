@@ -103,8 +103,15 @@ kept cells before removal. Setup now loads only ggplot2/patchwork/scales/data.ta
 and defines `FIG2`. The title described the DiffBind pipeline end-to-end and was
 rewritten; sections renumbered §1–§3b.
 
-One stored output was cleared: the old setup cell carried an **error** trace, and its
-source no longer matches. No figure output was touched.
+The notebook was then **re-executed end to end** in the `scnomehic_diff` kernel, because
+two of its stored outputs were stale: the setup cell carried an `Error in
+library(DiffBind)` trace, and the §3b colorbar cell had failed with
+`exists("lim") is not TRUE` — it had been run in a session where §3 had not.
+It now runs clean, all four cells produce output, and the colorbar renders.
+
+The re-run reproduced the analysis exactly: `bins shown: 1000 | differential rho=0.767`,
+and all three PDFs are byte-identical to the previous versions once the embedded PDF
+timestamps are stripped.
 
 ### `fig2_methylation.ipynb`, applied
 
