@@ -1,0 +1,121 @@
+# Per-project pipeline config — self-contained.
+#
+# Pass as the ONLY --configfile to snakemake. No need to also pass the repo's
+# configs/config.yaml — every field the pipeline needs is set here.
+# ──────────────────────────────────────────────────────────────────────────
+
+# ─── 1. PROJECT-SPECIFIC ──────────────────────────────────────────────────
+
+# Absolute path to this project's working directory.
+workdir: "/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake"
+
+# Pipeline starting mode:
+#   "raw"     — start from raw paired fastqs in `data/` (runs demultiplex + fastqc + trim)
+#   "trimmed" — start from already-trimmed fastqs in `trimmed_data/`
+#               (skips demux + fastqc + trim)
+start_from: "trimmed"
+
+# Raw fastq directory. Used when start_from == "raw". Files must be named
+# {prefix}_R1_001.fastq.gz and {prefix}_R2_001.fastq.gz.
+data: "00.raw_data/"
+
+# Single-cell index file (one barcode per line).
+#   REQUIRED in raw mode — drives demultiplexing.
+#   OPTIONAL in trimmed mode — if omitted, every distinct index suffix found
+#   in trimmed_data/ becomes a valid index. With mixed batches that used
+#   different barcode sets (batch1-2 used ACTTGA/CGATGT/GCCAAT/TAGCTT,
+#   batch4-5 used ATCACG/CGATGT/GCCAAT/TGACCA, etc.) leaving this unset is
+#   the cleanest option — the pipeline figures out the right per-sample
+#   index list from disk.
+# fileindex: "index.txt"
+
+# Trimmed-fastq directory. Used as the output dir for demultiplex_fastqc_trim
+# (raw mode), as the input dir for `mapping` (both modes), and as the scan
+# dir for auto-discovery (trimmed mode, no fastq_prefixes/fastq_prefixes_file).
+trimmed_data: "/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake/merged_trimmed"
+
+# Which cell prefixes to process under start_from == "trimmed". Pick at most ONE
+# (ignored when start_from == "raw"):
+#
+#   1. fastq_prefixes — inline list. Best when you have only a few cells.
+# fastq_prefixes:
+#   - batch5_scD_1
+#
+#   2. fastq_prefixes_file — path to a text file, one prefix per line. Best
+#      when you have hundreds of cells.
+# fastq_prefixes_file: "prefixes.txt"
+#
+#   3. (default) auto-discover — leave both above unset and the pipeline
+#      scans `trimmed_data` for every {prefix}.{index}.R1_val_1.fq.gz file
+#      and processes the (prefix, index) pairs that actually exist.
+
+# ─── 2. SHARED PATHS ──────────────────────────────────────────────────────
+
+reference: "/gpfs/projects/b1198/epifluidlab/shared/data/genomes/mm10/mm10"
+variants: "/gpfs/projects/b1198/epifluidlab/shared/data/dbsnp/mm10.dbsnp.vcf"
+restriction_sites: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10/4DNFI3HVC1SE.txt"
+# Bhmem -enzymeList path (region bedgraph) — different file from restriction_sites above.
+enzyme_list: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10/dpnII.span_region.bedgraph"
+
+picard: "/gpfs/projects/b1198/epifluidlab/yoshii/software/picard/picard.jar"
+bisulfitehic: "/gpfs/projects/b1198/epifluidlab/yoshii/software/bisulfiteHic"
+bissnp_jar: "/gpfs/projects/b1198/epifluidlab/yoshii/software/Bis-tools/Bis-SNP/Bis-SNP.latest.jar"
+bistools: "/gpfs/projects/b1198/epifluidlab/yoshii/software/Bis-tools"
+scripts: "/gpfs/projects/b1198/epifluidlab/yoshii/software/sc_NOMeHiC_pipeline/scripts"
+
+# GCHnorm intervals (used by rules/GCHnorm.smk; only needed if that workflow is enabled)
+hg38_5kb_no_dark_regions: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10/mm10.autosome.5kb.bed.gz"
+#hg38_250kb_no_dark_regions: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/genome_bins_250kb.bed"
+
+# ─── 3. TUNING ────────────────────────────────────────────────────────────
+
+# Methylation per-bin output. One TSV per (cell, context, bin_def) under
+# 08.methylation_snakemake/, named `{prefix}.{index}.{context}.{label}_methylation.txt`.
+# Both GCH and HCG contexts are always computed.
+#
+# Fixed-size tiling — label is rendered Mb/kb/bp (e.g. 1000 → 1kb, 1000000 → 1Mb):
+methylation_bin_sizes:
+  - 1000
+  - 50000
+  - 100000
+  - 250000
+
+# Custom region BEDs (label → bed path). Header rows in the BED are auto-skipped.
+methylation_region_beds:
+  gene_tss:  /gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10/mm10.autosome.gene_tss.bed.gz
+  gene_body: /gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10/mm10.autosome.gene_body.bed.gz
+  gene: /gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10/mm10.autosome.gene.bed.gz
+
+# Adapter trimming parameters (used by demultiplex_fastqc_trim → trim_galore)
+clip_r1: 15
+clip_r2: 15
+three_prime_clip_r1: 5
+three_prime_clip_r2: 5
+
+# QC analysis thresholds (used by rules/scnomehic_analysis.smk rule qc + qc_plots.ipynb)
+# Matched to 1st-batch R-script criteria (cells_after_filter_low.txt + 3D filter):
+#   d_frag       > 500000   (3D-filter level; low-filter was 280000)
+#   d_1kb_frag   > 3000     -> cis1kbnum_threshold
+#   d_10kb_frag  > 5000     -> cis10kbnum_threshold  (3D filter component)
+#   d_hcg        > 80000    -> HCG_threshold
+#   d_bs_conv    < 3        -> noncpg_threshold
+# Pipeline-extra filters (not in 1st-batch script) are kept at current values.
+fragnum_threshold: 100000
+noncpg_threshold: 5
+GCH_threshold: 1000000
+HCG_threshold: 150000
+# transrate is an UPPER bound — cells pass if transrate < transrate_threshold (%).
+# A high trans rate (> ~5%) flags promiscuous ligation / contamination. In cortex,
+# essentially no cell has near-zero transrate (min 0.44%, median 1.04%), so a
+# lower bound is not useful — it just removed ~200 otherwise-good cells.
+cis1kbnum_threshold: 2000
+
+# hicluster (rules/hiccluster.smk) — resolutions to run imputation/embedding for.
+# Default is [100000, 250000] when unset; declared explicitly here for clarity.
+hicluster_resolutions:
+  - 100000
+  - 250000
+
+# Whitelist of cells for hicluster's expensive impute/embed stage.
+# One "{prefix}.{index}" per line. Generated by qc_plots.ipynb (§7).
+selected_cells_file: "QC/cortex_passed.txt"
