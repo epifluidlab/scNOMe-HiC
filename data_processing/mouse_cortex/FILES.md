@@ -40,7 +40,9 @@ Everything else is verbatim. All scripts pass `bash -n` / `ast.parse`.
   Hi-C cell types split Pvalb/Vip, had no IT-L5/6, and placed 389 cells in IT-L4
   where the final annotation places 176.
 - **`make_apa_figure.py`** — a batch-script duplicate of the APA notebook's logic. The
-  notebook is the entry point and is verified end-to-end, so it is what ships.
+  notebook is the entry point and is verified end-to-end, so it is what ships. The two
+  have since diverged: the script's `--gamma` default is 2.0 while the notebook ships
+  `GAMMA = 3`, so running the script would not reproduce the figure.
 - **`run_hicluster_selected_resume.sh`, `run_hicluster_concat_only.sh`** — partial
   re-entry points for interrupted runs; operational, not method.
 - **`make_qc_excel.py`** — QC spreadsheet formatting, as with the other datasets.
