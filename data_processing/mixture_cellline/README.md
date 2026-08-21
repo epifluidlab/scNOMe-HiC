@@ -94,6 +94,22 @@ scHiCluster imputation of the per-cell Hi-C matrices, aggregated per cell type i
 the Q/E/T `.cool` files the Figure 2 APA panel piles up. Like `03_pseudobulk`, this
 needs the cell-type labels from §9 of the UMAP notebook.
 
+**This is not a repeat of the pipeline's Hi-C step.** `01_pipeline/02_hicluster.sh`
+also runs scHiCluster, but at a different scale and for a different purpose:
+
+| | pipeline `hicluster_selected` | this step |
+|---|---|---|
+| resolution | 100 kb + 250 kb | **25 kb** |
+| smoothing | `pad 1` | `pad 2` |
+| distance limit | none | `output_dist` 10.05 Mb (loops are short-range) |
+| aggregation | SVD embedding across cells | per-cell-type Q/E/T `.cool` |
+| consumed by | `fig2_umap.ipynb` | `fig2_apa.ipynb` |
+
+Clustering needs coarse genome-wide bins; APA needs fine bins over short distances.
+The two share only their input — the same per-cell `hic_matrix.txt.gz` files.
+`generatematrix-cell` is re-run here because the pipeline produces raw matrices only
+at 100/250 kb, so there is nothing at 25 kb to reuse.
+
 | Step | What it does |
 |---|---|
 | `01_prep_inputs.sh` | Builds the dot-convention symlinks and `cell_table.tsv`. The pipeline writes underscore IDs (`batch1_sc1.ACTTGA`) while hicluster expects dots (`batch1.sc1.ACTTGA`); this is where the two conventions are reconciled. |
