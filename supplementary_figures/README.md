@@ -10,11 +10,17 @@ the code that turns analysis-ready tables into panels.
 | `figS3/` | <!-- FILL --> | `../../scnomehic_paper/s3/` |
 | `figS4/` | <!-- FILL --> | `../../scnomehic_paper/s4/` |
 | `figS5/` | <!-- FILL --> | `../../scnomehic_paper/s5/` |
-| `figS6/` | <!-- FILL --> | `../../scnomehic_paper/s6/` |
-| `figS7/` | <!-- FILL --> | `../../scnomehic_paper/s7/` |
+| `figS6/` | Replicate reproducibility, mouse cortex (rep1 vs rep2) | `../../sc_nomehic/snakemake/replicate_comparison/` |
+| `figS7/` | QC / batch diagnostics on the integrated UMAP, mouse cortex | `../../sc_nomehic/snakemake/subset_clustering/250kb_denovo/` (via `main_figures/fig3/`) |
 
 Note: `s2` and `s2_new` both exist in the source tree. Which one (or which parts
 of each) belongs in `figS2/` is still to be decided.
+
+**The supplementary numbering has been reshuffled since `scnomehic_paper/` was
+laid out.** `scnomehic_paper/s6/` (accessibility / Hi-C QC UMAP panels, Jan 2026)
+and `scnomehic_paper/s7/` (library complexity and sequencing saturation, Jun 2026)
+are *not* the current S6 and S7 — those now come from the sources in the table
+above. Check the source directory, not the `sN` number, when migrating the rest.
 
 Each figure folder's `README.md` states which panels the code produces, which
 input tables it reads, and the order to run things in. Exploratory or superseded

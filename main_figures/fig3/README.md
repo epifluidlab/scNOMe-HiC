@@ -39,21 +39,46 @@ reference, with no hand-picked markers; the marker panel used for the heatmaps i
 Liu et al. 2021 Supplementary Table 7, five genes per type, chosen independently of
 these data.
 
-## Do not re-execute `fig3_umap.ipynb`
+## Re-executing `fig3_umap.ipynb`
 
-Its stored outputs are **not all current** — §8.5/§8.5b were edited after the last
-kernel run (restricted to the gene region, plus a `Klh12` → `Klhl12` fix that restores
-ODC's fifth marker, 49 → 50 genes) — and the notebook is partly unexecuted.
+The notebook now carries its outputs: 12 figures, no errors. Every cell has stored
+output except §1/§2 (which print nothing) and **§4a/§6b**, which are deliberately
+left unexecuted — see below.
 
-Re-running would not simply refresh them. The shipped annotation came from an
-**unseeded** run; both `impute.knn` calls are now seeded, so a rerun is deterministic
-but lands ~15 cells away from the shipped labels (99.05 % agreement, ARI 0.976). A
-full §4a→§9b pass is also a multi-hour job, because §4a's `impute.knn(maxp = "p")`
-forces a full kNN over 10,381 bins.
+**Reuse the saved embeddings; do not recompute them.** The outputs were produced by
+re-running the notebook with four values loaded from `tables/` instead of recomputed:
+the HCG and GCH SVDs (`hcg_svd_raw.txt` top-9, `gch_svd_raw.txt` top-20) and the HCG,
+GCH and joint UMAP layouts. Two reasons, both verified rather than assumed:
 
-So the stale outputs are a documented fact rather than something to repair. The
-figures on disk are current; running §8e → §8.5 → §8.5b → §8.5c in order reproduces
-them, and **§8e must run first** since it defines `marker_lists`.
+1. **The annotation.** The labels on disk came from an **unseeded** `impute.knn`.
+   Both calls are seeded now, so recomputing is deterministic but lands ~15 cells
+   away (99.05 %, ARI 0.976) — which would desynchronise the APA, whose cell table
+   matches the current annotation 1,577/1,577. Reusing the saved SVD reproduces the
+   annotation **exactly: 1,577/1,577, zero disagreements**, with the same cluster
+   sizes (249/225/199/193/176/174/135/99/69/58) and an §8a embedding checksum that
+   matches the recorded value to the last digit.
+2. **The UMAP layouts.** `write.table` stores the SVD to 15 significant digits.
+   Harmony passes that ~1e-15 through unchanged, but `umap()`'s optimiser amplifies
+   it into a visibly different layout (max |diff| ≈ 8 units). Clustering is immune —
+   this is why the annotation still reproduces exactly — but the scatter panels would
+   stop matching the published PDFs. `hic_umap` is unaffected, being read straight
+   from the hicluster HDF5 with no round-trip.
+
+With both reused, the regenerated figures match the shipped PDFs pixel-for-pixel:
+all three marker heatmaps, `annotation_umaps_celltype`, `atlas_correlation_heatmap`
+and `hic` are **identical**. `umap_fig4b_style` differs by a ~3 px offset from PDF
+font metrics (headless vs interactive), with the point clouds matching to 0.4 % in
+coloured-pixel count — a rendering difference, not a data one.
+
+A full §4a→§9b pass from scratch is a multi-hour job: §4a's `impute.knn(maxp = "p")`
+forces a full kNN over 10,381 bins. That is why §4a and §6b carry no stored output —
+populating them honestly means paying that cost and accepting the ~15-cell shift.
+With the shims, the whole notebook runs in **under four minutes**.
+
+§8.5/§8.5b were edited after the original kernel run (restricted to the gene region,
+plus a `Klh12` → `Klhl12` fix that restores ODC's fifth marker, 49 → 50 genes); their
+stored outputs are now current. **§8e must run before §8.5** — it defines
+`marker_lists`, and a stale kernel would otherwise plot the previous panel.
 
 ## The APA panel
 

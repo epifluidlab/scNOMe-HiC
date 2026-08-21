@@ -1,9 +1,10 @@
 # FILES — data_processing/mouse_cortex
 
-10 files. See `README.md` for the run order and what each step consumes and produces.
+20 files. See `README.md` for the run order and what each step consumes and produces.
 
 `$S` = `/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake`
 `$L` = `/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/hic/loop_final`
+`$R` = `/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake/replicate_comparison`
 
 | File | What it is | Origin |
 |---|---|---|
@@ -17,6 +18,11 @@
 | `03_hic_loops/02_call_loops.sh` | SLURM array, one task per cell type: `loop-sumcell-chr` → `loop-mergechr` → `make_celltype_cool.py`, over all 1,577 cells. | `$L/call_loops_1577.sh` |
 | `03_hic_loops/make_celltype_cool.py` | Builds the per-cell-type Q/T/E `.cool` files. **Distinct from the mixture dataset's copy of the same filename** — the two versions differ. | `sc_nomehic/hic/` |
 | `03_hic_loops/cell_table_all1577_25kb.tsv` | `cell_id ⇥ cell_type`, 1,577 cells, 10 types. A manifest, not an analysis output: derived from `250kb_denovo/annotation/cell_type_table.tsv` with the `batch<N>_` prefix stripped. Shipped because `02_call_loops.sh` requires it and no script builds it. | `$L/` |
+| `04_replicate_comparison/01_pseudobulk_methylation.{py,slurm}` | Pools per-cell GCH/HCG counts per 250 kb bin into a per-replicate pseudobulk (Σmc / Σcov, not a mean of rates). SLURM array 1–4. | `$R/code/` |
+| `04_replicate_comparison/02_merge_bam_to_hic.sh`, `02_submit_hic.sh` | Merge a replicate's `calmd` BAMs → `sam2juicer_new.py` → `juicer pre -q 30` → `{rep}.mapQ30.hic`. Submitter returns the two job ids for the step-3 dependency. | `$R/code/` |
+| `04_replicate_comparison/03_scc_hicrep.py`, `03_submit_scc.slurm` | `hicrepSCC(H=3)` per chromosome at 1 Mb / 500 kb / 250 kb; writes `scc_raw` and `scc_clip95`, and the cached dumps step 4 reuses. | `$R/code/` |
+| `04_replicate_comparison/04_scc_clip_sweep.py`, `04_submit_clip_95to99.slurm` | SCC at clip percentiles 95–99 off the cached dumps. Renumbered from `03b_*`; the sweep Figure S6 plots. | `$R/code/03b_*` |
+| `04_replicate_comparison/cell_lists/{rep1,rep2}.txt` | 702 + 875 = the 1,577 QC-passing cells, split by prefix. Manifests, not analysis outputs. | `$R/cell_lists/` |
 
 ## Edits made
 
