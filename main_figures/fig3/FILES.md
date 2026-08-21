@@ -5,9 +5,18 @@
 | File | What it is | Origin |
 |---|---|---|
 | `fig3_umap.ipynb` | R, 28 code cells, kernel `nomehic_r`. De novo Leiden clustering of the HCG Harmony embedding, CEMBA atlas assignment, then the Fig-4b style UMAPs (§8e) and the marker-gene heatmaps for methylation (§8.5) and accessibility (§8.5b, §8.5c). Writes `annotation/`. Outputs partly stale — see README. | `sc_nomehic/snakemake/subset_clustering/250kb_denovo/subset_final_snakemake_denovo.ipynb` |
-| `fig3_apa.ipynb` | Python, 15 code cells, kernel `hic_cooler`. Union loops → Q/T per anchor → differential assignment → APA pile-up → the 10 × 10 panel grid. Caches intermediates, so only §6 needs re-running to retune the colour scale. | `sc_nomehic/hic/loop_final/celltype_diffloop_apa.ipynb` |
+| `fig3_apa.ipynb` | Python, 7 code cells, kernel `hic_cooler`. Union loops → Q/T per anchor → differential assignment → APA pile-up → the 10 × 10 panel grid. Caches intermediates, so only §6 needs re-running to retune the colour scale. Executed: all 7 cells carry outputs, including the panel grid. | `sc_nomehic/hic/loop_final/celltype_diffloop_apa.ipynb` |
 
-Renamed only — no cell edits, no path rewriting.
+Renamed, and eight empty trailing code cells dropped (23 → 15 cells, 15 → 7 code).
+No path rewriting; `OUTDIR` still resolves to `hic/loop_final/apa_1577`.
+
+The figure cell's output was regenerated headlessly: the working-copy save at
+15:38:18 on 2026-08-21 caught the cell mid-run, so the notebook was saved without
+it while the PDF landed at 15:38:22. The re-execution reused the cached
+`apa_25kb.npz`, and the §7 diagonal-score table it produced is byte-identical to
+the one in the working copy — same `result`, same 23.68 / 22.71 / 23.39 … values.
+The stored PNG differs from `apa_1577/*.png` by a few pixels of `bbox_inches="tight"`
+margin only, an artefact of headless vs interactive text metrics.
 
 ## Environment
 

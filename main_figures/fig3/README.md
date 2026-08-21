@@ -67,8 +67,10 @@ assignment, or the marker selection, so a clean IT-L5/6 diagonal (23.39 against 
 for its best competitor) is independent structural evidence that it is a real cell
 type rather than a merge artefact. The same argument supports the merged `Inhib` group.
 
-Colour scale is `PowerNorm(gamma=0.5)` with limits at the 1st/99.5th percentile across
+Colour scale is `PowerNorm(gamma=3)` with limits at the 1st/99.9th percentile across
 all 100 panels and one shared colourbar. `GAMMA` in §6 is the knob worth retuning.
+The gamma is a presentation choice, not a reproduction: no `_powernorm_sharedcbar`
+version predates this analysis, so the contrast was tuned here.
 
 ## Not included
 
