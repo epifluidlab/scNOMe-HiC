@@ -79,7 +79,7 @@ panel. The accessibility panel does not — its ρ comes from the neighbouring c
 that applies the identical bin selection, which is why that cell is kept in the
 planned trim.
 
-## §8.9 Inter-modality Leiden agreement
+## §10 Inter-modality Leiden agreement
 
 Added 2026-08-21 from the source notebook. Quantifies how far the three per-modality
 Leiden clusterings agree on the two-group split **without any bulk reference** — pairwise
@@ -94,14 +94,13 @@ metrics only, so it is independent of the cell-type calling in §7.
 GCH is the least concordant modality, consistent with the §6 note that accessibility is
 intrinsically less cell-type-discriminative here than methylation.
 
-§8.9a computes the metrics from the stored embeddings (`hcg_embedding.txt` 5 PC,
+§10a computes the metrics from the stored embeddings (`hcg_embedding.txt` 5 PC,
 `hic_embedding.txt` 5 PC, `gch_embedding_harmony.txt` 3 PC) plus the per-modality cluster
-labels; §8.9b draws the 3×3 heatmap. Base R metrics, no extra packages.
+labels; §10b draws the 3×3 heatmap. Base R metrics, no extra packages.
 
-> **Ordering note.** §8.9a reads `metadata_with_cell_type.txt` from disk — a file **§9
-> writes**. It is placed before §9 here, matching the source notebook, so on a genuinely
-> fresh run §9 has to be run first (or that file already present). The two are otherwise
-> independent.
+It reads `metadata_with_cell_type.txt`, which **§9 writes**, so it is placed after §9 and
+renumbered accordingly — in the source notebook it sits before §9 as "§8.9", where a
+genuinely fresh top-to-bottom run would fail on the missing file.
 
 The superseded standalone versions (`scratchpad_modality_agreement.R`,
 `scratchpad_agreement_heatmap.R`) are not included — the notebook cells are the source of
@@ -113,7 +112,7 @@ Verified against the code, pending review:
 
 | Notebook | Cells | Keep |
 |---|---|---|
-| `fig2_umap.ipynb` | **32 → 21** | §1–§7, §8, **§8.9**, §9 |
+| `fig2_umap.ipynb` | **32 → 21** | §1–§9 plus **§10** |
 | `fig2_methylation.ipynb` | **17 → 5, done** | §1 setup, §2/§2b metilene characterization, §3 panel + statistics, §3b colorbar |
 | `fig2_accessibility.ipynb` | **26 → 4, done** | §1 setup, §2 heatmap + ρ = 0.767, §3 published panel, §3b colorbars |
 
