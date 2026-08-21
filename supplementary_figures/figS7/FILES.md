@@ -32,7 +32,7 @@ algorithm — they are the same cells, so a change to §8.7c must be made in bot
 | `tables/hic_svd_raw.txt` | fig3_umap.ipynb §5a |
 | `tables/gch_svd_raw.txt` | fig3_umap.ipynb §6b |
 | `tables/joint_umap.txt` | fig3_umap.ipynb §8.7a |
-| `tables/joint_umap_uncorrected.txt` | fig3_umap.ipynb §8.7c.1 |
+| `tables/joint_umap_uncorrected.txt` | fig3_umap.ipynb §8.7c.1 — **regenerated 2026-08-21**; the previous file was an unreproducible session artifact, now in `archive_superseded/` |
 | `annotation/metadata_with_cell_type.txt` | fig3_umap.ipynb §9 |
 
 ## Deliberately not included

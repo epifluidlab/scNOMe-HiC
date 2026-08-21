@@ -47,33 +47,44 @@ All from `../../data_processing/mouse_cortex/`:
   `transnum` from it; the cell asserts `library_prep_date` is present rather than
   reading any sample sheet ad hoc.
 
-## Why §8.7c.1 reuses the saved layout
+## §8.7c.1 recomputes — and that is deliberate
 
-§8.7c.1 loads `tables/joint_umap_uncorrected.txt` when it exists and only
-recomputes when it does not. That guard is deliberate.
+§8.7c.1 rebuilds the uncorrected joint embedding from `tables/{hcg,hic,gch}_svd_raw.txt`
+every time. It is **deterministic**: two independent recomputes — one a standalone
+`Rscript`, one through the notebook — agree to `0.000e+00`. Run this notebook and
+you get exactly the layout it shows.
 
-`umap()` is **not reproducible across re-runs of this cell**. It reads the raw
-SVDs from `tables/`, which `write.table` stored to 15 significant digits, and that
-rounding moves the resulting layout about as much as changing the random seed
-does. Measured on a 700-cell subsample at k = 30:
+That was not true before 2026-08-21. The layout previously on disk
+(`joint_umap_uncorrected.txt`, written 2026-08-11 23:28) could not be regenerated
+by any code path, and differed from a recompute by up to **13.0 units**.
 
-| comparison | neighbour overlap |
-|---|---|
-| saved layout vs a fresh recompute | 0.750 |
-| fresh recompute vs another seed, identical data | 0.734 |
+The cause was a precision fork in the cell:
 
-The saved layout sits *inside* the seed-to-seed baseline. And all three preserve
-the high-dimensional neighbourhoods equally well — 0.464 (saved), 0.466 (fresh),
-0.4655 (alt seed) — so the saved layout is not stale, and recomputing is not more
-correct. It is a different draw of the same structure.
+```r
+hcg_raw <- if (exists("HCG.svd")) HCG.svd[, seq_len(9), drop = FALSE] else rd_tab("hcg_svd_raw.txt")
+```
 
-Because neither is more correct, the notebook reuses the published one, which
-keeps panel A's "before correction" half identical to the shipped figure. Delete
-`joint_umap_uncorrected.txt` to force a fresh embedding; expect the panel to look
-different if you do.
+The Aug-11 layout was produced in a live session where §4a–§6b had already run, so
+the cell used the **full-precision in-memory** SVDs. Any standalone run takes the
+`else` branch and reads the text files, which `write.table` stored at 15
+significant digits — a lossy round-trip for a double (it alters ~93 % of values at
+~5e-15 relative). `umap()` is chaotic enough at that scale to reorganise the
+layout: elsewhere in this pipeline a 1e-15 difference in the Harmony embedding
+moved the UMAP by 8 units.
 
-The same instability affects §4b, §6c and §8.7a in the Fig-3 UMAP notebook, whose
-README documents it — reuse the saved embeddings there rather than recomputing.
+Neither layout was more faithful to the data — measured neighbourhood
+preservation was 0.464 (Aug-11) against 0.466 (recompute), and the two differed
+from each other no more than two random seeds do. So the unreproducible one was
+retired in favour of the one the notebook can regenerate.
+
+The superseded files are kept in
+`250kb_denovo/archive_superseded/joint_umap_uncorrected.aug11_session_artifact.txt`
+and the matching `joint_umap_qc_panels.aug11_session_artifact.{pdf,png}`.
+
+**The same fork still affects §4b, §6c and §8.7a** in the Fig-3 UMAP notebook.
+Those layouts are reproducible from the tables in the same way, but their shipped
+figures were produced from in-memory objects, so re-running them will shift the
+Fig-3 panels. See that folder's README.
 
 ## Not included
 

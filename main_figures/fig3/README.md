@@ -70,13 +70,23 @@ and `hic` are **identical**. `umap_fig4b_style` differs by a ~3 px offset from P
 font metrics (headless vs interactive), with the point clouds matching to 0.4 % in
 coloured-pixel count — a rendering difference, not a data one.
 
-§8.7c.1 now carries this policy **in code**: it reuses
-`tables/joint_umap_uncorrected.txt` when present rather than recomputing, because
-a recompute lands within the seed-to-seed baseline of `umap()` itself (neighbour
-overlap 0.750 saved-vs-fresh, against 0.734 for two seeds on identical data) and
-so is a different draw, not a better one. The other three `umap()` calls (§4b,
-§6c, §8.7a) still recompute; reuse their saved layouts from `tables/` if you need
-the published panels back.
+**Why the saved layouts and the code can disagree.** Cells like §8.7c.1 pick their
+input with `if (exists("HCG.svd")) ... else rd_tab("hcg_svd_raw.txt")`. Run inside
+a full session they use the full-precision in-memory SVDs; run standalone they
+read the text tables, which `write.table` stored at 15 significant digits — lossy
+for a double, ~5e-15 relative. `umap()` amplifies that into a visibly different
+layout, which is exactly why the Harmony embedding above differs by 1e-15 while
+its UMAP differs by 8 units.
+
+§8.7c.1 was resolved on 2026-08-21 by **retiring its unreproducible saved layout**:
+it now recomputes from the tables, deterministically (two independent recomputes
+agree to 0.000e+00), and the figure was regenerated to match. The superseded files
+are in `250kb_denovo/archive_superseded/*aug11_session_artifact*`.
+
+§4b, §6c and §8.7a have the same fork and have **not** been resolved — their saved
+layouts in `tables/` came from in-memory objects, so re-running those cells will
+shift the Fig-3 panels. Reuse the saved layouts to reproduce the published
+figures, or regenerate the panels as was done for §8.7c.1.
 
 A full §4a→§9b pass from scratch is a multi-hour job: §4a's `impute.knn(maxp = "p")`
 forces a full kNN over 10,381 bins. That is why §4a and §6b carry no stored output —
