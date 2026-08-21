@@ -79,13 +79,41 @@ panel. The accessibility panel does not — its ρ comes from the neighbouring c
 that applies the identical bin selection, which is why that cell is kept in the
 planned trim.
 
+## §8.9 Inter-modality Leiden agreement
+
+Added 2026-08-21 from the source notebook. Quantifies how far the three per-modality
+Leiden clusterings agree on the two-group split **without any bulk reference** — pairwise
+metrics only, so it is independent of the cell-type calling in §7.
+
+| pair | % agree | ARI | NMI | kNN purity |
+|---|---|---|---|---|
+| HCG ↔ Hi-C | 95.7 | 0.833 | 0.745 | 0.933 |
+| HCG ↔ GCH | 92.3 | 0.714 | 0.600 | 0.898 |
+| Hi-C ↔ GCH | 89.3 | 0.616 | 0.509 | 0.854 |
+
+GCH is the least concordant modality, consistent with the §6 note that accessibility is
+intrinsically less cell-type-discriminative here than methylation.
+
+§8.9a computes the metrics from the stored embeddings (`hcg_embedding.txt` 5 PC,
+`hic_embedding.txt` 5 PC, `gch_embedding_harmony.txt` 3 PC) plus the per-modality cluster
+labels; §8.9b draws the 3×3 heatmap. Base R metrics, no extra packages.
+
+> **Ordering note.** §8.9a reads `metadata_with_cell_type.txt` from disk — a file **§9
+> writes**. It is placed before §9 here, matching the source notebook, so on a genuinely
+> fresh run §9 has to be run first (or that file already present). The two are otherwise
+> independent.
+
+The superseded standalone versions (`scratchpad_modality_agreement.R`,
+`scratchpad_agreement_heatmap.R`) are not included — the notebook cells are the source of
+truth, and the scratchpad ones produce an older ARI-filled figure design.
+
 ## Planned trimming
 
 Verified against the code, pending review:
 
 | Notebook | Cells | Keep |
 |---|---|---|
-| `fig2_umap.ipynb` | **32 → 19, done** | §1–§7 plus §9 |
+| `fig2_umap.ipynb` | **32 → 21** | §1–§7, §8, **§8.9**, §9 |
 | `fig2_methylation.ipynb` | **17 → 5, done** | §1 setup, §2/§2b metilene characterization, §3 panel + statistics, §3b colorbar |
 | `fig2_accessibility.ipynb` | **26 → 4, done** | §1 setup, §2 heatmap + ρ = 0.767, §3 published panel, §3b colorbars |
 
