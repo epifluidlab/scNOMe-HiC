@@ -88,6 +88,25 @@ Run in this order:
 
 Each `.sh` is a SLURM wrapper that `cd`s to the analysis workdir and calls its `.py`.
 
+### 04_hic_imputation — per-cell-type contact matrices for the APA panel
+
+scHiCluster imputation of the per-cell Hi-C matrices, aggregated per cell type into
+the Q/E/T `.cool` files the Figure 2 APA panel piles up. Like `03_pseudobulk`, this
+needs the cell-type labels from §9 of the UMAP notebook.
+
+| Step | What it does |
+|---|---|
+| `01_prep_inputs.sh` | Builds the dot-convention symlinks and `cell_table.tsv`. The pipeline writes underscore IDs (`batch1_sc1.ACTTGA`) while hicluster expects dots (`batch1.sc1.ACTTGA`); this is where the two conventions are reconciled. |
+| `02_generate_impute.sbatch` | `hicluster generatematrix-cell` + `impute-cell` per cell, per chromosome. The heavy step. |
+| `03_loop_sumcell.sbatch` | Sums imputed matrices across the cells of each type. |
+| `04_loop_mergechr.sh` | Merges per-chromosome output. |
+| `05_make_celltype_cool.sh` → `make_celltype_cool.py` | Writes `per_celltype/{GM12878,IMR90}/*.{Q,E,T,Q2,E2,T2}.cool`. |
+
+- *in*: `06.hiccluster_snakemake/{cell}.hic_matrix.txt.gz` (441 cells) + `cell_type_table.tsv`
+- *out*: per-cell-type Q/E/T `.cool`, consumed by `../../main_figures/fig2/fig2_apa.ipynb`
+
+Outputs land on scratch to save GPFS quota; the APA notebook keeps its own copy.
+
 ## Outputs
 
 | Product | Path |
@@ -97,6 +116,7 @@ Each `.sh` is a SLURM wrapper that `cd`s to the analysis workdir and calls its `
 | Hi-C 250 kb embedding | `06.hiccluster_snakemake/hicluster_250kb_embed_dir/...svd20.hdf5` |
 | sc pseudobulk accessibility | `analysis/gch_acc_250kb/sc_pseudobulk_GCH_250kb.tsv.gz` |
 | sc pseudobulk over DMRs | `analysis/dmr_metilene_hcg/sc_pseudobulk_metilene_dmr_top2000.tsv.gz` |
+| Per-cell-type contact matrices | `per_celltype/{GM12878,IMR90}/*.{Q,E,T}.cool` |
 
 ## Notes on paths
 

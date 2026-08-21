@@ -62,6 +62,26 @@ It runs on bulk data only, never touching a single cell, and it *produces* the
 region sets that the single-cell pseudobulk builders consume. Putting it with the
 figures would make processing depend on the figure folder.
 
+### 04_hic_loops — in-situ Hi-C loop calling
+
+The loop universe for the Figure 2 APA panel, called on **ENCODE in-situ Hi-C** rather
+than on NOMe-HiC. NOMe-HiC has far fewer contacts, so HICCUPS on it missed many real
+loops; the in-situ calls give higher-confidence coordinates, and the single-cell
+pseudobulk contacts are then piled up at those positions.
+
+GM12878 in-situ is **3.26×** deeper than IMR90 (chr1 250 kb sums: 309.8 M vs 95.0 M), so
+GM is subsampled to match before either is called — otherwise the loop counts would
+reflect depth rather than biology.
+
+| Step | What it does |
+|---|---|
+| `01_subsample_gm_insitu.sbatch` → `subsample_hic.py` | Pixel-level `Binomial(count, p=0.307)` subsample of GM at 5 kb via `hicstraw`, rebuilt into a `.hic` with `juicer pre`. Pixel-level rather than read-level because only the processed `.hic` survives, not the raw pairs — equivalent at coarser resolutions since binomial thinning preserves marginals. |
+| `02_hiccups_gm_subsampled.sbatch` | GPU HICCUPS on the depth-matched GM `.hic` @ 25 kb. |
+| `03_hiccups_imr_full.sbatch` | GPU HICCUPS on full-depth IMR90 @ 25 kb. |
+
+- *out*: `{gm_insitu_sub,imr_insitu}_hiccups_25kb_loops/merged_loops.bedpe` — read directly
+  by `../../main_figures/fig2/fig2_apa.ipynb`
+
 ## Outputs
 
 | Product | Path |
@@ -69,6 +89,7 @@ figures would make processing depend on the figure folder.
 | IMR90 bulk methylation tracks | `data/bulk/IMR90/methylation/*.{bed,bw}` |
 | Bulk ATAC binned to 250 kb | `analysis/gch_acc_250kb/bulk_atac_250kb.tsv` |
 | Significant DMRs (76,126) | `analysis/dmr_metilene_hcg/` |
+| In-situ HICCUPS loops | `{gm_insitu_sub,imr_insitu}_hiccups_25kb_loops/merged_loops.bedpe` |
 | Bulk methylation references | `bulk_methylation_{GM12878,IMR90}.txt.gz` (250 kb bins) |
 
 ## Not included
@@ -81,5 +102,9 @@ figures would make processing depend on the figure folder.
 - **`diffbind_atac.R/.sh`** and **`download_atac_bams.sh`** — differential ATAC peaks
   via DiffBind/DESeq2. The published accessibility panel ranks bins by bulk ATAC
   *signal* difference rather than by DiffBind peaks, so this is off-path.
-- **`copy_imr90_hic.sh`** — copies the IMR90 in-situ Hi-C (`ENCFF188SSH`, 17.5 GB)
-  off scratch. Belongs with the APA analysis, still to be migrated.
+- **`copy_imr90_hic.sh`** — a one-off copy of the IMR90 in-situ Hi-C (`ENCFF188SSH`,
+  17.5 GB) off purgeable scratch. Data movement, not method.
+- **APA steps 04–06** — `step04_diff_loops.sh`, `step05_apa_pileup.sh`,
+  `step06_make_2x2_figure.py` and their `.sbatch` variants. Superseded: the notebook
+  reads the step02/03 HICCUPS bedpes directly, then runs its own ANOVA differential
+  test and its own APA pile-up.

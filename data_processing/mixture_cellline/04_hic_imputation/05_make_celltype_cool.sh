@@ -1,0 +1,41 @@
+#!/bin/bash
+#SBATCH --account=b1042
+#SBATCH --partition=genomics
+#SBATCH --job-name=lm25_step05_make_cool
+#SBATCH --time=02:00:00
+#SBATCH --mem=64G
+#SBATCH --cpus-per-task=2
+#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb/logs/%x_%j.out
+#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb/logs/%x_%j.err
+# STEP 05 — Build per-celltype Q/E/T cool files (and their *2.cool sum-of-squares).
+# Reuses the original make_celltype_cool.py from the Jan-25 pipeline; just changes
+# input/output directories to the new locations.
+# NOTE: drop -u because /etc/bashrc trips on BASHRCSOURCED with -u.
+set -eo pipefail
+
+source /home/jmj7858/.bashrc
+conda activate hic_env
+
+THIS_DIR=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb
+CELL_TABLE=$THIS_DIR/cell_table.tsv
+ROOT=/scratch/jmj7858/scnomehic/loop_majortype_25kb
+IMP_DIR=$ROOT/hicluster_impute
+OUT_DIR=$ROOT/per_celltype
+CHROM_FILE=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/autosomes.chrom.sizes
+MAKE_COOL_PY="$(dirname "$(readlink -f "$0")")/make_celltype_cool.py"
+
+mkdir -p "$OUT_DIR"
+
+echo "[$(date +%H:%M:%S)] running make_celltype_cool.py"
+
+python "$MAKE_COOL_PY" \
+    --cell_table "$CELL_TABLE" \
+    --in_dir "$IMP_DIR/" \
+    --out_dir "$OUT_DIR/" \
+    --chrom_sizes "$CHROM_FILE" \
+    --mode pad2_std1_rp0.5_sqrtvc \
+    --res 25000
+
+echo "[$(date +%H:%M:%S)] done"
+ls -la "$OUT_DIR"/GM12878/GM12878/*.cool 2>/dev/null
+ls -la "$OUT_DIR"/IMR90/IMR90/*.cool 2>/dev/null
