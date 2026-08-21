@@ -83,10 +83,12 @@ it now recomputes from the tables, deterministically (two independent recomputes
 agree to 0.000e+00), and the figure was regenerated to match. The superseded files
 are in `250kb_denovo/archive_superseded/*aug11_session_artifact*`.
 
-§4b, §6c and §8.7a have the same fork and have **not** been resolved — their saved
-layouts in `tables/` came from in-memory objects, so re-running those cells will
-shift the Fig-3 panels. Reuse the saved layouts to reproduce the published
-figures, or regenerate the panels as was done for §8.7c.1.
+**§8.7c.1 is the only cell with this fork.** §4b, §6c and §8.7a contain no
+`exists()` branch and read no tables — they use the in-memory embeddings
+exclusively, so within one run they are deterministic and reproduce exactly. The
+caveat that applies to them is the separate, pre-existing one above: the *shipped*
+layouts descend from the unseeded `impute.knn` in §4a/§6b, so a full re-run is
+self-consistent but lands ~15 cells away from the shipped annotation.
 
 A full §4a→§9b pass from scratch is a multi-hour job: §4a's `impute.knn(maxp = "p")`
 forces a full kNN over 10,381 bins. That is why §4a and §6b carry no stored output —

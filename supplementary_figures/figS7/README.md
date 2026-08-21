@@ -81,10 +81,11 @@ The superseded files are kept in
 `250kb_denovo/archive_superseded/joint_umap_uncorrected.aug11_session_artifact.txt`
 and the matching `joint_umap_qc_panels.aug11_session_artifact.{pdf,png}`.
 
-**The same fork still affects §4b, §6c and §8.7a** in the Fig-3 UMAP notebook.
-Those layouts are reproducible from the tables in the same way, but their shipped
-figures were produced from in-memory objects, so re-running them will shift the
-Fig-3 panels. See that folder's README.
+**§8.7c.1 was the only cell with this fork.** §4b, §6c and §8.7a in the Fig-3 UMAP
+notebook contain no `exists()` branch and read no tables — they take their input
+from the in-memory embeddings, so they are deterministic and a full run reproduces
+them exactly. Their separate caveat is the unseeded `impute.knn` in §4a/§6b, which
+is documented in that folder's README and is unrelated to serialisation.
 
 ## Not included
 
