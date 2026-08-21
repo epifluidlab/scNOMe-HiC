@@ -8,9 +8,6 @@
 #SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb/logs/%x_%j.out
 #SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb/logs/%x_%j.err
 # STEP 05 — Build per-celltype Q/E/T cool files (and their *2.cool sum-of-squares).
-# Reuses the original make_celltype_cool.py from the Jan-25 pipeline; just changes
-# input/output directories to the new locations.
-# NOTE: drop -u because /etc/bashrc trips on BASHRCSOURCED with -u.
 set -eo pipefail
 
 source /home/jmj7858/.bashrc
