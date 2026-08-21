@@ -47,18 +47,33 @@ All from `../../data_processing/mouse_cortex/`:
   `transnum` from it; the cell asserts `library_prep_date` is present rather than
   reading any sample sheet ad hoc.
 
-## One caveat if you re-run it
+## Why §8.7c.1 reuses the saved layout
 
-§8.7c.1 **recomputes** the uncorrected joint UMAP rather than loading the cached
-one — its disk fallback covers the input SVDs, not the output layout. `umap()` is
-sensitive enough that a recomputed layout can differ visibly from
-`tables/joint_umap_uncorrected.txt` while carrying the same structure, so the
-"before correction" half of panel A may not land pixel-identical to the shipped
-figure. The stored outputs in this notebook were produced against the shipped
-layout. Load `joint_umap_uncorrected.txt` before running §8.7c.2 if you need to
-reproduce the shipped panel exactly.
+§8.7c.1 loads `tables/joint_umap_uncorrected.txt` when it exists and only
+recomputes when it does not. That guard is deliberate.
 
-The same point applies to the Fig-3 UMAP notebook and is documented there.
+`umap()` is **not reproducible across re-runs of this cell**. It reads the raw
+SVDs from `tables/`, which `write.table` stored to 15 significant digits, and that
+rounding moves the resulting layout about as much as changing the random seed
+does. Measured on a 700-cell subsample at k = 30:
+
+| comparison | neighbour overlap |
+|---|---|
+| saved layout vs a fresh recompute | 0.750 |
+| fresh recompute vs another seed, identical data | 0.734 |
+
+The saved layout sits *inside* the seed-to-seed baseline. And all three preserve
+the high-dimensional neighbourhoods equally well — 0.464 (saved), 0.466 (fresh),
+0.4655 (alt seed) — so the saved layout is not stale, and recomputing is not more
+correct. It is a different draw of the same structure.
+
+Because neither is more correct, the notebook reuses the published one, which
+keeps panel A's "before correction" half identical to the shipped figure. Delete
+`joint_umap_uncorrected.txt` to force a fresh embedding; expect the panel to look
+different if you do.
+
+The same instability affects §4b, §6c and §8.7a in the Fig-3 UMAP notebook, whose
+README documents it — reuse the saved embeddings there rather than recomputing.
 
 ## Not included
 

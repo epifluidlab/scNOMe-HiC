@@ -70,6 +70,14 @@ and `hic` are **identical**. `umap_fig4b_style` differs by a ~3 px offset from P
 font metrics (headless vs interactive), with the point clouds matching to 0.4 % in
 coloured-pixel count — a rendering difference, not a data one.
 
+§8.7c.1 now carries this policy **in code**: it reuses
+`tables/joint_umap_uncorrected.txt` when present rather than recomputing, because
+a recompute lands within the seed-to-seed baseline of `umap()` itself (neighbour
+overlap 0.750 saved-vs-fresh, against 0.734 for two seeds on identical data) and
+so is a different draw, not a better one. The other three `umap()` calls (§4b,
+§6c, §8.7a) still recompute; reuse their saved layouts from `tables/` if you need
+the published panels back.
+
 A full §4a→§9b pass from scratch is a multi-hour job: §4a's `impute.knn(maxp = "p")`
 forces a full kNN over 10,381 bins. That is why §4a and §6b carry no stored output —
 populating them honestly means paying that cost and accepting the ~15-cell shift.
