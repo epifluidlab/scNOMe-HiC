@@ -1,0 +1,15 @@
+# HiC run 1 — ALL THREE BATCHES (overrides merged on top of config.yaml).
+# Pass as the SECOND --configfile after config.yaml.
+#
+# Only the cell-set-dependent embedding outputs are suffixed with cellset_label
+# (-> hicluster_250kb_embed_dir_all3/...); per-cell impute hdf5s stay shared so
+# the batch23 run can reuse them.
+
+hicluster_resolutions:
+  - 250000
+
+cellset_label: "all3"
+
+# HiC-usable passed cells (methylation QC + HiC usability check). Written by
+# qc_plots.ipynb's HiC usability cell. All three batches.
+selected_cells_file: "QC/meningioma_passed_hicusable.txt"
