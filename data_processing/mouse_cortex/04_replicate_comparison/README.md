@@ -20,16 +20,14 @@ Cell lists are in `cell_lists/`; together they are the same 1,577 cells as
 |---|---|---|
 | 1 | `01_pseudobulk_methylation.py` (`.slurm`, array 1–4) | per-cell GCH/HCG counts → `pseudobulk/{rep}.{GCH,HCG}.250kb.pseudobulk.{txt.gz,bedGraph}` |
 | 2 | `02_merge_bam_to_hic.sh` via `02_submit_hic.sh` | per-cell `04.alignment_snakemake/{cell}.calmd.bam` → merged, name-sorted → `sam2juicer_new.py -f mm10_DpnII` → `juicer pre -q 30` → `hic/{rep1,rep2}.mapQ30.hic` |
-| 3 | `03_scc_hicrep.py` (`03_submit_scc.slurm`) | the two `.hic` → per-chrom cool dumps → `hicrepSCC(H=3)` at 1 Mb / 500 kb / 250 kb → `results/scc/` |
-| 4 | `04_scc_clip_sweep.py` (`04_submit_clip_95to99.slurm`) | reuses step 3's cached dumps → SCC at clip percentiles 95–99 → `results/scc_clip95to99/` |
+| 3 | `03_scc_hicrep.py` (`03_submit_scc.slurm`) | the two `.hic` → per-chrom cool dumps → `hicrepSCC(H=3)` at 1 Mb / 500 kb / 250 kb → `results/scc/`, with both `scc_raw` and `scc_clip95` |
 
-Steps 1 and 2 are independent; 3 needs 2; 4 needs 3's `results/scc/dumps/`.
+Steps 1 and 2 are independent; 3 needs 2.
 
 ```bash
 sbatch 01_pseudobulk_methylation.slurm
 bash   02_submit_hic.sh                                  # returns the rep1/rep2 job ids
 sbatch --dependency=afterok:<rep1>:<rep2> 03_submit_scc.slurm
-sbatch --dependency=afterok:<scc job>     04_submit_clip_95to99.slurm
 ```
 
 ## Method choices that matter
@@ -45,10 +43,11 @@ sbatch --dependency=afterok:<scc job>     04_submit_clip_95to99.slurm
 
 ## The clip percentile — read this before reusing the SCC
 
-Step 4 sweeps a per-chromosome clip at the 95th–99th percentile. On this deep
-pseudobulk **the clip saturates**: median SCC is exactly 1.000 at the 95th
-percentile for all three resolutions, and only at the 99th does 1 Mb fall to
-0.577. Raw SCC is the informative version.
+Step 3 writes both a raw SCC and one under a per-chromosome 95th-percentile clip.
+On this deep pseudobulk **the clip saturates**: median SCC is exactly 1.000 at the
+95th percentile for all three resolutions. A sweep out to the 99th percentile was
+run during development and confirmed no clip below 99 avoids it; that sweep is not
+part of the figure path and is not shipped. Raw SCC is the informative version.
 
 | resolution | raw SCC (min / median / max) | clip95 SCC |
 |---|---|---|
@@ -66,7 +65,6 @@ uses the clip-95 violin; see that folder's README.
 | Pseudobulk methylation/accessibility | `pseudobulk/{rep}.{GCH,HCG}.250kb.pseudobulk.txt.gz` |
 | Per-replicate Hi-C | `hic/{rep1,rep2}.mapQ30.hic` |
 | SCC per chrom × resolution | `results/scc/scc_by_chrom_and_resolution.csv` (`scc_raw`, `scc_clip95`) |
-| SCC clip sweep 95–99 | `results/scc_clip95to99/scc_clip_sweep.csv` |
 
 Large intermediates (merged BAMs, sorted pair files) were written to b1042 scratch
 and are not part of the analysis outputs.

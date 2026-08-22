@@ -10,24 +10,21 @@
 | `02_submit_hic.sh` | Submits the worker for rep1 and rep2 and prints the two job ids (needed for the step-3 dependency). | `code/02_submit_hic.sh` |
 | `03_scc_hicrep.py` | Dumps both `.hic` to per-chrom cool, runs `hicrepSCC(H=3)` at 1 Mb / 500 kb / 250 kb, writes the SCC table and a violin. Also leaves the cached dumps that step 4 reuses. | `code/03_scc_hicrep.py` |
 | `03_submit_scc.slurm` | Step 3 job. Submit with `--dependency=afterok:` on the two step-2 jobs. | `code/03_submit_scc.slurm` |
-| `04_scc_clip_sweep.py` | Sweeps the per-chromosome clip percentile and recomputes SCC at each, reusing step 3's dumps. | `code/03b_scc_clip_sweep.py` |
-| `04_submit_clip_95to99.slurm` | Step 4 job at `--pcts 95,96,97,98,99`, writing `results/scc_clip95to99/`. This is the sweep Figure S6 plots. | `code/03b_submit_clip_95to99.slurm` |
 | `cell_lists/rep1.txt` | 702 `scNH_c57cortex_*` cell ids. | `cell_lists/rep1.txt` |
 | `cell_lists/rep2.txt` | 875 `batch2_*` cell ids. | `cell_lists/rep2.txt` |
 
-Renumbering: step `3b` became step `04` so the folder reads 01–04 in run order.
-Two self-references were rewritten to match — the `Step 3b:` docstring header in
-`04_scc_clip_sweep.py`, and the `${RC}/code/03b_scc_clip_sweep.py` path inside
-`04_submit_clip_95to99.slurm` (now a sibling path). No command, parameter or data
-path was changed. All scripts pass `bash -n` / `ast.parse`.
+No command, parameter or data path was changed from the originals. All scripts
+pass `bash -n` / `ast.parse`.
 
 ## Deliberately not included
 
-- **`code/03b_submit_clip_sweep.slurm`** — the earlier 95..100 sweep, writing
-  `results/scc_clipsweep/`. Figure S6 plots the 95–99 sweep
-  (`results/scc_clip95to99/`) instead, and nothing else reads the 95..100 output.
-  Same `04_scc_clip_sweep.py` driver, different `--pcts` and `--out_dir`, so it
-  can be reproduced from the shipped script if wanted.
+- **`code/03b_scc_clip_sweep.py` and both its submitters** — the clip-percentile
+  sweeps (95..100 and 95–99). Figure S6 plots only the 95th percentile, and step 3
+  already writes that as the `scc_clip95` column: the sweep's clip-95 values are
+  **bit-identical** to it across all 60 chrom × resolution rows. So the sweep is
+  not on the figure's path. It was used during development to establish that no
+  clip below the 99th percentile escapes saturation — a result recorded in the
+  README rather than recomputed.
 - **`code/04_methy_acc_compare.py` + `04_submit_methy.slurm`** — rep1-vs-rep2
   distribution/KS and methylation–accessibility correlation tables. Feeds the
   notebook's exploratory sections A–C and the `repro_HCG` / `corr_methy_acc_*`

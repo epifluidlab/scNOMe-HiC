@@ -6,7 +6,7 @@ sc-NOMe-HiC run (rep1 = 702 cells, rep2 = 875, together the 1,577 QC-passing set
 | Panel | File | Made by |
 |---|---|---|
 | Reproducibility scatter, GCH + HCG | `repro_GCH_HCG_qnorm_plain.pdf` | §Figure 4b |
-| Hi-C SCC violin, 95th-pct clip | `scc_violin_clip95.pdf` | §D-pub2 |
+| Hi-C SCC violin, 95th-pct clip | `scc_violin_clip95.pdf` | §D-pub |
 
 | Notebook | Kernel | Panels |
 |---|---|---|
@@ -17,7 +17,7 @@ sc-NOMe-HiC run (rep1 = 702 cells, rep2 = 875, together the 1,577 QC-passing set
 Produced by `../../data_processing/mouse_cortex/04_replicate_comparison/`:
 
 - `pseudobulk/{rep1,rep2}.{GCH,HCG}.250kb.pseudobulk.txt.gz` — step 1
-- `results/scc_clip95to99/scc_clip_sweep.csv` — step 4
+- `results/scc/scc_by_chrom_and_resolution.csv` — step 3 (columns `scc_raw`, `scc_clip95`)
 
 ## Run order
 
@@ -30,8 +30,7 @@ Top to bottom. The cells are:
 | C2 | quantile-normalises GCH across replicates — **defines `quantile_normalize()`**, which Figure 4b calls |
 | pub helpers | `FIG_DIR`, the `PUB` rcParams, `save_fig`, `density_scatter` |
 | **Figure 4b** | **panel 1** — `repro_GCH_HCG_qnorm_plain` |
-| D-pub | SCC violins from the main SCC table; defines `SCC_STYLE` and `RESLABS` |
-| **D-pub2** | **panel 2** — `scc_violin_clip95..99` |
+| **D-pub** | **panel 2** — `scc_violin_clip95`, plus `scc_violin_raw` for reference |
 
 ## Two things to know about the SCC panel
 
@@ -51,12 +50,13 @@ the same table (`scc_raw`) and plotted by the §D-pub cell as
 `scc_violin_raw.pdf`. Figure S6 ships the clip-95 violin as a deliberate choice;
 if a reviewer asks why every SCC is ~1.0, the raw panel is one cell away.
 
-**2. Two cells write `scc_violin_clip95.pdf`.** §D-pub writes it from the
-`scc_clip95` column of `results/scc/scc_by_chrom_and_resolution.csv`; §D-pub2
-writes it again from `results/scc_clip95to99/scc_clip_sweep.csv`. In a
-top-to-bottom run **§D-pub2 wins**, and that is the file on disk. Both sources
-agree that clip95 saturates, so the figure is the same either way — but the
-collision is real, and renaming one of them would be a sensible cleanup.
+**2. Only the 95th percentile is kept.** The source notebook also had a §D-pub2
+cell sweeping clip percentiles 95–99 and writing a violin for each, which wrote
+`scc_violin_clip95.pdf` a second time. That cell was dropped: its clip-95 values
+are **bit-identical** to the `scc_clip95` column §D-pub already reads (verified
+across all 60 chrom × resolution rows, max difference 0), and the figure it
+produced is **pixel-identical** to §D-pub's. Dropping it removed a filename
+collision and made the 95–99 processing step unnecessary.
 
 ## Panel 1 detail
 
