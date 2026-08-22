@@ -5,8 +5,8 @@ sc-NOMe-HiC run (rep1 = 702 cells, rep2 = 875, together the 1,577 QC-passing set
 
 | Panel | File | Made by |
 |---|---|---|
-| Reproducibility scatter, GCH + HCG | `repro_GCH_HCG_qnorm_plain.pdf` | §Figure 4b |
-| Hi-C SCC violin, 95th-pct clip | `scc_violin_clip95.pdf` | §D-pub |
+| Reproducibility scatter, GCH + HCG | `repro_GCH_HCG_qnorm_plain.pdf` | §5 |
+| Hi-C SCC violin, 95th-pct clip | `scc_violin_clip95.pdf` | §7 |
 
 | Notebook | Kernel | Panels |
 |---|---|---|
@@ -31,13 +31,16 @@ Top to bottom. The cells are:
 
 | § | What it does |
 |---|---|
-| config | paths, `CTXS`, `CTX_NAME` |
-| load | `load_pb()` → `data`, the four pseudobulk tables |
-| C2 | quantile-normalises GCH across replicates — **defines `quantile_normalize()`**, which Figure 4b calls |
-| pub helpers | `FIG_DIR`, the `PUB` rcParams, `save_fig`, `density_scatter` |
-| **Figure 4b** | **panel 1** — `repro_GCH_HCG_qnorm_plain` |
-| D-calc | SCC from the dumps → the `scc` table (`scc_raw` and `scc_clip95`) |
-| **D-pub** | **panel 2** — `scc_violin_clip95` |
+| §1 | paths, `CTXS`, `CTX_NAME` |
+| §2 | `load_pb()` → `data`, the four pseudobulk tables |
+| §3 | quantile-normalises GCH across replicates — **defines `quantile_normalize()`**, which §5 calls |
+| §4 | `FIG_DIR`, the `PUB` rcParams, `save_fig`, `density_scatter` |
+| **§5** | **panel 1** — `repro_GCH_HCG_qnorm_plain` |
+| §6 | SCC from the dumps → the `scc` table (`scc_raw` and `scc_clip95`) |
+| **§7** | **panel 2** — `scc_violin_clip95` |
+
+Sections are numbered for this notebook. In the source notebook the same cells are
+C2, the publication-figure helpers, Figure 4b and D-pub.
 
 ## Two things to know about the SCC panel
 
@@ -60,17 +63,17 @@ The notebook plots **only** clip-95. `scc_raw` is still written to
 is ~1.0, the raw violin is one `scc_violin("scc_raw", …)` call away — the helper
 that draws it is already defined in the same cell.
 
-**2. Only the 95th percentile is kept.** The source notebook also had a §D-pub2
-cell sweeping clip percentiles 95–99 and writing a violin for each, which wrote
-`scc_violin_clip95.pdf` a second time. That cell was dropped: its clip-95 values
-are **bit-identical** to the `scc_clip95` column §D-pub already reads (verified
+**2. Only the 95th percentile is kept.** The source notebook also had a cell
+(its D-pub2) sweeping clip percentiles 95–99 and writing a violin for each, which
+wrote `scc_violin_clip95.pdf` a second time. That cell was dropped: its clip-95
+values are **bit-identical** to the `scc_clip95` values §6 computes (verified
 across all 60 chrom × resolution rows, max difference 0), and the figure it
-produced is **pixel-identical** to §D-pub's. Dropping it removed a filename
-collision and made the 95–99 processing step unnecessary.
+produced is **pixel-identical**. Dropping it removed a filename collision and made
+the 95–99 processing step unnecessary.
 
-## Panel 1 detail
+## §5 detail
 
-Figure 4b is the "plain Section-B style" scatter with larger text: per-250 kb-bin
+§5 is the plain-style scatter with larger text: per-250 kb-bin
 rep1 vs rep2, one axis pair per context, with the identity line and Pearson /
 Spearman annotated. **GCH is quantile-normalised, HCG is left raw** — the
 `NORM_LBL` dict in the cell carries that distinction into the panel titles. The

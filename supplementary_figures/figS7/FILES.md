@@ -4,24 +4,28 @@
 |---|---|---|
 | `README.md` | Panels, where the code comes from, inputs, the re-run caveat. | written for this repo |
 | `FILES.md` | This file. | written for this repo |
-| `figS7_qc_panels.ipynb` | R, 4 code cells, kernel `nomehic_r`. §1 setup, §2 helpers, §8.7c.1 uncorrected joint embedding, §8.7c.2 the QC/batch panels. Carries its outputs — 1 figure, no errors. | `main_figures/fig3/fig3_umap.ipynb`, code cells 0, 1, 23, 24 |
+| `figS7_qc_panels.ipynb` | R, 4 code cells, kernel `nomehic_r`. §1 setup, §2 helpers, §3 uncorrected joint embedding, §4 the QC/batch panels. Carries its outputs — 1 figure, no errors. | `main_figures/fig3/fig3_umap.ipynb`, code cells 0, 1, 23, 24 (its §1, §2, §8.7c.1, §8.7c.2) |
 
 ## How it was assembled
 
-Four cells lifted verbatim from `fig3_umap.ipynb` — no source edits, no path
-rewriting, outputs carried over as-is rather than re-executed. Two markdown cells
-were added: a title cell, and a `## §8.7c` section header explaining the jump from
-§2 to §8.7c.
+Four cells lifted from `fig3_umap.ipynb` — no path rewriting, outputs carried
+over as-is rather than re-executed. Two markdown cells were added: a title cell
+and a section header for §3.
 
-The original § numbers are kept deliberately. Renumbering them to §1–§4 would
-break the correspondence with the Fig-3 notebook, where these panels also appear,
-and the repo convention is not to change what code says about itself.
+**Renumbered §1–§4.** The cells arrive as fig3's §1, §2, §8.7c.1 and §8.7c.2;
+carrying §8.7c into a four-cell notebook left the reader hunting for a §3 through
+§8.7b that are not here. The section comments were renumbered to match, and every
+reference that genuinely points at the Fig-3 notebook now names it. Two dead
+lines went with the renumber — `PARENT` and `REF_DIR`, the latter commented as
+feeding a §8d concordance check that is in neither notebook; nothing referenced
+either.
 
 ## Relationship to `main_figures/fig3/`
 
 The same four cells exist in `fig3_umap.ipynb`. That notebook is the full
 analysis; this one is the S7 extract. They are not independent copies of an
-algorithm — they are the same cells, so a change to §8.7c must be made in both.
+algorithm — they are the same cells, so a change to §3/§4 here (§8.7c there)
+must be made in both.
 `fig3_umap.ipynb` is the source of truth.
 
 ## Inputs it reads

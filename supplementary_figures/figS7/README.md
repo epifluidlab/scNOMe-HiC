@@ -19,18 +19,18 @@ by Harmony and that no per-cell QC measure structures the embedding.
 
 ## Where this code comes from
 
-These are **§1, §2 and §8.7c of `../../main_figures/fig3/fig3_umap.ipynb`**, kept
-under their original section numbers so they stay traceable to that notebook. The
-extraction is self-contained because both §8.7c cells were written to be
-resume-friendly: each falls back to reading from disk when the in-session object
-is absent.
+The cells come from **`../../main_figures/fig3/fig3_umap.ipynb`**, where these
+panels are §8.7c. They are renumbered §1–§4 here so the notebook reads in its own
+order; the table below gives both names. The extraction is self-contained because
+the §8.7c cells were written to be resume-friendly: each falls back to reading
+from disk when the in-session object is absent.
 
-| § | What it does | Reads if not in session |
-|---|---|---|
-| §1 | setup — `WORKDIR`, `OUT_TAB`, `OUT_FIG`, libraries | — |
-| §2 | helpers — `ggsave_both` | — |
-| §8.7c.1 | rebuilds the **uncorrected** (pre-Harmony) joint embedding, the "before" half of panel A | `tables/{hcg,hic,gch}_svd_raw.txt` |
-| §8.7c.2 | draws the panels | `annotation/metadata_with_cell_type.txt`, `tables/joint_umap.txt`, `tables/joint_umap_uncorrected.txt` |
+| here | in `fig3_umap.ipynb` | What it does | Reads if not in session |
+|---|---|---|---|
+| §1 | §1 | setup — `WORKDIR`, `OUT_TAB`, `OUT_FIG`, libraries | — |
+| §2 | §2 | helpers — `ggsave_both` | — |
+| §3 | §8.7c.1 | rebuilds the **uncorrected** (pre-Harmony) joint embedding, the "before" half of panel A | `tables/{hcg,hic,gch}_svd_raw.txt` |
+| §4 | §8.7c.2 | draws the panels | `annotation/metadata_with_cell_type.txt`, `tables/joint_umap.txt` |
 
 So it runs without the §4–§8 embedding chain, against
 `subset_clustering/250kb_denovo/{tables,annotation}/`.
@@ -47,9 +47,9 @@ All from `../../data_processing/mouse_cortex/`:
   `transnum` from it; the cell asserts `library_prep_date` is present rather than
   reading any sample sheet ad hoc.
 
-## §8.7c.1 recomputes — and that is deliberate
+## §3 recomputes — and that is deliberate
 
-§8.7c.1 rebuilds the uncorrected joint embedding from `tables/{hcg,hic,gch}_svd_raw.txt`
+§3 rebuilds the uncorrected joint embedding from `tables/{hcg,hic,gch}_svd_raw.txt`
 every time. It is **deterministic**: two independent recomputes — one a standalone
 `Rscript`, one through the notebook — agree to `0.000e+00`. Run this notebook and
 you get exactly the layout it shows.
@@ -81,8 +81,8 @@ The superseded files are kept in
 `250kb_denovo/archive_superseded/joint_umap_uncorrected.aug11_session_artifact.txt`
 and the matching `joint_umap_qc_panels.aug11_session_artifact.{pdf,png}`.
 
-**§8.7c.1 was the only cell with this fork.** §4b, §6c and §8.7a in the Fig-3 UMAP
-notebook contain no `exists()` branch and read no tables — they take their input
+**§8.7c.1 in the Fig-3 notebook — §3 here — was the only cell with this fork.**
+§4b, §6c and §8.7a there contain no `exists()` branch and read no tables — they take their input
 from the in-memory embeddings, so they are deterministic and a full run reproduces
 them exactly. Their separate caveat is the unseeded `impute.knn` in §4a/§6b, which
 is documented in that folder's README and is unrelated to serialisation.
