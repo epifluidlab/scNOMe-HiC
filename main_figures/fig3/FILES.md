@@ -8,6 +8,16 @@
 | `fig3_apa.ipynb` | Python, 7 code cells, kernel `hic_cooler`. Union loops → Q/T per anchor → differential assignment → APA pile-up → the 10 × 10 panel grid. Caches intermediates, so only §6 needs re-running to retune the colour scale. Executed: all 7 cells carry outputs, including the panel grid. | `sc_nomehic/hic/loop_final/celltype_diffloop_apa.ipynb` |
 
 Renamed, and eight empty trailing code cells dropped (23 → 15 cells, 15 → 7 code).
+
+**Updated 2026-08-22** to the finalised plotting. Four changes from the previous
+version: `FC_THRESH` 1.2 → **2**; cell-type order changed to put **ASC before ODC
+and OPC**; the colour scale moved from `gamma=3` with 1st/99.9th-percentile limits
+to **`gamma=2` with fixed `vmin=0.2, vmax=0.75`**; and per-panel APA scores were
+taken off the grid (reported in §7 instead). §5 gained a **cache-permutation
+guard** — `apa_25kb.npz` now stores the `LEG` order it was built under, and both
+axes are permuted if `LEG` has changed since. That guard fired on this run, so the
+shipped figure is drawn from a cache built under the old order and correctly
+re-indexed.
 No path rewriting; `OUTDIR` still resolves to `hic/loop_final/apa_1577`.
 
 The figure cell's output was regenerated headlessly: the working-copy save at

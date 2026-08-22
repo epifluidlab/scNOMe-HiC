@@ -112,10 +112,27 @@ assignment, or the marker selection, so a clean IT-L5/6 diagonal (23.39 against 
 for its best competitor) is independent structural evidence that it is a real cell
 type rather than a merge artefact. The same argument supports the merged `Inhib` group.
 
-Colour scale is `PowerNorm(gamma=3)` with limits at the 1st/99.9th percentile across
-all 100 panels and one shared colourbar. `GAMMA` in §6 is the knob worth retuning.
-The gamma is a presentation choice, not a reproduction: no `_powernorm_sharedcbar`
-version predates this analysis, so the contrast was tuned here.
+Colour scale is `PowerNorm(gamma=2)` with **fixed** limits `vmin = 0.2`,
+`vmax = 0.75` and one shared colourbar. The limits are deliberately not
+percentile-derived: the 1st percentile is the empty corner (~0.02), which drags
+almost every pixel far up the colour axis. These match the original
+`hic/save.py` figure, which used `imshow(vmin=0.2, vmax=0.8)` with no norm.
+`GAMMA` in §6 is the knob worth retuning — above 1 it compresses the low end
+(background to white, focal dot standing out); below 1 it saturates the
+background.
+
+**Loop specificity** uses `FC_THRESH = 2`: a loop is assigned to a cell type when
+fc(Q) *and* fc(T) both exceed 2 against the mean of the other nine.
+
+**Cell-type order** is IT-L2/3, IT-L4, IT-L5/6, CT-L6, Inhib, **ASC, ODC, OPC**,
+MGC, PC/EC. §5 carries a guard for this: the cached `apa_25kb.npz` records the
+`LEG` order it was built with, and if `LEG` has since been reordered both axes of
+`result` and `counts` are permuted to match. Without it a reordering would
+silently mislabel every panel — the figure would look perfectly fine and be
+wrong.
+
+Per-panel APA scores are no longer printed over the grid; they are reported as a
+table in §7, which keeps the 10 × 10 panel readable.
 
 ## Not included
 
