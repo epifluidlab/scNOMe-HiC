@@ -30,7 +30,7 @@ Top to bottom. The cells are:
 | C2 | quantile-normalises GCH across replicates — **defines `quantile_normalize()`**, which Figure 4b calls |
 | pub helpers | `FIG_DIR`, the `PUB` rcParams, `save_fig`, `density_scatter` |
 | **Figure 4b** | **panel 1** — `repro_GCH_HCG_qnorm_plain` |
-| **D-pub** | **panel 2** — `scc_violin_clip95`, plus `scc_violin_raw` for reference |
+| **D-pub** | **panel 2** — `scc_violin_clip95` |
 
 ## Two things to know about the SCC panel
 
@@ -42,13 +42,16 @@ Top to bottom. The cells are:
 | 500 kb | 0.221 / **0.896** / 0.988 | 0.989 / **1.000** / 1.000 |
 | 250 kb | 0.465 / **0.908** / 0.985 | 0.990 / **1.000** / 1.000 |
 
-All three clip-95 violins collapse against the y = 1 ceiling. The processing
-folder's README puts it plainly: on this deep pseudobulk the 95th-percentile clip
-over-clips, and no clip percentile below 99 avoids it. **The raw SCC is the
-informative version** — medians 0.84–0.91 with real spread — and it is written to
-the same table (`scc_raw`) and plotted by the §D-pub cell as
-`scc_violin_raw.pdf`. Figure S6 ships the clip-95 violin as a deliberate choice;
-if a reviewer asks why every SCC is ~1.0, the raw panel is one cell away.
+All three clip-95 violins collapse against the y = 1 ceiling. On this deep
+pseudobulk the 95th-percentile clip over-clips, and no clip percentile below 99
+avoids it. The raw SCC has real spread — medians 0.84–0.91 — and is the more
+informative statistic, but Figure S6 ships the clip-95 violin as a deliberate
+choice, for consistency with the cell-line SCC panel which uses the same formula.
+
+The notebook plots **only** clip-95. `scc_raw` is still written to
+`scc_by_chrom_and_resolution.csv` by step 3, so if a reviewer asks why every SCC
+is ~1.0, the raw violin is one `scc_violin("scc_raw", …)` call away — the helper
+that draws it is already defined in the same cell.
 
 **2. Only the 95th percentile is kept.** The source notebook also had a §D-pub2
 cell sweeping clip percentiles 95–99 and writing a violin for each, which wrote

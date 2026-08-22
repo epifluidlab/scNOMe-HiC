@@ -4,7 +4,7 @@
 |---|---|---|
 | `README.md` | Panels, inputs, run order, the SCC clip caveat. | written for this repo |
 | `FILES.md` | This file. | written for this repo |
-| `figS6_replicate_reproducibility.ipynb` | Python, 6 code cells, kernel `scnomehic_python`. Loads the per-replicate 250 kb pseudobulk, quantile-normalises GCH, draws the reproducibility scatter, then the SCC violins from the step-3 SCC table. All 6 cells carry outputs — 5 figures, no errors. | `sc_nomehic/snakemake/replicate_comparison/replicate_comparison.ipynb` |
+| `figS6_replicate_reproducibility.ipynb` | Python, 6 code cells, kernel `scnomehic_python`. Loads the per-replicate 250 kb pseudobulk, quantile-normalises GCH, draws the reproducibility scatter, then the clip-95 SCC violin from the step-3 SCC table. All 6 cells carry outputs — 4 figures, no errors. | `sc_nomehic/snakemake/replicate_comparison/replicate_comparison.ipynb` |
 
 ## What was trimmed
 
@@ -17,7 +17,7 @@ The source notebook has 17 code cells; 6 are kept. Retained cells and why:
 | 5 | C2 | **defines `quantile_normalize()`**, which Figure 4b calls |
 | 6 | pub helpers | `FIG_DIR`, `PUB`, `save_fig` |
 | 11 | Figure 4b | **panel 1** |
-| 13 | D-pub | **panel 2** — `scc_violin_clip95`, plus `scc_violin_raw` |
+| 13 | D-pub | **panel 2** — `scc_violin_clip95` only |
 
 Cells 5 and 6 are kept because a panel cell depends on a name they define, not
 because they are panels themselves — cell 5 for `quantile_normalize`, cell 6 for
@@ -54,6 +54,9 @@ No cell source was edited and no path was rewritten; outputs are the originals.
 - The other figures in `results/figures_pub/` — `repro_HCG`, `repro_GCH_qnorm`,
   `corr_methy_acc_{rep1,rep2}`, `repro_GCH_HCG_qnorm`, `scc_violin_raw`,
   `scc_violin_clip{96..99}`. Produced by cells that are kept or dropped as above,
-  but not S6 panels themselves. `scc_violin_clip{96..99}` are **no longer produced
-  at all** — the sweep cell was dropped. Stale copies of those four PDFs/PNGs may
-  remain in the working tree's `results/figures_pub/`; they are orphaned.
+  but not S6 panels themselves. `scc_violin_clip{96..99}` and `scc_violin_raw` are
+  **no longer produced at all** — the sweep cell was dropped and the raw call
+  removed, so the notebook draws exactly one SCC violin. Stale copies of those
+  files may remain in the working tree's `results/figures_pub/`; they are
+  orphaned. The `scc_violin()` helper still takes a column argument, so raw can be
+  drawn again with a one-line call.
