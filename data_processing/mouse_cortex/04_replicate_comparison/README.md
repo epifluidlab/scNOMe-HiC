@@ -20,14 +20,20 @@ Cell lists are in `cell_lists/`; together they are the same 1,577 cells as
 |---|---|---|
 | 1 | `01_pseudobulk_methylation.py` (`.slurm`, array 1–4) | per-cell GCH/HCG counts → `pseudobulk/{rep}.{GCH,HCG}.250kb.pseudobulk.{txt.gz,bedGraph}` |
 | 2 | `02_merge_bam_to_hic.sh` via `02_submit_hic.sh` | per-cell `04.alignment_snakemake/{cell}.calmd.bam` → merged, name-sorted → `sam2juicer_new.py -f mm10_DpnII` → `juicer pre -q 30` → `hic/{rep1,rep2}.mapQ30.hic` |
-| 3 | `03_scc_hicrep.py` (`03_submit_scc.slurm`) | the two `.hic` → per-chrom cool dumps → `hicrepSCC(H=3)` at 1 Mb / 500 kb / 250 kb → `results/scc/`, with both `scc_raw` and `scc_clip95` |
+| 3 | `03_dump_hic.py` (`03_submit_dump.slurm`) | the two `.hic` → `juicer_tools dump observed NONE` per chromosome at 1 Mb / 500 kb / 250 kb → `results/scc/dumps/` (120 files) |
+
+**The SCC itself is not computed here.** It lives in the Figure S6 notebook, which
+reads these dumps — the same split `main_figures/fig1` uses for its
+single-cell-vs-bulk SCC. Only the dump needs to be a batch step: java plus
+juicer_tools, 120 invocations against ~230 MB `.hic` files. Computing SCC from the
+dumps takes about 15 s, so it belongs with the figure that reports it.
 
 Steps 1 and 2 are independent; 3 needs 2.
 
 ```bash
 sbatch 01_pseudobulk_methylation.slurm
 bash   02_submit_hic.sh                                  # returns the rep1/rep2 job ids
-sbatch --dependency=afterok:<rep1>:<rep2> 03_submit_scc.slurm
+sbatch --dependency=afterok:<rep1>:<rep2> 03_submit_dump.slurm
 ```
 
 ## Method choices that matter
@@ -43,8 +49,8 @@ sbatch --dependency=afterok:<rep1>:<rep2> 03_submit_scc.slurm
 
 ## The clip percentile — read this before reusing the SCC
 
-Step 3 writes both a raw SCC and one under a per-chromosome 95th-percentile clip.
-On this deep pseudobulk **the clip saturates**: median SCC is exactly 1.000 at the
+The Figure S6 notebook computes SCC two ways — raw, and under a per-chromosome
+95th-percentile clip. On this deep pseudobulk **the clip saturates**: median SCC is exactly 1.000 at the
 95th percentile for all three resolutions. A sweep out to the 99th percentile was
 run during development and confirmed no clip below 99 avoids it; that sweep is not
 part of the figure path and is not shipped. Raw SCC is the informative version.
@@ -64,7 +70,10 @@ uses the clip-95 violin; see that folder's README.
 |---|---|
 | Pseudobulk methylation/accessibility | `pseudobulk/{rep}.{GCH,HCG}.250kb.pseudobulk.txt.gz` |
 | Per-replicate Hi-C | `hic/{rep1,rep2}.mapQ30.hic` |
-| SCC per chrom × resolution | `results/scc/scc_by_chrom_and_resolution.csv` (`scc_raw`, `scc_clip95`) |
+| Per-chromosome contact dumps | `results/scc/dumps/{rep}_{res}_{chrom}.txt` — 120 files, ~104 MB |
+
+The SCC table is produced by the Figure S6 notebook from those dumps, not by this
+folder.
 
 Large intermediates (merged BAMs, sorted pair files) were written to b1042 scratch
 and are not part of the analysis outputs.

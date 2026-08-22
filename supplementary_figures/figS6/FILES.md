@@ -4,7 +4,7 @@
 |---|---|---|
 | `README.md` | Panels, inputs, run order, the SCC clip caveat. | written for this repo |
 | `FILES.md` | This file. | written for this repo |
-| `figS6_replicate_reproducibility.ipynb` | Python, 6 code cells, kernel `scnomehic_python`. Loads the per-replicate 250 kb pseudobulk, quantile-normalises GCH, draws the reproducibility scatter, then the clip-95 SCC violin from the step-3 SCC table. All 6 cells carry outputs — 4 figures, no errors. | `sc_nomehic/snakemake/replicate_comparison/replicate_comparison.ipynb` |
+| `figS6_replicate_reproducibility.ipynb` | Python, 7 code cells, kernel `scnomehic_python`. Loads the per-replicate 250 kb pseudobulk, quantile-normalises GCH, draws the reproducibility scatter, **computes the Hi-C SCC from the step-3 juicer dumps**, then draws the clip-95 violin. All 7 cells carry outputs — 4 figures, no errors. Runs in ~20 s. | `sc_nomehic/snakemake/replicate_comparison/replicate_comparison.ipynb` |
 
 ## What was trimmed
 
@@ -18,6 +18,7 @@ The source notebook has 17 code cells; 6 are kept. Retained cells and why:
 | 6 | pub helpers | `FIG_DIR`, `PUB`, `save_fig` |
 | 11 | Figure 4b | **panel 1** |
 | 13 | D-pub | **panel 2** — `scc_violin_clip95` only |
+| — | D-calc | **added for this repo**: computes the `scc` table from the dumps, replacing the `pd.read_csv` the D-pub cell used to do |
 
 Cells 5 and 6 are kept because a panel cell depends on a name they define, not
 because they are panels themselves — cell 5 for `quantile_normalize`, cell 6 for
@@ -37,14 +38,23 @@ the trimmed notebook reproduces `scc_violin_clip95.png` **pixel-identically** to
 the shipped file. So nothing about the panel changed — the notebook simply no
 longer computes four percentiles it never plotted in the figure.
 
-No cell source was edited and no path was rewritten; outputs are the originals.
+One cell was **added** rather than lifted: `D-calc`, which computes SCC from the
+juicer dumps. It is the SCC half of the original `03_scc_hicrep.py` batch script,
+moved into the notebook so the figure and its statistic live together — the same
+arrangement `main_figures/fig1` uses. Its dump parsing, `H=3` smoothing,
+resolutions, chromosome list and 95th-percentile clip are the script's, unchanged,
+and it reproduces that script's `scc_by_chrom_and_resolution.csv` **bit-identically**
+for both columns across all 60 rows. The `D-pub` cell lost only its `pd.read_csv`
+line, since `scc` now comes from `D-calc`.
+
+Otherwise no cell source was edited and no path was rewritten.
 
 ## Inputs it reads
 
 | Path (working tree) | Written by |
 |---|---|
 | `replicate_comparison/pseudobulk/{rep}.{GCH,HCG}.250kb.pseudobulk.txt.gz` | `04_replicate_comparison/01_pseudobulk_methylation.py` |
-| `replicate_comparison/results/scc/scc_by_chrom_and_resolution.csv` | `04_replicate_comparison/03_scc_hicrep.py` |
+| `replicate_comparison/results/scc/dumps/{rep}_{res}_{chrom}.txt` | `04_replicate_comparison/03_dump_hic.py` |
 
 ## Deliberately not included
 

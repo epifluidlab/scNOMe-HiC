@@ -20,7 +20,7 @@
 | `03_hic_loops/cell_table_all1577_25kb.tsv` | `cell_id ⇥ cell_type`, 1,577 cells, 10 types. A manifest, not an analysis output: derived from `250kb_denovo/annotation/cell_type_table.tsv` with the `batch<N>_` prefix stripped. Shipped because `02_call_loops.sh` requires it and no script builds it. | `$L/` |
 | `04_replicate_comparison/01_pseudobulk_methylation.{py,slurm}` | Pools per-cell GCH/HCG counts per 250 kb bin into a per-replicate pseudobulk (Σmc / Σcov, not a mean of rates). SLURM array 1–4. | `$R/code/` |
 | `04_replicate_comparison/02_merge_bam_to_hic.sh`, `02_submit_hic.sh` | Merge a replicate's `calmd` BAMs → `sam2juicer_new.py` → `juicer pre -q 30` → `{rep}.mapQ30.hic`. Submitter returns the two job ids for the step-3 dependency. | `$R/code/` |
-| `04_replicate_comparison/03_scc_hicrep.py`, `03_submit_scc.slurm` | `hicrepSCC(H=3)` per chromosome at 1 Mb / 500 kb / 250 kb; writes both `scc_raw` and `scc_clip95`. The `scc_clip95` column is what Figure S6 plots. | `$R/code/` |
+| `04_replicate_comparison/03_dump_hic.py`, `03_submit_dump.slurm` | `juicer_tools dump observed NONE` per (replicate, resolution, chromosome) — 120 dumps. Split out of the original `03_scc_hicrep.py`; the SCC half moved into the Fig. S6 notebook. | `$R/code/03_scc_hicrep.py` |
 | `04_replicate_comparison/cell_lists/{rep1,rep2}.txt` | 702 + 875 = the 1,577 QC-passing cells, split by prefix. Manifests, not analysis outputs. | `$R/cell_lists/` |
 
 ## Edits made

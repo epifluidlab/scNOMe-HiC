@@ -8,13 +8,19 @@
 | `01_pseudobulk_methylation.slurm` | SLURM array 1–4: rep1/GCH, rep1/HCG, rep2/GCH, rep2/HCG. | `code/01_pseudobulk_methylation.slurm` |
 | `02_merge_bam_to_hic.sh` | Worker: merge a replicate's `calmd` BAMs → name-sort → `sam2juicer_new.py` → sort → `juicer pre -q 30` → multi-resolution `.hic`. | `code/02_merge_bam_to_hic.sh` |
 | `02_submit_hic.sh` | Submits the worker for rep1 and rep2 and prints the two job ids (needed for the step-3 dependency). | `code/02_submit_hic.sh` |
-| `03_scc_hicrep.py` | Dumps both `.hic` to per-chrom cool, runs `hicrepSCC(H=3)` at 1 Mb / 500 kb / 250 kb, writes the SCC table and a violin. Also leaves the cached dumps that step 4 reuses. | `code/03_scc_hicrep.py` |
-| `03_submit_scc.slurm` | Step 3 job. Submit with `--dependency=afterok:` on the two step-2 jobs. | `code/03_submit_scc.slurm` |
+| `03_dump_hic.py` | `juicer_tools dump observed NONE` for every (replicate, resolution, chromosome) — 120 dumps. Skips existing non-empty files, so re-running is safe. **The SCC calculation was moved out of this script into the Figure S6 notebook**; what remains is the part that genuinely needs a batch job. | rewritten from `code/03_scc_hicrep.py` |
+| `03_submit_dump.slurm` | Step 3 job. Submit with `--dependency=afterok:` on the two step-2 jobs. | rewritten from `code/03_submit_scc.slurm` |
 | `cell_lists/rep1.txt` | 702 `scNH_c57cortex_*` cell ids. | `cell_lists/rep1.txt` |
 | `cell_lists/rep2.txt` | 875 `batch2_*` cell ids. | `cell_lists/rep2.txt` |
 
-No command, parameter or data path was changed from the originals. All scripts
-pass `bash -n` / `ast.parse`.
+`03_scc_hicrep.py` was split: the dump loop stayed here as `03_dump_hic.py`, and
+the SCC/plot half moved into `figS6_replicate_reproducibility.ipynb`. Verified
+before and after — the notebook reproduces the batch script's
+`scc_by_chrom_and_resolution.csv` **bit-identically** for both `scc_raw` and
+`scc_clip95` across all 60 chromosome × resolution rows (max difference 0). Its
+dump parameters, resolutions, chromosome list and `H=3` smoothing are unchanged.
+Everything else keeps the commands and paths it ran with. All scripts pass
+`bash -n` / `ast.parse`.
 
 ## Deliberately not included
 

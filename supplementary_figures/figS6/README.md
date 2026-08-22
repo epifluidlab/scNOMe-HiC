@@ -17,7 +17,13 @@ sc-NOMe-HiC run (rep1 = 702 cells, rep2 = 875, together the 1,577 QC-passing set
 Produced by `../../data_processing/mouse_cortex/04_replicate_comparison/`:
 
 - `pseudobulk/{rep1,rep2}.{GCH,HCG}.250kb.pseudobulk.txt.gz` — step 1
-- `results/scc/scc_by_chrom_and_resolution.csv` — step 3 (columns `scc_raw`, `scc_clip95`)
+- `results/scc/dumps/{rep}_{res}_{chrom}.txt` — step 3, 120 juicer dumps
+
+**The SCC is computed in this notebook**, not read from a table — dumps → dense
+matrix → 95th-percentile clip → cooler → `hicrepSCC(H=3)`, about 15 s for all 60
+chromosome × resolution pairs. This matches `main_figures/fig1`, which computes
+its single-cell-vs-bulk SCC the same way. Verified bit-identical to the values the
+old batch script wrote (60/60 rows, max difference 0).
 
 ## Run order
 
@@ -30,6 +36,7 @@ Top to bottom. The cells are:
 | C2 | quantile-normalises GCH across replicates — **defines `quantile_normalize()`**, which Figure 4b calls |
 | pub helpers | `FIG_DIR`, the `PUB` rcParams, `save_fig`, `density_scatter` |
 | **Figure 4b** | **panel 1** — `repro_GCH_HCG_qnorm_plain` |
+| D-calc | SCC from the dumps → the `scc` table (`scc_raw` and `scc_clip95`) |
 | **D-pub** | **panel 2** — `scc_violin_clip95` |
 
 ## Two things to know about the SCC panel

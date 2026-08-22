@@ -69,7 +69,7 @@ across all three modalities.
 |---|---|
 | `01_pseudobulk_methylation.{py,slurm}` | Per-replicate GCH/HCG pseudobulk at 250 kb, pooled as Σmc / Σcov rather than a mean of per-cell rates. |
 | `02_merge_bam_to_hic.sh` via `02_submit_hic.sh` | Merge each replicate's `calmd` BAMs → `sam2juicer_new.py` → `juicer pre -q 30` → `{rep}.mapQ30.hic`. |
-| `03_scc_hicrep.py` | `hicrepSCC(H=3)` per chromosome at 1 Mb / 500 kb / 250 kb. Writes both `scc_raw` and `scc_clip95`. |
+| `03_dump_hic.py` | `juicer_tools dump observed NONE` per chromosome at 1 Mb / 500 kb / 250 kb — 120 dumps. The SCC is computed from these in the Fig. S6 notebook. |
 
 Steps 1 and 2 are independent; 3 needs 2. On this deep pseudobulk the
 95th-percentile clip **saturates** — median SCC exactly 1.000 at every resolution,
@@ -86,7 +86,7 @@ against 0.84–0.91 raw. See that folder's README before reusing the SCC.
 | Per-type loops and coolers | `<cell_type>.loop.bedpe`, `<cell_type>.{Q,T,E}.cool` |
 | Per-replicate pseudobulk | `replicate_comparison/pseudobulk/{rep}.{GCH,HCG}.250kb.pseudobulk.txt.gz` |
 | Per-replicate Hi-C | `replicate_comparison/hic/{rep1,rep2}.mapQ30.hic` |
-| SCC tables | `replicate_comparison/results/scc/` |
+| Per-chromosome contact dumps | `replicate_comparison/results/scc/dumps/` |
 
 ## Notes on paths
 
