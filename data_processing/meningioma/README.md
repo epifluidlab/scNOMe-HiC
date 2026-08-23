@@ -10,8 +10,9 @@ through the pipeline together under one workdir.
 | data_batch_3 | `NU04113_scNOMe_HiC_p2_*` | 80 |
 | **total** | | **348** |
 
-Prefixes are unique across batches, so the three trimmed-fastq sets can be
-symlinked into one scan directory without collisions.
+Prefixes are unique across batches, so all three can be processed as **one set**
+in a single workdir without name collisions — that is why there is one config and
+one driver rather than three.
 
 Cell counts narrow at two points, and the distinction matters downstream:
 
@@ -47,8 +48,17 @@ HCG > 150000          cis1kbnum > 2000
 
 | Step | What it does |
 |---|---|
-| `00_setup_merged_trimmed.sh` | Symlinks each batch's `*.R1_val_1.fq.gz` / `*.R2_val_2.fq.gz` into `merged_trimmed/` — 696 links for 348 cells. Run once; it is what lets the pipeline auto-discover all three batches as one set. |
 | `01_run_pipeline.sh` | Snakemake driver: `mapping → bamprocess → qc → bisqc → bistools → methylation` for all 348 cells. |
+
+**Input directory.** `config.yaml` points at `trimmed_data: merged_trimmed`, a
+single directory holding every cell's reads. In the original run that directory
+was assembled by symlinking three separately-trimmed batch folders into one
+place — a detail of how this dataset happened to be stored, not part of the
+method, so the script that did it is not shipped.
+
+Start from raw or demultiplexed reads instead and the pipeline does its own
+trimming; see the root `RUNNING.md` for the two entry points. Data downloaded
+from GEO is already demultiplexed, so it takes the second one.
 
 The hicluster stage is deliberately **not** in the default run — it is gated on
 `selected_cells_file`, which does not exist until QC has run.

@@ -1,6 +1,6 @@
 # FILES — data_processing/meningioma
 
-12 files. See `README.md` for the run order and what each step consumes and produces.
+11 files. See `README.md` for the run order and what each step consumes and produces.
 
 `$M` = `/gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic`
 `$S` = `$M/snakemake`
@@ -11,7 +11,6 @@
 | `FILES.md` | This file. | written for this repo |
 | `00_config/config.yaml` | Self-contained snakemake config: `start_from: trimmed`, `trimmed_data: merged_trimmed`, hg38 references, the shared QC thresholds, methylation bins/regions. | `$S/config.yaml` |
 | `00_config/config_hic_all3.yaml` | Layered on top of `config.yaml` for the hicluster step: the all-three-batch cell list and 250 kb embedding output dir. | `$S/config_hic_all3.yaml` |
-| `01_pipeline/00_setup_merged_trimmed.sh` | Symlinks the three batches' trimmed FASTQs into `merged_trimmed/` (696 links, 348 cells). Run once, before the pipeline. | `$S/setup_merged_trimmed.sh` |
 | `01_pipeline/01_run_pipeline.sh` | Snakemake driver for the per-cell chain over all 348 cells. | `$S/run_pipeline.sh` |
 | `02_qc/qc_plots.ipynb` | QC gate and methylation matrices; writes `QC/meningioma_passed.txt`. Python, 15 code cells, 39 figures, no errors. | `$S/qc_plots.ipynb` |
 | `02_qc/remove_controls.py` | Removes the 7 named control / titration wells (blank, 10c, 100c, 1000c) from the passing lists. | `$S/code/remove_controls.py` |
@@ -61,3 +60,20 @@ All scripts pass `bash -n` / `ast.parse`.
 - **`$S/code/plotheatmap_src.py`** — vendored heatmap plotting used by the CNA
   *notebook* (sub-clone clustering and the heatmap figure), not by the count
   step here. It belongs with the figure code.
+- **`$S/setup_merged_trimmed.sh`** — symlinked the three batches' already-trimmed
+  FASTQs into one `merged_trimmed/` directory. That reflects how this dataset was
+  stored locally (batch 1 had been trimmed by an older, non-snakemake pipeline),
+  not how it should be re-run: from raw or demultiplexed reads the pipeline trims
+  for itself. See the root `RUNNING.md`.
+
+## Running this outside the original workdir
+
+Every script keeps the absolute paths it ran with, as in the other datasets — the
+`cd` at the top of each driver, `ROOT`/`OUTDIR`, and the `QC` path in
+`remove_controls.py`. Point those at your own workdir before running.
+
+`remove_controls.py` is safe either way: it removes the named wells by set
+difference, so if a deposit does not include the control/titration wells it
+simply reports removing none. It does not fail on their absence. Only two of the
+seven listed wells passed QC in the original run (`MY_28_S210.ACTTGA`,
+`MY_30_S212.CTTGTA`) — those two are the 296 → 294 difference.

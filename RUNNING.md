@@ -162,6 +162,8 @@ For a reproduction run, `--forceall` is the safer choice.
 | `gm12878_cellline` | `raw` | Full chain including demultiplexing — the default path. |
 | `mixture_cellline` | `trimmed` | Its raw→trimmed step predates this record and the trimmed FASTQs lived on scratch. To run it from scratch, switch to `raw` and supply `data` + `fileindex`, or use `demultiplexed` if you have per-cell reads. |
 | `bulk_scNOMeHiC` | `trimmed` | Bulk libraries are trimmed and split into chunks by that folder's own steps 02–03 before the workflow is invoked. |
+| `mouse_cortex` | `trimmed` | Switch to `demultiplexed` for per-cell reads from GEO. |
+| `meningioma` | `trimmed` | Three sequencing batches were processed as one set from a single input directory (`trimmed_data: merged_trimmed`). That directory was assembled locally by symlinking three separately-trimmed batch folders — batch 1 had been trimmed by an older, non-snakemake pipeline — which is why the assembly script is not shipped. Starting from GEO, point `demultiplexed_data` at the download and set `start_from: "demultiplexed"`; the workflow trims for itself and the three-way split disappears. |
 
 ---
 
