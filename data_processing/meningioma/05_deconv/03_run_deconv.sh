@@ -15,7 +15,11 @@
 # Submit: sbatch 03_run_deconv.sh
 # NOTE: source .bashrc BEFORE enabling strict mode — /etc/bashrc references an unbound
 # variable (BASHRCSOURCED), which would abort the job under `set -u`.
-HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# NOTE: sbatch copies this script into /var/spool/slurmd/job<id>/ before running
+# it, so BASH_SOURCE does NOT point at the real file. Resolve the sibling
+# scripts from the submit directory instead, falling back to BASH_SOURCE when
+# run directly with bash.
+HERE="${SLURM_SUBMIT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 source /home/jmj7858/.bashrc
 module load gcc/11.2.0 || true
 module load htslib || true

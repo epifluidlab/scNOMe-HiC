@@ -63,6 +63,14 @@ so re-running the notebook reproduces the figures exactly rather than redrawing
 them. `.rds` rather than a text table is deliberate — a 15-significant-digit text
 round-trip is by itself enough to move a UMAP.
 
+**Verified, not assumed.** A second run reported `[frozen]` for all seven
+embeddings with none recomputed, and `final_umap_{hcg,hic,gch,joint}.tsv` and
+`final_metadata.tsv` all came back **bit-identical**. Note this buys
+reproducibility rather than speed — the two runs took 313 s and 320 s, because
+the imputation and SVD ahead of Harmony still run each time. Those are
+deterministic (checked across three separate processes), so they are a cost, not
+a risk.
+
 **Delete `tables/frozen/` to recompute from scratch**, and expect a different
 layout if the environment has changed since. The kernel is pinned to `nomehic_r`
 for the same reason.
@@ -110,7 +118,13 @@ disagrees with `cell_type_joint` on only **13** cells against **30** for
 
 To split on an annotation instead, set `SPLIT` in
 `05_deconv/01_make_cell_lists.py`; the BAM merge and UXM step then have to be
-redone, which is the expensive part.
+redone, which is the expensive part (job 3894488, 1 h 07 m).
+
+Changing the split moved the deconvolution modestly: the largest shift is
+**Blood-Mono+Macro at 0.046**, then Megakaryocytes 0.030, Smooth-Muscle 0.021 and
+Microglia 0.019, across 42 atlas cell types. The direction of the barplot is
+unchanged — the contamination the old split carried was real, but not large
+enough to reverse the result.
 
 ## Inputs
 
