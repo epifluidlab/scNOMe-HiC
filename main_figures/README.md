@@ -9,6 +9,7 @@ analysis-ready tables (produced under `../data_processing/`) into published pane
 | `fig2/` | Cell-type mixture vs ground truth: UMAP, accessibility and methylation heatmaps — **migrated** (APA panel pending) | `../../scnomehic_paper/fig2/`, `../../sc_nomehic_cellline/snakemake/` |
 
 | `fig3/` | Mouse cortex cell types: de novo annotation, marker heatmaps, differential-loop APA — **migrated** | `../../sc_nomehic/` |
+| `fig4/` | Meningioma: copy number and multi-modal clustering, 292 cells | `../../meningioma_scnomehic/snakemake/subset_clustering/250kb/all_batches/` |
 
 Add `fig4/`, … as those sections are migrated.
 
