@@ -1,6 +1,6 @@
 # FILES — data_processing/meningioma
 
-11 files. See `README.md` for the run order and what each step consumes and produces.
+14 files. See `README.md` for the run order and what each step consumes and produces.
 
 `$M` = `/gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic`
 `$S` = `$M/snakemake`
@@ -20,6 +20,9 @@
 | `03_hic/03_hicluster.sh` | `hicluster_selected` at 250 kb over the usable cells → `hicluster_250kb_embed_dir_all3/`. | `$S/code/hic2_run_all3.sh` |
 | `04_cna/01_build_cna_1M.sh` | Per-cell fragment counts in 1 Mb bins from the alignment BEDs → `CNA.1M.txt`, the copy-number proxy. | `$S/code/build_cna_1M.sh` |
 | `04_cna/count_fragment.py` | The binning worker the step above calls. Lived outside `snakemake/`, in `data_batch_3/`; shipped here so the step is self-contained. | `$M/data_batch_3/count_fragment.py` |
+| `05_deconv/01_make_cell_lists.py` | Splits the 292 cells into tumour (tumor1 + tumor2) and non-tumour (monocyte) from `final_metadata.tsv`. **Uses `cell_type_hcg`** — set `COL` to change that. | `$S/code/deconv_make_cell_lists.py` |
+| `05_deconv/02_combine_bam.sh` | Merges one group's per-cell BAMs into `combined_sorted_<group>.bam`. | `$S/code/deconv_combinebam.sh` |
+| `05_deconv/03_run_deconv.sh` | SLURM driver: cell lists → merged BAMs → `wgbstools bam2pat` → `uxm deconv` against the Loyfer brain atlas → `output.csv`. | `$S/code/deconv_run.sh` |
 
 ## Edits made
 

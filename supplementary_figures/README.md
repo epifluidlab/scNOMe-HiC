@@ -12,6 +12,7 @@ the code that turns analysis-ready tables into panels.
 | `figS5/` | <!-- FILL --> | `../../scnomehic_paper/s5/` |
 | `figS6/` | Replicate reproducibility, mouse cortex (rep1 vs rep2) | `../../sc_nomehic/snakemake/replicate_comparison/` |
 | `figS7/` | QC / batch diagnostics on the integrated UMAP, mouse cortex | `../../sc_nomehic/snakemake/subset_clustering/250kb_denovo/` (via `main_figures/fig3/`) |
+| `figS8/` | Meningioma: joint vs HCG annotation, and the concordance metrics Fig. 4 does not show | via `main_figures/fig4/fig4_umap.ipynb` — no notebook of its own |
 
 Note: `s2` and `s2_new` both exist in the source tree. Which one (or which parts
 of each) belongs in `figS2/` is still to be decided.

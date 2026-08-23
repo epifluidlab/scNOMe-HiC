@@ -7,6 +7,7 @@
 | `README.md` | Panels, the freeze, the two cell-type annotations. | written for this repo |
 | `FILES.md` | This file. | written for this repo |
 | `fig4_cna.ipynb` | Python, 5 code cells, kernel `scnomehic_python`. 1 Mb fragment counts → median-normalised copy-number heatmap → chr1p + chr22q sub-clone calling. Writes `figures/cna_approach3_chr1p_chr22q.{pdf,png}` and `tables/cna_approach3_clusters.txt`. 3 figures, no errors. | `$A/CNA.ipynb` |
+| `fig4_deconv_barplot.ipynb` | Python, 1 code cell, kernel `scnomehic`. Reads `deconv/output.csv` (UXM fractions per group) and draws the per-cell-type difference, non-tumour − tumour. 1 figure. Executed for this repo — the working copy had none. | `$A/deconv/celltype_difference_barplot.ipynb` |
 | `fig4_umap.ipynb` | R, 16 code cells, kernel `nomehic_r`. Per-modality embeddings (HCG / Hi-C / GCH) → Harmony → UMAP + Leiden, joint embedding, cell-type annotation, the §8c four-panel figures, §8d concordance, §9 saves. 15 of 16 cells carry outputs — 11 figures, no errors. | `$A/subset_final_snakemake.ipynb` |
 
 ## What was trimmed
@@ -44,8 +45,12 @@ Only the last cell is unexecuted, and it is empty.
 - **`$A/subset_final_snakemake_exploration.ipynb`** — the n_pc × k parameter
   sweep that fixed the locked settings (HCG 20/25, Hi-C 5/25, GCH 9/25, res 0.2).
   Exploration; the final notebook states the chosen values directly.
-- **`$A/deconv/`** and `code/deconv_*` — the deconvolution analysis, pending a
-  decision on whether it is a paper panel.
+- **`$A/deconv/` outputs** — the merged BAMs (33 GB), `.pat.gz`, `.beta`,
+  `output.csv` and `deconv.pdf`. Data and intermediates; the chain that makes them
+  is `data_processing/meningioma/05_deconv/`.
+- **`$S/code/deconv_barplot.py`** — an earlier script version of the barplot,
+  superseded by `celltype_difference_barplot.ipynb` (which is what produced the
+  shipped PDF, dated 2026-07-16 against the script's 07-08).
 - **`250kb/batch2_3/`** — the 142-cell batch2+3 variant, abandoned in June.
 
 ## On `plotheatmap`

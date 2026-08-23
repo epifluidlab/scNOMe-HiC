@@ -8,14 +8,23 @@ QC → 292 survive the Hi-C usability gate). Inputs come from
 |---|---|---|
 | Copy-number heatmap, three sub-clone groups | `cna_approach3_chr1p_chr22q.pdf` | `fig4_cna.ipynb`, Approach 3 |
 | Four-panel UMAPs coloured by cell type | `final_umap_fig4b_joint.pdf` | `fig4_umap.ipynb` §8c |
+| Embedding–CNA concordance, **NMI facet** | `embedding_cna_concordance_signif.pdf` | `fig4_umap.ipynb` §8d |
+| Tumour vs non-tumour cell-type deconvolution | `celltype_difference_barplot.pdf` | `fig4_deconv_barplot.ipynb` |
 
-`final_umap_fig4b_joint.pdf` also appears in **Supplementary Figure S8**, beside
-`final_umap_fig4b_hcg.pdf` — the same four panels under the HCG-based annotation.
+**Also in Supplementary Figure S8:** `final_umap_fig4b_joint.pdf` beside
+`final_umap_fig4b_hcg.pdf` (the same four panels under the HCG annotation), and
+the **kNN-purity and ARI facets** of the concordance figure.
+
+§8d draws all three metrics as one faceted figure —
+`embedding_cna_concordance_signif.pdf` contains kNN purity, ARI and NMI side by
+side. The main figure uses the NMI facet and S8 the other two, so the split is
+made when the panel is laid out, not by the notebook.
 
 | Notebook | Kernel | Produces |
 |---|---|---|
 | `fig4_cna.ipynb` | Python (`scnomehic_python`) | the copy-number heatmap, and `tables/cna_approach3_clusters.txt` |
-| `fig4_umap.ipynb` | R (`nomehic_r`) | the per-modality and joint embeddings, the cell-type annotation, and the §8c panels |
+| `fig4_umap.ipynb` | R (`nomehic_r`) | the per-modality and joint embeddings, the cell-type annotation, the §8c panels and the §8d concordance |
+| `fig4_deconv_barplot.ipynb` | Python (`scnomehic`) | the tumour vs non-tumour difference barplot, from `deconv/output.csv` |
 
 **Run `fig4_cna.ipynb` first.** It writes the CNA group labels that the UMAP
 notebook reads in §7 and colours by throughout.
@@ -71,6 +80,26 @@ They disagree on 17 cells, at the monocyte/tumor2 boundary. **The paper uses
 `cell_type_joint`** — Leiden on the joint embedding, so all three modalities
 contribute. §8d supports that choice quantitatively: the joint embedding tracks
 the CNA groups better than any single modality.
+
+## Deconvolution — note the annotation
+
+The deconvolution splits cells into tumour and non-tumour, merges their BAMs,
+and runs UXM against the Loyfer brain atlas; the barplot is the per-cell-type
+fraction difference (non-tumour − tumour). The chain is
+`../../data_processing/meningioma/05_deconv/`, and the barplot is drawn here from
+its `output.csv`.
+
+**The split uses `cell_type_hcg`, not `cell_type_joint`** — verified against
+`final_metadata.tsv`: the shipped `cell_tumor.txt` / `cell_nontumor.txt` are
+184 / 108, which matches the HCG annotation exactly and not the joint one
+(which would give 201 / 91). So this panel and the §8c UMAP panel rest on
+different annotations, differing on 17 cells at the monocyte/tumor2 boundary.
+
+That may be deliberate — the deconvolution predates the joint-annotation choice —
+but it is worth a deliberate decision before submission. To rebuild it on the
+joint annotation, set `COL = "cell_type_joint"` in
+`05_deconv/01_make_cell_lists.py` and re-run the chain; the merged BAMs and the
+UXM step would have to be redone, which is the expensive part.
 
 ## Inputs
 
