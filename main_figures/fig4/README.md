@@ -89,17 +89,28 @@ fraction difference (non-tumour − tumour). The chain is
 `../../data_processing/meningioma/05_deconv/`, and the barplot is drawn here from
 its `output.csv`.
 
-**The split uses `cell_type_hcg`, not `cell_type_joint`** — verified against
-`final_metadata.tsv`: the shipped `cell_tumor.txt` / `cell_nontumor.txt` are
-184 / 108, which matches the HCG annotation exactly and not the joint one
-(which would give 201 / 91). So this panel and the §8c UMAP panel rest on
-different annotations, differing on 17 cells at the monocyte/tumor2 boundary.
+**The split is copy-number driven**, which is the definition that matches what
+the deconvolution asks: chr22q carries NF2, the truncal meningioma event, so
+"has the driver lesion" defines tumour rather than any methylation clustering.
 
-That may be deliberate — the deconvolution predates the joint-annotation choice —
-but it is worth a deliberate decision before submission. To rebuild it on the
-joint annotation, set `COL = "cell_type_joint"` in
-`05_deconv/01_make_cell_lists.py` and re-run the chain; the merged BAMs and the
-UXM step would have to be redone, which is the expensive part.
+```
+cna_group 1  chr22q intact             ->  non-tumour   96 cells
+cna_group 2  chr22q loss               ->  tumour      196 cells
+cna_group 3  chr22q loss + chr1p loss  ->  tumour
+```
+
+An earlier version split on `cell_type_hcg` (184 / 108). That was changed because
+it disagreed with copy number on **30 cells** — 21 cells with a 22q loss were
+pooled into the non-tumour methylome, and 9 diploid cells into the tumour one.
+The published-but-superseded outputs are kept in `deconv/published_hcg_split/`.
+
+Worth noting as independent support for the annotation choice: the CNA split
+disagrees with `cell_type_joint` on only **13** cells against **30** for
+`cell_type_hcg` — the same ordering §8d finds.
+
+To split on an annotation instead, set `SPLIT` in
+`05_deconv/01_make_cell_lists.py`; the BAM merge and UXM step then have to be
+redone, which is the expensive part.
 
 ## Inputs
 
