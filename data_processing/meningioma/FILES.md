@@ -12,7 +12,7 @@
 | `00_config/config.yaml` | Self-contained snakemake config: `start_from: trimmed`, `trimmed_data: merged_trimmed`, hg38 references, the shared QC thresholds, methylation bins/regions. | `$S/config.yaml` |
 | `00_config/config_hic_all3.yaml` | Layered on top of `config.yaml` for the hicluster step: the all-three-batch cell list and 250 kb embedding output dir. | `$S/config_hic_all3.yaml` |
 | `01_pipeline/01_run_pipeline.sh` | Snakemake driver for the per-cell chain over all 348 cells. | `$S/run_pipeline.sh` |
-| `02_qc/qc_plots.ipynb` | QC gate and methylation matrices; writes `QC/meningioma_passed.txt`. Python, 15 code cells, 39 figures, no errors. | `$S/qc_plots.ipynb` |
+| `02_qc/qc_plots.ipynb` | QC gate and methylation matrices; writes `QC/meningioma_passed.txt`. §Doublet inspection is where `cisnum_max = 3M` was chosen, so it is kept. Python, 13 code cells, 39 figures, no errors. | `$S/qc_plots.ipynb` |
 | `02_qc/remove_controls.py` | Removes the 7 named control / titration wells (blank, 10c, 100c, 1000c) from the passing lists. | `$S/code/remove_controls.py` |
 | `02_qc/build_methylation_matrices_250kb.py` | GCH / HCG cell × bin matrices at 250 kb. | `$S/code/build_methylation_matrices_250kb.py` |
 | `03_hic/01_hic_matrices.sh` | Per-cell Hi-C contact matrices (`scbam2hic` + `hicprocess`) for the QC-passed cells. | `$S/code/hic1_matrices.sh` |
@@ -68,6 +68,22 @@ All scripts pass `bash -n` / `ast.parse`.
   stored locally (batch 1 had been trimmed by an older, non-snakemake pipeline),
   not how it should be re-run: from raw or demultiplexed reads the pipeline trims
   for itself. See the root `RUNNING.md`.
+
+## One duplicate left in place
+
+`qc_plots.ipynb` still carries a Hi-C usability cell that implements the **same
+gate** as `03_hic/02_hic_usability_check.py` — identical constants (≥ 1 cis
+contact, > 2500 bp, ends in different `MAX_RES` bins, on every autosome), same
+inputs, same two output files. Only the standalone script ever ran; the notebook
+cell is unexecuted, and the script is what produced the shipped 292-cell list.
+
+It was left rather than removed because deleting a cell changes the notebook, and
+the choice is a real one: the check cannot run in a single top-to-bottom pass —
+it needs the per-cell matrices that `03_hic/01_hic_matrices.sh` produces *from*
+the notebook's own output, so a notebook-resident version requires re-entering the
+notebook after a cluster job. The standalone script avoids that. Keeping both is
+the one thing to avoid, since two copies of a filter can silently drift and change
+which cells are analysed.
 
 ## Running this outside the original workdir
 
