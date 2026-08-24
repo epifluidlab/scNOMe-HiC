@@ -1,0 +1,61 @@
+# ══════════════════════════════════════════════════════════════════════════
+# scNOMe-HiC config — GM_F123 human/mouse SPECIES-MIXING (barnyard) sample
+# aligned to the combined hg38_mm10 reference.
+#
+# Scope for this run: ALIGNMENT + QC ONLY (mapping → bamprocess → qc). Launched
+# with `--until qc` so bisqc / bistools / methylation are NOT run (no combined
+# dbSNP exists for the mixed genome; not needed to measure per-cell human vs
+# mouse read fractions / collision rate).
+# ══════════════════════════════════════════════════════════════════════════
+
+# ─── 1. PROJECT-SPECIFIC ──────────────────────────────────────────────────
+workdir: "/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s3/snakemake"
+
+# Start from already demultiplexed + trim_galore'd fastqs (no demux/trim).
+start_from: "trimmed"
+data: "00.raw_data/"   # unused in trimmed mode
+
+# Auto-discover every {prefix}.{index} pair present in merged_trimmed/. The 96
+# GM_F123 cells are demul_sc{49..72}.{ATCACG,CGATGT,GCCAAT,TGACCA}. fileindex
+# left unset → every barcode found becomes a valid index.
+trimmed_data: "/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s3/snakemake/merged_trimmed"
+
+# ─── 2. REFERENCE (combined hg38 + mm10) ──────────────────────────────────
+# Base path (pipeline appends .fa / .fa.fai / index). Human contigs are named
+# chr*, mouse contigs mm10_chr*.
+reference: "/gpfs/projects/b1198/epifluidlab/shared/data/genomes/hg38_mm10/hg38_mm10"
+
+# Bhmem -enzymeList. The shared ref lacks a DpnII span-region file, so we built
+# a combined one (hg38 chr* + mm10 mm10_chr*) under this workdir's reference/.
+enzyme_list: "/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s3/snakemake/reference/hg38_mm10.DpnII.span_region.bedgraph"
+
+# variants / restriction_sites are only consumed by rules NOT run here
+# (bisqc, bistools, hiccluster). Set to valid placeholders so config parses;
+# no combined dbSNP exists for the mixed genome.
+variants: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/Homo_sapiens_assembly38.dbsnp138.vcf"
+restriction_sites: "/gpfs/projects/b1198/epifluidlab/shared/data/genomes/hg38_mm10/hg38_mm10.fa_DpnII.txt"
+
+# hiccluster.smk reads {reference}.chrom.sizes at PARSE time unless
+# hicluster_chromosomes is set. The combined ref has no chrom.sizes and we
+# aren't running hicluster, so pin a static list to skip that read.
+hicluster_chromosomes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
+
+# ─── SOFTWARE ─────────────────────────────────────────────────────────────
+picard: "/gpfs/projects/b1198/epifluidlab/yoshii/software/picard/picard.jar"
+bisulfitehic: "/gpfs/projects/b1198/epifluidlab/yoshii/software/bisulfiteHic"
+bissnp_jar: "/gpfs/projects/b1198/epifluidlab/yoshii/software/Bis-tools/Bis-SNP/Bis-SNP.latest.jar"
+bistools: "/gpfs/projects/b1198/epifluidlab/yoshii/software/Bis-tools"
+scripts: "/gpfs/projects/b1198/epifluidlab/yoshii/software/sc_NOMeHiC_pipeline/scripts"
+
+# ─── TRIMMING PARAMS (unused in trimmed mode, kept for parse completeness) ─
+clip_r1: 15
+clip_r2: 15
+three_prime_clip_r1: 5
+three_prime_clip_r2: 5
+
+# ─── METHYLATION (not run here; kept so Snakefile parses) ──────────────────
+methylation_bin_sizes:
+  - 1000
+  - 50000
+  - 100000
+  - 250000
