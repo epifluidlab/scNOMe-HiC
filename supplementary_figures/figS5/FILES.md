@@ -10,13 +10,6 @@ Shipped whole: §1 collects, §2 checks completeness (180 cells × 7 fractions),
 §3 fits and draws **the panel**, §4 and §5 are the supporting views. Every cell is
 on the path to §3 or is one of those views.
 
-## Note on the output file names
-
-The notebook still writes `s7_saturation.{pdf,png}`,
-`s7_library_complexity.{pdf,png}` and `s7_saturation_byfraction.{pdf,png}`, from
-when this was Supplementary Figure S7. The names were left rather than rewritten,
-so the notebook keeps producing exactly the files it produced for the paper.
-
 ## Deliberately not included
 
 - **`scnomehic_paper/s7/code/plot_saturation.py`** — an earlier standalone

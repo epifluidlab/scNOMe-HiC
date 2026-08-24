@@ -8,12 +8,9 @@ GM12878 4-plex single-cell NOMe-HiC dataset. **180 QC-passing cells.**
 | Saturation curves with Michaelis–Menten fit | `s5_saturation.pdf` | §3 of the notebook |
 
 The notebook also draws two supporting views that are not the panel:
-`library_complexity` (unique molecules against raw fragments, §4) and
-`saturation_byfraction` (the same curves with subsample fraction on the x-axis,
-§5). Both are kept — they are how the fit was sanity-checked.
-
-> The figures are still written as `s7_*.pdf` by the notebook, from when this was
-> Supplementary Figure S7. Only the file names lag; the content is this figure.
+`s5_library_complexity` (unique molecules against raw fragments, §4) and
+`s5_saturation_byfraction` (the same curves with subsample fraction on the
+x-axis, §5). Both are kept — they are how the fit was sanity-checked.
 
 | Notebook | Kernel | Inputs |
 |---|---|---|
