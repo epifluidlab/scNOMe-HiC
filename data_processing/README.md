@@ -13,6 +13,7 @@ and `../supplementary_figures/` from the tables these pipelines emit.
 | `barnyard_mixing/` | GM_F123 human/mouse species mixing, 96 cells on a combined hg38+mm10 reference — alignment and QC only, behind Fig. S4 — **migrated** | `../../scnomehic_paper/s3/snakemake/` |
 | `bulk_scNOMeHiC/` | bulk NOMe-HiC GM12878, 3 reps from SRA — the bulk arm of the Fig. 1 comparison — **migrated** | `../../sc_nomehic_cellline/bulk_gm_from_scratch/` |
 | `bulk_others/` | ENCODE bulk GM12878/IMR90 + metilene DMR calling — the Fig. 2 ground truth — **migrated** | `../../scnomehic_paper/fig2/codes/` |
+| `published_singlecell/` | published GM12878 single-cell datasets reprocessed to hg38 pseudobulk — Drop-BS scWGBS, sci-MET, snATAC/DNase, sci-Hi-C — the Fig. S2 comparison — **migrated** | `../../scnomehic_paper/s2_new/` |
 
 Each dataset folder documents, in its own `README.md`, the order the steps run in
 and what each step consumes and produces.
