@@ -13,17 +13,18 @@
 
 ## Status
 
-The skeleton is in place; content is being migrated in section by section from the
-original working directories:
+Migrated section by section from the original working directories. Files are
+**copied**, never moved — the originals are left untouched.
 
 | Destination | Source working directory |
 |---|---|
 | `data_processing/mouse_cortex/` | `../sc_nomehic/` |
-| `data_processing/gm12878_cellline/` | `../sc_nomehic_cellline/` |
-| `data_processing/mixture_cellline/` | `../sc_nomehic_cellline/` |
+| `data_processing/gm12878_cellline/`, `mixture_cellline/`, `bulk_scNOMeHiC/` | `../sc_nomehic_cellline/` |
 | `data_processing/meningioma/` | `../meningioma_scnomehic/` |
+| `data_processing/barnyard_mixing/`, `bulk_others/`, `published_singlecell/` | `../scnomehic_paper/{s3,fig2,s2_new}/` |
 | `main_figures/figN/` | `../scnomehic_paper/figN/` |
-| `supplementary_figures/figSN/` | `../scnomehic_paper/sN/` |
+| `supplementary_figures/figSN/` | `../scnomehic_paper/sN/` — but the numbering was reshuffled; see that folder's `README.md` |
 
-Files are **copied**, never moved — the original working directories are left
-untouched.
+**Still to migrate:** `supplementary_figures/figS1/`. The paper metadata in
+`README.md` (`<!-- FILL -->` markers), a LICENSE, and the git remote are also
+outstanding.
