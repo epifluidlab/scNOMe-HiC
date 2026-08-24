@@ -1,79 +1,24 @@
 # Mouse cortex — single-cell NOMe-HiC processing
 
-Mouse cortex scNOMe-HiC, **1,577 cells**, clustered at 250 kb. The dataset behind
-Figure 3: de novo cell-type annotation, marker-gene heatmaps, and differential-loop
-APA across ten cortical cell types.
+Mouse cortex scNOMe-HiC, **1,577 cells**, clustered at 250 kb. Figure panels are in
+`../../main_figures/fig3/`; Supplementary Fig. S6 in `../../supplementary_figures/figS6/`.
 
-This folder covers processing up to data generation. Figure panels are built in
-`../../main_figures/fig3/`.
-
-## The pipeline is a separate repository
-
-Same shared workflow as the other datasets — see
-<https://github.com/epifluidlab/sc_NOMeHiC_pipeline> and the note in `../README.md`.
-To run from scratch, see **[../../RUNNING.md](../../RUNNING.md)**.
-
-**This dataset starts from `trimmed`.** The libraries were sequenced in batches and
-merged before the pipeline ran; those merge steps are deliberately out of scope,
-because what a reader downloads from GEO is already merged and demultiplexed. Enter
-at `demultiplexed` or `trimmed` accordingly.
+Pipeline: <https://github.com/epifluidlab/sc_NOMeHiC_pipeline>. Running from scratch:
+[../../RUNNING.md](../../RUNNING.md). This dataset ran from `start_from: trimmed`.
 
 ## Run order
 
-### 01_pipeline
-
-- **`01_run_pipeline.sh`** — align → bamprocess → QC → Bis-SNP → per-bin methylation.
-- **`02_hicluster.sh`** — the `hicluster_selected` target, at **100 kb and 250 kb**
-  (`hicluster_resolutions` in the config). It runs only over the QC-passing cells in
-  `selected_cells_file` (`QC/cortex_passed.txt`), which §7 of the QC notebook writes —
-  so this runs **after** `02_qc`. Imputation and embedding are the expensive stage;
-  restricting them to QC-passing cells is the point of the whitelist.
-
-### 02_qc
-
-- **`qc_plots.ipynb`** — QC gate and the cells × bins methylation matrices. Also
-  writes `QC/cortex_passed.txt`, the whitelist `02_hicluster.sh` consumes.
-- **`build_hcg_counts.R`** and **`build_gch_counts.R`** — per-cell **count** matrices
-  (`mc` = methylated reads, `cov` = total reads) at three gene regions: TSS window,
-  gene body, and the two combined. 21,800 genes × 1,577 cells each.
-
-  These exist because the `methylation_matrix_*.tsv.gz` files store **fractions
-  only**, which cannot support Σmc/Σcov pooling. Read-weighted pseudobulk avoids the
-  low-coverage bias of averaging per-cell fractions and needs no kNN imputation — it
-  is what the Figure 3 marker heatmaps are built on. `bin_id` order is identical
-  across cells (md5-verified), so counts are column-stacked without re-alignment.
-
-### 03_hic_loops — differential loops for the APA panel
-
-Runs at **25 kb**, on all 1,577 cells, grouped by the final annotation. Per-cell
-imputation is annotation-independent; only the loop and cooler steps depend on the
-labels, so a relabelling repeats step 02 alone.
-
-| Step | What it does |
+| Step | What it is |
 |---|---|
-| `01_impute_missing_25kb.sh` | SLURM array: `generatematrix-cell` → `impute-cell` → `loop-bkg-cell` for the cells lacking 25 kb output. |
-| `02_call_loops.sh` → `make_celltype_cool.py` | SLURM array, one task per cell type: `loop-sumcell-chr` → `loop-mergechr` → per-type `.loop.bedpe`, plus the matching Q/T/E `.cool` files so the differential fold-changes are comparable. |
-| `cell_table_all1577_25kb.tsv` | `cell_id ⇥ cell_type` for all 1,577 cells. Derived from `250kb_denovo/annotation/cell_type_table.tsv`, with the `batch<N>_` prefix stripped to match the imputation directory. Rebuild this if the labels change. |
-
-`make_celltype_cool.py` here is **not** the same file as the one under
-`../mixture_cellline/04_hic_imputation/` — the two versions differ, so each dataset
-carries its own.
-
-### 04_replicate_comparison — rep1 vs rep2 reproducibility (Supplementary Fig. S6)
-
-Splits the 1,577 QC-passing cells into the two biological replicates by prefix
-(rep1 `scNH_c57cortex_*`, 702 cells; rep2 `batch2_*`, 875) and compares them
-across all three modalities.
-
-| Step | What it does |
-|---|---|
-| `01_pseudobulk_methylation.{py,slurm}` | Per-replicate GCH/HCG pseudobulk at 250 kb, pooled as Σmc / Σcov rather than a mean of per-cell rates. |
-| `02_merge_bam_to_hic.sh` via `02_submit_hic.sh` | Merge each replicate's `calmd` BAMs → `sam2juicer_new.py` → `juicer pre -q 30` → `{rep}.mapQ30.hic`. |
-| `03_dump_hic.py` | `juicer_tools dump observed NONE` per chromosome at 1 Mb / 500 kb / 250 kb — 120 dumps. The SCC is computed from these in the Fig. S6 notebook. |
-
-Steps 1 and 2 are independent; 3 needs 2. On this deep pseudobulk the
-95th-percentile clip **saturates** — median SCC exactly 1.000 at every resolution,
-against 0.84–0.91 raw. See that folder's README before reusing the SCC.
+| `00_config/config.yaml` | Snakemake config. Hicluster at 100 kb and 250 kb; `selected_cells_file: QC/cortex_passed.txt`. |
+| `01_pipeline/01_run_pipeline.sh` | Align → bamprocess → QC → Bis-SNP → per-bin methylation. |
+| `01_pipeline/02_hicluster.sh` | `hicluster_selected` at 100 kb and 250 kb. Runs **after** `02_qc`, over the QC-passing whitelist. |
+| `02_qc/qc_plots.ipynb` | QC gate and cells × bins matrices. Writes `QC/cortex_passed.txt`. |
+| `02_qc/build_hcg_counts.R`, `build_gch_counts.R` | Per-cell `mc`/`cov` count matrices at TSS, gene body and both combined. 21,800 genes × 1,577 cells. |
+| `03_hic_loops/01_impute_missing_25kb.sh` | SLURM array: `generatematrix-cell` → `impute-cell` → `loop-bkg-cell` at 25 kb. |
+| `03_hic_loops/02_call_loops.sh` → `make_celltype_cool.py` | Per cell type: `loop-sumcell-chr` → `loop-mergechr` → `.loop.bedpe`, plus Q/T/E `.cool`. |
+| `03_hic_loops/cell_table_all1577_25kb.tsv` | `cell_id ⇥ cell_type` for all 1,577 cells. Rebuild if the labels change. |
+| `04_replicate_comparison/` | rep1 vs rep2 reproducibility — see that folder's README. |
 
 ## Outputs
 
@@ -84,12 +29,15 @@ against 0.84–0.91 raw. See that folder's README before reusing the SCC.
 | Per-cell count matrices | `QC/methylation_matrices/{HCG,GCH}_{gene,gene_tss,gene_body}_counts.rds` |
 | Hi-C embeddings | `06.hiccluster_snakemake/hicluster_{100kb,250kb}_embed_dir/` |
 | Per-type loops and coolers | `<cell_type>.loop.bedpe`, `<cell_type>.{Q,T,E}.cool` |
-| Per-replicate pseudobulk | `replicate_comparison/pseudobulk/{rep}.{GCH,HCG}.250kb.pseudobulk.txt.gz` |
-| Per-replicate Hi-C | `replicate_comparison/hic/{rep1,rep2}.mapQ30.hic` |
-| Per-chromosome contact dumps | `replicate_comparison/results/scc/dumps/` |
 
-## Notes on paths
+## Notes
 
-Scripts keep the absolute paths they ran with. Original working directories:
-`/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake` and
-`/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/hic/loop_final`.
+- The count matrices exist because `methylation_matrix_*.tsv.gz` stores fractions
+  only, which cannot support Σmc/Σcov pooling. The Fig. 3 marker heatmaps use the
+  read-weighted pooling.
+- `make_celltype_cool.py` here differs from the copy in
+  `../mixture_cellline/04_hic_imputation/`; each dataset carries its own.
+- Per-cell 25 kb imputation is annotation-independent — a relabelling repeats only
+  `02_call_loops.sh`.
+- Scripts keep the absolute paths they ran with:
+  `sc_nomehic/snakemake` and `sc_nomehic/hic/loop_final`.

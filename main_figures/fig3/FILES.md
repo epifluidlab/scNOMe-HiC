@@ -4,7 +4,7 @@
 
 | File | What it is | Origin |
 |---|---|---|
-| `fig3_umap.ipynb` | R, 28 code cells, kernel `nomehic_r`. De novo Leiden clustering of the HCG Harmony embedding, CEMBA atlas assignment, then the Fig-4b style UMAPs (§8e) and the marker-gene heatmaps for methylation (§8.5) and accessibility (§8.5b, §8.5c). Writes `annotation/`. Outputs partly stale — see README. | `sc_nomehic/snakemake/subset_clustering/250kb_denovo/subset_final_snakemake_denovo.ipynb` |
+| `fig3_umap.ipynb` | R, 28 code cells, kernel `nomehic_r`. De novo Leiden clustering of the HCG Harmony embedding, CEMBA atlas assignment, then the Fig-4b style UMAPs (§8e) and the marker-gene heatmaps for methylation (§8.5) and accessibility (§8.5b, §8.5c). Writes `annotation/`. All 28 cells carry outputs except §4a/§6b — 12 figures, no errors. | `sc_nomehic/snakemake/subset_clustering/250kb_denovo/subset_final_snakemake_denovo.ipynb` |
 | `fig3_apa.ipynb` | Python, 7 code cells, kernel `hic_cooler`. Union loops → Q/T per anchor → differential assignment → APA pile-up → the 10 × 10 panel grid. Caches intermediates, so only §6 needs re-running to retune the colour scale. Executed: all 7 cells carry outputs, including the panel grid. | `sc_nomehic/hic/loop_final/celltype_diffloop_apa.ipynb` |
 
 Renamed, and eight empty trailing code cells dropped (23 → 15 cells, 15 → 7 code).
@@ -34,9 +34,12 @@ Two kernels: `nomehic_r` (R) and `hic_cooler` (Python). Neither is captured in `
 
 ## Not included
 
-See `README.md`: `regen_marker_heatmaps.R`, the stale `*_gene_tss` / `*_gene_body`
-heatmap variants, `resolution_exploration.ipynb`, `archive_superseded/`, and the
-non-canonical annotation directories.
+| File | Why not |
+|---|---|
+| `scripts/regen_marker_heatmaps.R` | Standalone reproduction of §8e + §8.5 + §8.5b + §8.5c, written to refresh the PDFs without a kernel re-run. The notebook is the source of truth. |
+| `marker_gene_heatmap_*_gene_tss.*`, `*_gene_body.*` | Stale leftovers from an earlier three-region version; no longer produced. |
+| `resolution_exploration.ipynb`, `archive_superseded/`, `.bak` notebooks | Development history. |
+| `annotation_k20_r0.3/`, `annotation_consensus12_backup/` | Non-canonical annotations — a superseded scanpy intermediate (differs on 23 cells) and a retired 12-type consensus. |
 
 ## Two bugs fixed upstream, worth knowing
 

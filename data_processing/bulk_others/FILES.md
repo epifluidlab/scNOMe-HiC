@@ -17,6 +17,10 @@ Only `03_build_bulk_methylation_bins.py` was edited (bin size parameterized); th
 
 ## Not included
 
-See the "Not included" section of `README.md`: the methylKit tile-based DMR branch,
-the DiffBind differential-ATAC branch, `fix_gm_bed_links.sh` (methylKit support), and
-`copy_imr90_hic.sh` (belongs with the APA analysis, not yet migrated).
+| File | Why not |
+|---|---|
+| `dmr_methylkit_250kb.R/.sh` | Differential 250 kb tiles via methylKit. The published figure uses the metilene DMRs. |
+| `fix_gm_bed_links.sh` | Per-CpG BED symlinks needed only by methylKit. |
+| `diffbind_atac.R/.sh`, `download_atac_bams.sh` | Differential ATAC peaks via DiffBind/DESeq2. The published panel ranks bins by bulk ATAC signal, not by DiffBind peaks. |
+| `copy_imr90_hic.sh` | One-off copy of the IMR90 in-situ Hi-C (`ENCFF188SSH`, 17.5 GB) off purgeable scratch. Data movement, not method. |
+| `step04_diff_loops.sh`, `step05_apa_pileup.sh`, `step06_make_2x2_figure.py` and their `.sbatch` variants | Superseded: the APA notebook reads the step 02/03 HICCUPS bedpes directly and runs its own ANOVA and pile-up. |

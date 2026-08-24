@@ -1,32 +1,25 @@
 # 04_replicate_comparison — rep1 vs rep2 reproducibility
 
-Compares the two biological replicates of the mouse-cortex sc-NOMe-HiC run across
-methylation, accessibility and Hi-C. Produces the tables behind **Supplementary
-Figure S6** (`../../../supplementary_figures/figS6/`).
+Compares the two biological replicates of the mouse-cortex run across methylation,
+accessibility and Hi-C. Produces the tables behind Supplementary Figure S6
+(`../../../supplementary_figures/figS6/`).
 
 The 1,577 QC-passing cells split by prefix:
 
 | Replicate | Cell prefix | Cells | Samplesheet |
 |---|---|---|---|
-| **rep1** | `scNH_c57cortex_*` | 702 | `scNH_micecortex_rep1` |
-| **rep2** | `batch2_*` | 875 | `samplesheet_sc_micecortex_rep2` |
+| rep1 | `scNH_c57cortex_*` | 702 | `scNH_micecortex_rep1` |
+| rep2 | `batch2_*` | 875 | `samplesheet_sc_micecortex_rep2` |
 
-Cell lists are in `cell_lists/`; together they are the same 1,577 cells as
-`QC/cortex_passed.txt`.
+Cell lists are in `cell_lists/`; together they are `QC/cortex_passed.txt`.
 
 ## Run order
 
 | Step | Script | Input → output |
 |---|---|---|
 | 1 | `01_pseudobulk_methylation.py` (`.slurm`, array 1–4) | per-cell GCH/HCG counts → `pseudobulk/{rep}.{GCH,HCG}.250kb.pseudobulk.{txt.gz,bedGraph}` |
-| 2 | `02_merge_bam_to_hic.sh` via `02_submit_hic.sh` | per-cell `04.alignment_snakemake/{cell}.calmd.bam` → merged, name-sorted → `sam2juicer_new.py -f mm10_DpnII` → `juicer pre -q 30` → `hic/{rep1,rep2}.mapQ30.hic` |
+| 2 | `02_merge_bam_to_hic.sh` via `02_submit_hic.sh` | per-cell `*.calmd.bam` → merged, name-sorted → `sam2juicer_new.py -f mm10_DpnII` → `juicer pre -q 30` → `hic/{rep1,rep2}.mapQ30.hic` |
 | 3 | `03_dump_hic.py` (`03_submit_dump.slurm`) | the two `.hic` → `juicer_tools dump observed NONE` per chromosome at 1 Mb / 500 kb / 250 kb → `results/scc/dumps/` (120 files) |
-
-**The SCC itself is not computed here.** It lives in the Figure S6 notebook, which
-reads these dumps — the same split `main_figures/fig1` uses for its
-single-cell-vs-bulk SCC. Only the dump needs to be a batch step: java plus
-juicer_tools, 120 invocations against ~230 MB `.hic` files. Computing SCC from the
-dumps takes about 15 s, so it belongs with the figure that reports it.
 
 Steps 1 and 2 are independent; 3 needs 2.
 
@@ -36,49 +29,24 @@ bash   02_submit_hic.sh                                  # returns the rep1/rep2
 sbatch --dependency=afterok:<rep1>:<rep2> 03_submit_dump.slurm
 ```
 
-## Method choices that matter
-
-- **Pseudobulk methylation is a pooled ratio**, not a mean of per-cell rates: sum
-  `methylated_reads` and sum `total_reads` across a replicate's cells per 250 kb
-  bin, *then* divide. GCH is accessibility, HCG is CpG methylation. This matches
-  the read-weighted estimator used everywhere else in the paper.
-- **Hi-C** reuses the `cortex_pseudobulk` stream_B recipe, genome `mm10`,
-  MAPQ ≥ 30, DpnII sites.
-- **SCC** is `hicrep.hicrepSCC(H=3)` per chromosome (chr1–19, chrX), mirroring the
-  cell-line `compute_scc_tidy.py`.
-
-## The clip percentile — read this before reusing the SCC
-
-The Figure S6 notebook computes SCC two ways — raw, and under a per-chromosome
-95th-percentile clip. On this deep pseudobulk **the clip saturates**: median SCC is exactly 1.000 at the
-95th percentile for all three resolutions. A sweep out to the 99th percentile was
-run during development and confirmed no clip below 99 avoids it; that sweep is not
-part of the figure path and is not shipped. Raw SCC is the informative version.
-
-| resolution | raw SCC (min / median / max) | clip95 SCC |
-|---|---|---|
-| 1 Mb | 0.216 / **0.843** / 0.971 | 0.983 / **1.000** / 1.000 |
-| 500 kb | 0.221 / **0.896** / 0.988 | 0.989 / **1.000** / 1.000 |
-| 250 kb | 0.465 / **0.908** / 0.985 | 0.990 / **1.000** / 1.000 |
-
-Both `scc_raw` and `scc_clip95` are written, so either can be plotted. Figure S6
-uses the clip-95 violin; see that folder's README.
-
 ## Outputs
 
-| Product | Path (in the working tree) |
+| Product | Path |
 |---|---|
 | Pseudobulk methylation/accessibility | `pseudobulk/{rep}.{GCH,HCG}.250kb.pseudobulk.txt.gz` |
 | Per-replicate Hi-C | `hic/{rep1,rep2}.mapQ30.hic` |
 | Per-chromosome contact dumps | `results/scc/dumps/{rep}_{res}_{chrom}.txt` — 120 files, ~104 MB |
 
-The SCC table is produced by the Figure S6 notebook from those dumps, not by this
-folder.
+## Notes
 
-Large intermediates (merged BAMs, sorted pair files) were written to b1042 scratch
-and are not part of the analysis outputs.
-
-## Notes on paths
-
-Scripts keep the absolute paths they ran with. Original working directory:
-`/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake/replicate_comparison`.
+- **SCC is not computed here** — the Figure S6 notebook computes it from these
+  dumps (~15 s), the same split `main_figures/fig1` uses. Only the dump needs to be
+  a batch step: 120 juicer_tools invocations against ~230 MB `.hic` files.
+- Pseudobulk methylation is a **pooled ratio**: sum `methylated_reads` and sum
+  `total_reads` across a replicate's cells per 250 kb bin, then divide — not a mean
+  of per-cell rates. GCH is accessibility, HCG is CpG methylation.
+- Hi-C reuses the `cortex_pseudobulk` stream_B recipe: mm10, MAPQ ≥ 30, DpnII sites.
+- Large intermediates (merged BAMs, sorted pair files) went to b1042 scratch and are
+  not analysis outputs.
+- Scripts keep the absolute paths they ran with. Original working directory:
+  `sc_nomehic/snakemake/replicate_comparison`.
