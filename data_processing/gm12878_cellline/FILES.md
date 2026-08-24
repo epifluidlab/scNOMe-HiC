@@ -1,6 +1,6 @@
 # FILES — data_processing/gm12878_cellline
 
-18 files. See `README.md` for the run order and the input/output of each step.
+17 files. See `README.md` for the run order and the input/output of each step.
 
 `$S3`  = `/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s3`
 `$CCP` = `$GM/ctcf_cgi_profiles`
@@ -47,7 +47,6 @@ single-cell arm of the Figure 1 comparison. Run in the order listed.
 | `05_profiles/01_setup_regions.sh` | Stages the region BEDs used by `computeMatrix`: GM12878 CTCF peaks (TSS-excluded), an oriented CTCF motif set, and gencode v45 CGI / non-CGI TSS. | `$CCP/scripts/02_setup_regions.sh` |
 | `05_profiles/02_plot_ctcf.sh` | CTCF metaprofile: GCH and HCG in one `computeMatrix`, then `plotProfile` / `plotHeatmap`. | `$S3/plotCTCF_pseudobulk.sh` |
 | `05_profiles/03_plot_cgi.sh` | The same at TSS with both region sets in one matrix. Its heatmap is a Fig. S3 panel. | `$S3/plotCGI_pseudobulk.sh` |
-| `05_profiles/04_split_cgi_figures.sh` | Splits the combined matrix per region set via `computeMatrixOperations subset` — no recompute, values byte-identical. | `$S3/split_cgi_figures.sh` |
 
 ## Renumbering
 

@@ -168,12 +168,11 @@ sites and transcription start sites.
 | `01_setup_regions.sh` | Stages the region BEDs: GM12878 CTCF ChIP-seq peaks (TSS-excluded), an oriented CTCF motif set, and gencode v45 TSS split into CGI and non-CGI (+2 kb shore). |
 | `02_plot_ctcf.sh` | `computeMatrix` with **GCH and HCG in one matrix** so they overlay in one figure, then `plotProfile`/`plotHeatmap`. |
 | `03_plot_cgi.sh` | The same at TSS, with **both region sets in one matrix** so `--perGroup` gives one panel per set. Its `plotHeatmap` output is an S3 panel. |
-| `04_split_cgi_figures.sh` | Splits that combined matrix into per-region-set figures with `computeMatrixOperations subset` — nothing is recomputed, so the values stay byte-identical. |
 
-Both plotting jobs pass `--missingDataColor white`. The per-site tracks cover
-only ~6.3% of bases, so ~27% of 20 bp bins are NaN and deepTools' default black
-rendered the heatmap almost solid. `--missingDataAsZero` is deliberately not
-used: it would treat "not measured" as "unmethylated" and deflate the values.
+Both plotting jobs pass `--missingDataColor white`: the per-site tracks cover ~6.3%
+of bases, so ~27% of bins are NaN and deepTools' default black renders the heatmap
+almost solid. `--missingDataAsZero` is not used — it would treat "not measured" as
+"unmethylated".
 
 The dual-axis overlays are in `../../supplementary_figures/figS3/`.
 
