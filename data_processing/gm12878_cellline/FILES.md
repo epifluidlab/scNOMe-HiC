@@ -86,7 +86,7 @@ Commands, parameters, and data paths are untouched. All scripts pass `bash -n`.
 - **`gm_hicmatrix_driver.sh` and its config** — built per-cell
   `06.hiccluster_snakemake/*.hic_matrix.txt.gz`, which nothing in the analysis or
   figure code reads. That config also carried a broken `bisulfitehic` path, so its
-  run produced 188 empty files — see the session note.
+  run produced 188 empty files.
 - **`make_qc_notebook.py`** — the generator that wrote `qc_plots.ipynb`. Tooling for
   authoring the notebook, not part of the method.
 - **`make_qc_excel.py`** — formats the QC metrics into a spreadsheet for reading.

@@ -7,3 +7,7 @@ __pycache__/
 .Rhistory
 .Rproj.user/
 .DS_Store
+
+# Internal working logs -- this repo is reviewer-facing.
+# They live in ../scNOMeHiC_code_notes/
+SESSION_NOTE_*.md
