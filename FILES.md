@@ -30,5 +30,7 @@ is referenced rather than duplicated. The cross-method benchmark
 (`yoshihiko1218/snomehic_benchmark` @ `236719d`) is carried, code only, in
 `data_processing/benchmark/`.
 
-**Outstanding:** the paper metadata in `README.md` (`<!-- FILL -->` markers), a
-LICENSE, and the git remote.
+Remote: <https://github.com/yoshihiko1218/scNOMe-HiC> (`origin`, branch `main`).
+
+**Outstanding:** the paper metadata in `README.md` (`<!-- FILL -->` markers) and a
+LICENSE.
