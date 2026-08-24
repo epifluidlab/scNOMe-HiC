@@ -60,10 +60,9 @@ each published dataset — is in `../../data_processing/benchmark/`, copied from
 
 <https://github.com/yoshihiko1218/snomehic_benchmark> — commit `236719d`
 
-Methods compared: scHi-C (Nagano et al. 2013), Droplet Hi-C (Chang et al. 2025),
-scNOMe-seq (Pott et al. 2017), scWGBS (Smallwood et al. 2014), snmC-seq2 (Luo et
-al. 2018), snm3C-seq (Liu et al. 2023), snmCAT-seq (Luo et al. 2022), and
-scNOMe-HiC.
+Methods compared: Droplet Hi-C (Chang et al. 2025), scNOMe-seq (Pott et al. 2017),
+scWGBS (Smallwood et al. 2014), snmC-seq2 (Luo et al. 2018), snm3C-seq (Liu et al.
+2023), snmCAT-seq (Luo et al. 2022), and scNOMe-HiC.
 
 ## Notes
 
@@ -76,12 +75,14 @@ scNOMe-HiC.
   HiCRep uses). chr4 is excluded as an outlier.
 - The chr1 heatmap *is* IC-balanced, at 1 Mb with low-coverage bins dropped, 2400
   dpi. Balancing is for visual comparability only; it is not used for SCC.
-- The `_no_nagano` Hi-C violins drop Nagano et al. because that dataset's contact
-  counts sit far below the others and compress the rest of the axis. Both versions
-  are drawn — cell 35 with Nagano, cell 39 without — and Figure 1 uses the version
-  without.
-- Methyl-HiC is processed in the benchmark repository but does not appear in these
-  panels.
+- **The `_no_nagano` suffix is vestigial.** Nagano et al. (scHi-C) is loaded into
+  `hic_df` — 15 cells — but plotted nowhere: cell 34 sets `dataset_order` to
+  droplethic / snmCseq3 / scnomehic, so cell 35's panels exclude it just as cell 39's
+  explicitly-named `_no_nagano` ones do. Both sets show the same three datasets. The
+  original reason for dropping it was that its contact counts sit far below the
+  others and compress the axis.
+- Methyl-HiC never enters the notebook. Neither it nor Nagano is carried in
+  `data_processing/benchmark/`.
 - All three notebooks keep the absolute paths they ran with; the benchmark notebook
   writes into a relative `figures/` directory and so must be run from the benchmark
   repository root.

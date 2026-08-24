@@ -1,20 +1,19 @@
 # benchmark — the published single-cell methods compared in Figure 1 and S1
 
-Download, alignment and per-cell QC for seven published single-cell methods, run
-the same way so their per-cell yield can be compared with scNOMe-HiC. The violins
-are drawn in `../../main_figures/fig1/fig1_benchmark_violins.ipynb`.
+Download, alignment and per-cell QC for the six published single-cell methods that
+appear in the panels, run the same way so their per-cell yield can be compared with
+scNOMe-HiC. The violins are drawn in
+`../../main_figures/fig1/fig1_benchmark_violins.ipynb`.
 
 | Folder | Method | Publication |
 |---|---|---|
 | `scnomehic/` | scNOMe-HiC | this paper |
-| `nagano/` | scHi-C | Nagano et al. 2013 |
 | `droplethic/` | Droplet Hi-C | Chang et al. 2025 |
 | `scnome/` | scNOMe-seq | Pott et al. 2017 |
 | `smallwood/` | scWGBS | Smallwood et al. 2014 |
 | `snmCseq2/` | snmC-seq2 | Luo et al. 2018 |
 | `snmCseq3/` | snm3C-seq | Liu et al. 2023 |
 | `snmCAT/` | snmCAT-seq | Luo et al. 2022 |
-| `methylhic/`, `methylhic_new/` | Methyl-HiC | processed, but not in these panels |
 
 ## Layout
 
@@ -37,8 +36,8 @@ Each `codes/` folder is numbered in run order and follows the same shape:
 00.rename_fastq_header  →  01.trim  →  02.alignment  →  03.bamprocess / summary
 ```
 
-with per-method variations (`yap` for the snmC family, `sam2hic` for Nagano,
-Snakemake for Droplet Hi-C). `mapping_config*.ini` carries the aligner settings.
+with per-method variations (`yap` for the snmC family, Snakemake for Droplet Hi-C).
+`mapping_config*.ini` carries the aligner settings.
 
 ## summary — the cross-method tables
 
@@ -65,6 +64,10 @@ Run after every dataset's pipeline. These produce exactly what the notebook read
   native Bis-SNP NOMe pipeline, so it still carries the MAPQ ≥ 30 cut.
 - The scNOMe-HiC arm of the comparison is generated in
   `../gm12878_cellline/06_benchmark_qc/`, not here.
+- **The notebook still loads Nagano** (scHi-C) in its Hi-C cells, but plots it
+  nowhere: `dataset_order` is reassigned before every panel is drawn, so even the
+  panels *not* named `_no_nagano` exclude it. Its processing is therefore not
+  carried here. Methyl-HiC never enters the notebook at all.
 - Every intermediate lives on scratch — see `../../README.md`. This folder is code
   only, so paths in these scripts are a record of the original run.
 - Upstream repository: <https://github.com/yoshihiko1218/snomehic_benchmark>,

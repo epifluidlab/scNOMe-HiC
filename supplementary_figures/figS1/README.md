@@ -1,6 +1,6 @@
 # Supplementary Figure S1 — per-cell QC vs other single-cell methods
 
-Per-cell yield and quality of scNOMe-HiC beside seven published single-cell
+Per-cell yield and quality of scNOMe-HiC beside six published single-cell
 methods. Figure 1 shows three panels from the same comparison; S1 shows the rest.
 
 ## Panels
@@ -27,8 +27,8 @@ seam to split on; this folder documents the mapping instead of carrying a near-c
 |---|---|
 | 32 | mapping rate, before and after dedup |
 | 33 | read count, before and after dedup |
-| 35 | the four Hi-C metrics **including** Nagano — S1 takes the trans ratio |
-| 39 | the same four **excluding** Nagano — S1 takes cis and cis > 1 kb |
+| 35 | the four Hi-C metrics — S1 takes the trans ratio |
+| 39 | the same four, re-drawn under `_no_nagano` names — S1 takes cis and cis > 1 kb |
 | 41 | HCG and GCH detected loci (Figure 1) |
 | 42 | bisulfite non-conversion, chrM and chr21/chr19 |
 
@@ -49,6 +49,7 @@ full input list and the list of methods compared.
 - `readcount_beforeDedup` and `mapq30rate_beforeDedup` are the **pre-deduplication**
   measures. Cells 32 and 33 also draw the post-dedup versions, which are not S1
   panels.
-- The trans-ratio panel keeps Nagano et al.; the two cis panels drop it, because
-  its contact counts sit far below the others and compress the axis. A ratio is
-  scale-free, so it does not have that problem.
+- **All four Hi-C panels show the same three datasets** — droplethic, snmCseq3 and
+  scnomehic. `dataset_order` is reassigned at cell 34, so Nagano et al. is excluded
+  from cell 35's panels as well as from cell 39's `_no_nagano` ones; the suffix no
+  longer distinguishes anything. Nagano is loaded (15 cells) but never plotted.

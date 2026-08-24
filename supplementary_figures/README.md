@@ -5,7 +5,7 @@ the code that turns analysis-ready tables into panels.
 
 | Folder | Figure | Source working dir |
 |---|---|---|
-| `figS1/` | Per-cell QC vs seven published single-cell methods | `snomehic_benchmark` — no notebook of its own, see `main_figures/fig1/` |
+| `figS1/` | Per-cell QC vs six published single-cell methods | `snomehic_benchmark` — no notebook of its own, see `main_figures/fig1/` |
 | `figS2/` | scNOMe-HiC vs published single-cell assays: scWGBS/sci-MET, snATAC, sci-Hi-C | `../../scnomehic_paper/s2_new/` |
 | `figS3/` | GCH/HCG metaprofiles at CTCF sites and CGI vs non-CGI TSS | `../../scnomehic_paper/s3/` |
 | `figS4/` | Species mixing (barnyard) and per-site GCH/HCG distributions | `../../scnomehic_paper/s3/`, `s3/snakemake/` |

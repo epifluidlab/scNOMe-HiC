@@ -14,7 +14,7 @@ and `../supplementary_figures/` from the tables these pipelines emit.
 | `bulk_scNOMeHiC/` | bulk NOMe-HiC GM12878, 3 reps from SRA — the bulk arm of the Fig. 1 comparison — **migrated** | `../../sc_nomehic_cellline/bulk_gm_from_scratch/` |
 | `bulk_others/` | ENCODE bulk GM12878/IMR90 + metilene DMR calling — the Fig. 2 ground truth — **migrated** | `../../scnomehic_paper/fig2/codes/` |
 | `published_singlecell/` | published GM12878 single-cell datasets reprocessed to hg38 pseudobulk — Drop-BS scWGBS, sci-MET, snATAC/DNase, sci-Hi-C — the Fig. S2 comparison — **migrated** | `../../scnomehic_paper/s2_new/` |
-| `benchmark/` | seven published single-cell methods reprocessed the same way — scHi-C, Droplet Hi-C, scNOMe-seq, scWGBS, snmC-seq2, snm3C-seq, snmCAT-seq — the Fig. 1 / S1 comparison — **migrated** | `snomehic_benchmark` @ `236719d` |
+| `benchmark/` | six published single-cell methods reprocessed the same way — Droplet Hi-C, scNOMe-seq, scWGBS, snmC-seq2, snm3C-seq, snmCAT-seq — the Fig. 1 / S1 comparison — **migrated** | `snomehic_benchmark` @ `236719d` |
 
 Each dataset folder documents, in its own `README.md`, the order the steps run in
 and what each step consumes and produces.

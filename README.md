@@ -19,7 +19,7 @@ data_processing/          Per-dataset processing: raw reads -> analysis-ready ma
   barnyard_mixing/          human/mouse species mixing (S4)
   bulk_scNOMeHiC/           bulk NOMe-HiC GM12878 (Fig. 1)
   bulk_others/              published bulk datasets used as ground truth (Fig. 2)
-  benchmark/                seven published single-cell methods (Fig. 1, S1)
+  benchmark/                six published single-cell methods (Fig. 1, S1)
   published_singlecell/     published single-cell assays for the S2 comparison
 main_figures/             fig1/ … fig4/
 supplementary_figures/    figS1/ … figS8/
@@ -47,7 +47,7 @@ aligning **without** `-pbat`, which the shared pipeline hardcodes.
 
 ## The cross-method benchmark
 
-The Figure 1 and Figure S1 violins compare per-cell yield against seven published
+The Figure 1 and Figure S1 violins compare per-cell yield against six published
 single-cell methods. That processing is in `data_processing/benchmark/`, copied
 from its own repository:
 
