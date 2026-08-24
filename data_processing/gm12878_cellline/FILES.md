@@ -1,7 +1,8 @@
 # FILES — data_processing/gm12878_cellline
 
-10 files. See `README.md` for the run order and the input/output of each step.
+14 files. See `README.md` for the run order and the input/output of each step.
 
+`$S7` = `/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s7/code`
 `$GM` = `/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new`
 `$PIPE` = `/gpfs/projects/b1198/epifluidlab/yoshii/software/sc_NOMeHiC_pipeline`
 
@@ -35,6 +36,12 @@ single-cell arm of the Figure 1 comparison. Run in the order listed.
 | `03_merge_methylation.sh` | Concatenates the 23 per-chromosome BEDs into genome-wide `{GCH,HCG}.6plus2.bed.gz` (**2 of the 3 modalities**), then bins to 1/50/100/250 kb via the pipeline's `calcmethylation.py`. | `$GM/pseudobulk_methylation/` |
 | `04_build_pseudobulk_hic.sh` | Builds the pseudobulk contact map (**3rd modality**): per-cell `samtools view -q30 -f1 -F1804` → `sam2juicer_new.py` → 8-col short → sort → `juicer_tools pre -f DpnII`. The good-reads filter runs *before* sam2juicer, matching the bulk exactly so both arms exclude PCR duplicates. | `$GM/hic_comparison/scripts/build_pseudobulk_dedup_hic.sh` |
 | `05_make_bedgraph_bigwig.sh` | Per-site BEDs → 4-column bedGraph (col 7 = methylation %) → bigWig tracks. Collapses exact-duplicate coordinates by averaging so `bedGraphToBigWig` accepts the input. | `$GM/pseudobulk_methylation/` |
+| `04_saturation/00_config.sh` | Paths and parameters for the saturation chain. `CODE_DIR` now resolves to this folder, so the steps find each other wherever it is placed. | `$S7/config.sh` |
+| `04_saturation/01_make_tasklist.sh` | Writes `tasks.tsv`: one `CELL⇥FRACTION` line per array task (180 cells × 6 fractions). | `$S7/make_tasklist.sh` |
+| `04_saturation/02_run_one.sh` | One (cell, fraction): subsample the **pre-dedup** BAM → markdup → contact summary → Bis-SNP → one result row. Idempotent, cleans its own scratch. | `$S7/run_one.sh` |
+| `04_saturation/03_submit_array.sbatch` | SLURM array wrapper for step 2. | `$S7/submit_array.sbatch` |
+| `04_saturation/04_extract_full_depth.sh` | The f = 1.0 point taken from existing full-depth pipeline outputs rather than recomputed. | `$S7/extract_full_depth.sh` |
+| `04_saturation/05_collect_results.sh` | Concatenates every per-task row into `saturation_results.tsv`. | `$S7/collect_results.sh` |
 
 ## Renumbering
 

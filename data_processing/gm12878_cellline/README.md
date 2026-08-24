@@ -131,6 +131,33 @@ processed identically. Step 04 uses the same good-reads filter as the bulk `.hic
    - Value is column 7 (methylation %, 0–100), no coverage filter; exact-duplicate
      coordinates are collapsed by averaging so `bedGraphToBigWig` accepts the input.
 
+### 04_saturation — sequencing saturation (Supplementary Fig. S5)
+
+Measures how much of each library's complexity the sequencing captured, by
+subsampling reads and re-measuring four metrics at each depth.
+
+| Step | What it does |
+|---|---|
+| `00_config.sh` | All paths and parameters; sourced by every other step. `CODE_DIR` resolves to this folder. |
+| `01_make_tasklist.sh` | Writes `tasks.tsv` — one `CELL⇥FRACTION` line per array task (180 cells × 6 fractions). |
+| `02_run_one.sh` | One task: subsample → markdup → contact summary → Bis-SNP → `results/{cell}.f{frac}.tsv`. Idempotent; deletes its scratch BAMs. |
+| `03_submit_array.sbatch` | SLURM array wrapper around step 2. |
+| `04_extract_full_depth.sh` | The f = 1.0 point, read from the existing full-depth pipeline outputs rather than recomputed. |
+| `05_collect_results.sh` | Concatenates every result line into `saturation_results.tsv`. |
+
+Two choices make the curve meaningful. **Subsampling happens before
+de-duplication** — saturation is a statement about PCR duplicates, so each depth
+is deduplicated afresh; thinning an already-deduplicated BAM would give a
+straight line. And a **fixed `samtools view -s` seed** makes the depths nested,
+so each cell's curve is monotonic by construction rather than by luck.
+
+Fractions are 0.05, 0.1, 0.2, 0.4, 0.6, 0.8, plus 1.0 from step 4.
+
+Intermediates and per-task results live on b1042 scratch
+(`SCRATCH_DIR` in `00_config.sh`), not here.
+
+The fit and figures are in `../../supplementary_figures/figS5/`.
+
 ## Outputs
 
 What the figure code reads:

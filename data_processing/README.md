@@ -7,7 +7,7 @@ and `../supplementary_figures/` from the tables these pipelines emit.
 | Folder | Dataset | Source working dir |
 |---|---|---|
 | `mouse_cortex/` | mouse cortex scNOMe-HiC, 1,577 cells at 250 kb — the Fig. 3 dataset, plus the rep1-vs-rep2 comparison behind Fig. S6 — **migrated** | `../../sc_nomehic/snakemake/`, `../../sc_nomehic/hic/loop_final/`, `../../sc_nomehic/snakemake/replicate_comparison/` |
-| `gm12878_cellline/` | GM12878 cell line, 188 cells / 180 pass QC, hg38 — **migrated** | `../../sc_nomehic_cellline/gm_sc_new/` |
+| `gm12878_cellline/` | GM12878 cell line, 188 cells / 180 pass QC, hg38 — **migrated**, plus the sequencing-saturation chain behind Fig. S5 | `../../sc_nomehic_cellline/gm_sc_new/` |
 | `mixture_cellline/` | GM12878 / IMR90 mixture, 639 cells / 441 pass QC — the Fig. 2 ground-truth benchmark — **migrated** | `../../sc_nomehic_cellline/snakemake/` |
 | `meningioma/` | human meningioma scNOMe-HiC, 348 cells → 292 analysed, hg38, two patients over three batches — preprocessing plus the 1 Mb copy-number counts — **migrated** | `../../meningioma_scnomehic/snakemake/` |
 | `bulk_scNOMeHiC/` | bulk NOMe-HiC GM12878, 3 reps from SRA — the bulk arm of the Fig. 1 comparison — **migrated** | `../../sc_nomehic_cellline/bulk_gm_from_scratch/` |
