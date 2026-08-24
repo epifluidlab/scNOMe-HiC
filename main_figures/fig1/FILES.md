@@ -54,14 +54,9 @@ ran.
 
 ## Not included
 
-- **The benchmark repository itself** — `snomehic_benchmark` holds the download,
-  alignment and QC pipeline for each published dataset (10 dataset folders, tens of
-  terabytes of intermediates). It is released separately and referenced, not
-  duplicated, the same call made for `sc_NOMeHiC_pipeline`.
-- **`summary/` helper scripts in that repository** — `compare_qc*.py`,
-  `collect_conversion.py`, `frag_counts.py`, `extract_trinuc*.py`,
-  `build_qc_tables.py` and their submit wrappers. They build the cached tables the
-  notebook reads; they belong with the datasets they process.
+- **The benchmark processing** — download, alignment and QC for each published
+  dataset, plus the `summary/` scripts that build the tables this notebook reads.
+  It belongs with the datasets it processes: `../../data_processing/benchmark/`.
 - **`hic_comparison_clean_min_gm.ipynb`** (2026-06-03) — the earlier version of the
   Hi-C comparison, superseded by `hic_comparison_gm_clean.ipynb` (2026-06-10, rerun
   after the bulk `.hic` was rebuilt without `-pbat`).

@@ -56,7 +56,7 @@ summary/hic_cache/hic_df.csv
 ## The benchmark repository
 
 The processing for the other single-cell methods — download, alignment and QC for
-each published dataset — lives in a separate repository, not duplicated here:
+each published dataset — is in `../../data_processing/benchmark/`, copied from
 
 <https://github.com/yoshihiko1218/snomehic_benchmark> — commit `236719d`
 

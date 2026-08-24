@@ -19,6 +19,8 @@ data_processing/          Per-dataset processing: raw reads -> analysis-ready ma
   barnyard_mixing/          human/mouse species mixing (S4)
   bulk_scNOMeHiC/           bulk NOMe-HiC GM12878 (Fig. 1)
   bulk_others/              published bulk datasets used as ground truth (Fig. 2)
+  benchmark/                seven published single-cell methods (Fig. 1, S1)
+  published_singlecell/     published single-cell assays for the S2 comparison
 main_figures/             fig1/ … fig4/
 supplementary_figures/    figS1/ … figS8/
 ```
@@ -46,12 +48,12 @@ aligning **without** `-pbat`, which the shared pipeline hardcodes.
 ## The cross-method benchmark
 
 The Figure 1 and Figure S1 violins compare per-cell yield against seven published
-single-cell methods. Downloading, aligning and QC-ing those datasets is likewise a
-separate repository, not duplicated here:
+single-cell methods. That processing is in `data_processing/benchmark/`, copied
+from its own repository:
 
 <https://github.com/yoshihiko1218/snomehic_benchmark> — commit `236719d`
 
-The scNOMe-HiC side of that comparison is in
+The scNOMe-HiC side of the comparison is in
 `data_processing/gm12878_cellline/06_benchmark_qc/`, and the notebook that draws
 the violins is `main_figures/fig1/fig1_benchmark_violins.ipynb`.
 

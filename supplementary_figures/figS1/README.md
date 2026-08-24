@@ -40,8 +40,8 @@ arms come from the benchmark repository's `summary/` tables:
 
 <https://github.com/yoshihiko1218/snomehic_benchmark> — commit `236719d`
 
-That repository holds the download, alignment and QC pipeline for each published
-dataset; it is not duplicated here. See `../../main_figures/fig1/README.md` for the
+The download, alignment and QC pipeline for each published dataset is in
+`../../data_processing/benchmark/`. See `../../main_figures/fig1/README.md` for the
 full input list and the list of methods compared.
 
 ## Notes
