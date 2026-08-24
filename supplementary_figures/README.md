@@ -7,7 +7,7 @@ the code that turns analysis-ready tables into panels.
 |---|---|---|
 | `figS1/` | <!-- FILL --> | `../../scnomehic_paper/s1/` |
 | `figS2/` | <!-- FILL --> | `../../scnomehic_paper/s2/`, `../../scnomehic_paper/s2_new/` |
-| `figS3/` | <!-- FILL --> | `../../scnomehic_paper/s3/` |
+| `figS3/` | GCH/HCG metaprofiles at CTCF sites and CGI vs non-CGI TSS | `../../scnomehic_paper/s3/` |
 | `figS4/` | Species mixing (barnyard) and per-site GCH/HCG distributions | `../../scnomehic_paper/s3/` and `s3/snakemake/` |
 | `figS5/` | Sequencing saturation, GM12878 — 180 cells subsampled and re-measured | `../../scnomehic_paper/s7/` |
 | `figS6/` | Replicate reproducibility, mouse cortex (rep1 vs rep2) | `../../sc_nomehic/snakemake/replicate_comparison/` |

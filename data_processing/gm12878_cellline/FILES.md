@@ -1,7 +1,9 @@
 # FILES — data_processing/gm12878_cellline
 
-14 files. See `README.md` for the run order and the input/output of each step.
+18 files. See `README.md` for the run order and the input/output of each step.
 
+`$S3`  = `/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s3`
+`$CCP` = `$GM/ctcf_cgi_profiles`
 `$S7` = `/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s7/code`
 `$GM` = `/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new`
 `$PIPE` = `/gpfs/projects/b1198/epifluidlab/yoshii/software/sc_NOMeHiC_pipeline`
@@ -42,6 +44,10 @@ single-cell arm of the Figure 1 comparison. Run in the order listed.
 | `04_saturation/03_submit_array.sbatch` | SLURM array wrapper for step 2. | `$S7/submit_array.sbatch` |
 | `04_saturation/04_extract_full_depth.sh` | The f = 1.0 point taken from existing full-depth pipeline outputs rather than recomputed. | `$S7/extract_full_depth.sh` |
 | `04_saturation/05_collect_results.sh` | Concatenates every per-task row into `saturation_results.tsv`. | `$S7/collect_results.sh` |
+| `05_profiles/01_setup_regions.sh` | Stages the region BEDs used by `computeMatrix`: GM12878 CTCF peaks (TSS-excluded), an oriented CTCF motif set, and gencode v45 CGI / non-CGI TSS. | `$CCP/scripts/02_setup_regions.sh` |
+| `05_profiles/02_plot_ctcf.sh` | CTCF metaprofile: GCH and HCG in one `computeMatrix`, then `plotProfile` / `plotHeatmap`. | `$S3/plotCTCF_pseudobulk.sh` |
+| `05_profiles/03_plot_cgi.sh` | The same at TSS with both region sets in one matrix. Its heatmap is a Fig. S3 panel. | `$S3/plotCGI_pseudobulk.sh` |
+| `05_profiles/04_split_cgi_figures.sh` | Splits the combined matrix per region set via `computeMatrixOperations subset` — no recompute, values byte-identical. | `$S3/split_cgi_figures.sh` |
 
 ## Renumbering
 
