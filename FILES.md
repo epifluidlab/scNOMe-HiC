@@ -25,6 +25,9 @@ Migrated section by section from the original working directories. Files are
 | `main_figures/figN/` | `../scnomehic_paper/figN/` |
 | `supplementary_figures/figSN/` | `../scnomehic_paper/sN/` — but the numbering was reshuffled; see that folder's `README.md` |
 
-**Still to migrate:** `supplementary_figures/figS1/`. The paper metadata in
-`README.md` (`<!-- FILL -->` markers), a LICENSE, and the git remote are also
-outstanding.
+Two upstream repositories are referenced rather than duplicated: the per-cell
+Snakemake workflow (`epifluidlab/sc_NOMeHiC_pipeline` @ `a0456b9`) and the
+cross-method benchmark (`yoshihiko1218/snomehic_benchmark` @ `236719d`).
+
+**Outstanding:** the paper metadata in `README.md` (`<!-- FILL -->` markers), a
+LICENSE, and the git remote.

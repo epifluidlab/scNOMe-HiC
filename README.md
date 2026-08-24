@@ -43,6 +43,18 @@ invoke it. One exception: `data_processing/bulk_scNOMeHiC/` carries its own
 alignment and methylation-calling scripts, because that library's protocol required
 aligning **without** `-pbat`, which the shared pipeline hardcodes.
 
+## The cross-method benchmark
+
+The Figure 1 and Figure S1 violins compare per-cell yield against seven published
+single-cell methods. Downloading, aligning and QC-ing those datasets is likewise a
+separate repository, not duplicated here:
+
+<https://github.com/yoshihiko1218/snomehic_benchmark> — commit `236719d`
+
+The scNOMe-HiC side of that comparison is in
+`data_processing/gm12878_cellline/06_benchmark_qc/`, and the notebook that draws
+the violins is `main_figures/fig1/fig1_benchmark_violins.ipynb`.
+
 ## Running it
 
 See **[RUNNING.md](RUNNING.md)** for prerequisites, the config keys you must change,

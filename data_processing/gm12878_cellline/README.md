@@ -21,10 +21,16 @@ Pipeline: <https://github.com/epifluidlab/sc_NOMeHiC_pipeline>, commit
 | `03_pseudobulk/05_make_bedgraph_bigwig.sh` | bedGraph and bigWig tracks from the per-site BEDs. |
 | `04_saturation/` | Sequencing saturation (Supplementary Fig. S5) — steps 00–05. |
 | `05_profiles/` | CTCF and TSS metaprofiles (Supplementary Fig. S3) — steps 01–03. |
+| `06_benchmark_qc/` | Per-cell GCH/HCG loci counts and chrM/autosome trinucleotide methylation — the scNOMe-HiC arm of the Figure 1 / S1 cross-method comparison. |
 
 `04_saturation` subsamples reads and re-measures four metrics at each depth
 (fractions 0.05–0.8 plus full depth). `05_profiles` runs deepTools `computeMatrix`
 on the pseudobulk bigwigs from step 3.
+
+`06_benchmark_qc` runs `extract_GCH_HCG_counts.py` over the per-cell methylation
+BEDs and `extract_trinuc_chrM.py` over the per-cell trinucleotide QC files. Both
+`.sh` wrappers carry one line per dataset in the paper; the GM12878 lines are the
+ones Figure 1 and S1 use.
 
 ## Outputs
 
@@ -37,6 +43,7 @@ on the pseudobulk bigwigs from step 3.
 | Pseudobulk methylation | `pseudobulk_methylation/gm_pseudobulk_merged.HCG.6plus2.bed.gz` |
 | Pseudobulk contacts | `hic_comparison/gm_pseudobulk.dedup.mapQ30.hic` |
 | Pseudobulk tracks | `pseudobulk_methylation/gm_pseudobulk_merged.{GCH,HCG}.methlevel.bw` |
+| Per-cell benchmark QC | `gm_sc.gch_hcg_count.txt.gz`, `chrM_gch_hcg/gm.{chr21,chrM}.txt.gz` |
 
 ## Notes
 
@@ -53,5 +60,8 @@ on the pseudobulk bigwigs from step 3.
   because it would treat "not measured" as "unmethylated".
 - No per-cell Hi-C contact-matrix step: nothing here reads
   `06.hiccluster_snakemake/*.hic_matrix.txt.gz`.
-- Scripts keep the absolute paths they ran with. Original working directory:
-  `sc_nomehic_cellline/gm_sc_new`.
+- The other single-cell methods in the Figure 1 / S1 comparison are processed in a
+  separate repository, <https://github.com/yoshihiko1218/snomehic_benchmark>
+  (commit `236719d`), which is referenced rather than duplicated here.
+- Scripts keep the absolute paths they ran with. Original working directories:
+  `sc_nomehic_cellline/gm_sc_new`, and `scnomehic_paper/s1/QC` for `06_benchmark_qc`.

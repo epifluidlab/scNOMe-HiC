@@ -1,17 +1,20 @@
 # FILES — main_figures/fig1
 
-2 notebooks. See `README.md` for inputs, panels, and which script produces each
+3 notebooks. See `README.md` for inputs, panels, and which script produces each
 input.
 
 | File | What it is | Origin |
 |---|---|---|
 | `fig1_methylation_accessibility.ipynb` | R 4.4.2, 4 code cells (2 with outputs). Pseudobulk vs bulk NOMe-HiC for CpG methylation and GpC accessibility. Reads the four per-site 6plus2 beds directly and bins to 250 kb itself. Publishes `newbulk_locus_HCG_methylation_minCT_10.pdf` and `newbulk_acc_250kb_GCH_quantileNorm.pdf`. | `sc_nomehic_cellline/single_cell_vs_bulk.ipynb` |
 | `fig1_hic_comparison.ipynb` | Python 3.12.8, 6 code cells (3 with outputs). chr1 contact-matrix heatmap (bulk above the diagonal, pseudobulk below, IC-balanced at 1 Mb, 2400 dpi) plus the HiCRep SCC calculation. Reads juicer text dumps and builds temporary `.cool` files for balancing. Publishes `gm_heatmap_chr1_combined_main_dot.pdf`. | `sc_nomehic_cellline/snakemake/hic_comparison_gm_clean.ipynb` |
+| `fig1_benchmark_violins.ipynb` | Python, **42 code cells** (51 empty ones dropped), kernel `scnomehic_python`. Cross-technology per-cell QC over eight single-cell methods: cells 1–31 load each method's tables, cells 32–42 draw 33 violins. Five are Figure 1 or Figure S1 panels; see the two READMEs for the mapping. Outputs preserved. | `snomehic_benchmark` @ `236719d`, `summary/qc.ipynb` |
 
 ## Trimming
 
-Both were copied unmodified, then reduced to the cells leading to the published
-panels. Retained cells keep their source **and outputs** byte-identical.
+The first two were copied unmodified, then reduced to the cells leading to the
+published panels. Retained cells keep their source **and outputs** byte-identical.
+`fig1_benchmark_violins.ipynb` had only its 51 empty code cells removed — every
+substantive cell is kept, with its outputs.
 
 | Notebook | Cells | Removed |
 |---|---|---|
@@ -51,6 +54,14 @@ ran.
 
 ## Not included
 
+- **The benchmark repository itself** — `snomehic_benchmark` holds the download,
+  alignment and QC pipeline for each published dataset (10 dataset folders, tens of
+  terabytes of intermediates). It is released separately and referenced, not
+  duplicated, the same call made for `sc_NOMeHiC_pipeline`.
+- **`summary/` helper scripts in that repository** — `compare_qc*.py`,
+  `collect_conversion.py`, `frag_counts.py`, `extract_trinuc*.py`,
+  `build_qc_tables.py` and their submit wrappers. They build the cached tables the
+  notebook reads; they belong with the datasets they process.
 - **`hic_comparison_clean_min_gm.ipynb`** (2026-06-03) — the earlier version of the
   Hi-C comparison, superseded by `hic_comparison_gm_clean.ipynb` (2026-06-10, rerun
   after the bulk `.hic` was rebuilt without `-pbat`).

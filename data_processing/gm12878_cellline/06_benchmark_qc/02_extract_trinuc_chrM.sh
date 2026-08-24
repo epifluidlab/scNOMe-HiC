@@ -1,0 +1,6 @@
+python extract_trinuc_chrM.py --folder /ocean/projects/mcb190124p/dnaase/projects/hexa_seq/scNOMe_mouse_cortex_20230417/bam/QC --suffix .mm10.calmd.trinuc_methy.chrM.txt --output mouse_cortex_20230417.chrM.txt
+python extract_trinuc_chrM.py --folder /ocean/projects/mcb190124p/dnaase/projects/hexa_seq/scNOMe_DNA_IMR90_GM_all/bam/QC/ --suffix .hg38.calmd.trinuc_methy.chrM.txt --output imr90_gm_all.chrM.txt
+python extract_trinuc_chrM.py --folder /gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/data_batch_2/07.bistools_snakemake/qc/ --suffix .calmd.trinuc_methy.chrM.txt --output summary_files/meningioma_batch2.chrM.txt
+python extract_trinuc_chrM.py --folder /gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/data_batch_3/07.bistools_snakemake/qc/ --suffix .calmd.trinuc_methy.chrM.txt --output summary_files/meningioma_batch3.chrM.txt
+python extract_trinuc_chrM.py --folder /gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s1/QC/mouse_summary --suffix .mm10.calmd.trinuc_methy.chrM.txt --output chrM_gch_hcg/mouse_cortex_20240507.chrM.txt
+python extract_trinuc_chrM.py --folder /gpfs/projects/b1198/epifluidlab/yaping/projects/scNOMe_celllines_20240314/bam/IMR90/QC/ --suffix .hg38.calmd.trinuc_methy.chrM.txt --output chrM_gch_hcg/imr90.chrM.txt

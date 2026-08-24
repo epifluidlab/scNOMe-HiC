@@ -47,6 +47,13 @@ single-cell arm of the Figure 1 comparison. Run in the order listed.
 | `05_profiles/01_setup_regions.sh` | Stages the region BEDs used by `computeMatrix`: GM12878 CTCF peaks (TSS-excluded), an oriented CTCF motif set, and gencode v45 CGI / non-CGI TSS. | `$CCP/scripts/02_setup_regions.sh` |
 | `05_profiles/02_plot_ctcf.sh` | CTCF metaprofile: GCH and HCG in one `computeMatrix`, then `plotProfile` / `plotHeatmap`. | `$S3/plotCTCF_pseudobulk.sh` |
 | `05_profiles/03_plot_cgi.sh` | The same at TSS with both region sets in one matrix. Its heatmap is a Fig. S3 panel. | `$S3/plotCGI_pseudobulk.sh` |
+| `06_benchmark_qc/extract_GCH_HCG_counts.py` | Per-cell counts of detected GCH and HCG loci from the per-cell methylation BEDs. | `$S1Q/extract_GCH_HCG_counts.py` |
+| `06_benchmark_qc/01_extract_gch_hcg_counts.sh` | Runs the above; one line per dataset in the paper. The GM12878 line writes `gm_sc.gch_hcg_count.txt.gz`. | `$S1Q/extract_counts.sh` |
+| `06_benchmark_qc/extract_trinuc_chrM.py` | Per-cell trinucleotide methylation from the per-cell `trinuc_methy` QC files. Used for both chrM and an autosome. | `$S1Q/extract_trinuc_chrM.py` |
+| `06_benchmark_qc/02_extract_trinuc_chrM.sh` | Runs the above on chrM — the bisulfite non-conversion proxy. | `$S1Q/extractchrM.sh` |
+| `06_benchmark_qc/03_extract_trinuc_autosome.sh` | The same on chr21 (chr19 for mouse) — the autosomal non-CpG methylation proxy. | `$S1Q/extractchr.sh` |
+
+`$S1Q` = `scnomehic_paper/s1/QC`.
 
 ## Renumbering
 
@@ -96,5 +103,10 @@ Commands, parameters, and data paths are untouched. All scripts pass `bash -n`.
   `scc_analysis.py`, `build_bulk_*.sh`, `validate_pairfilter*.sh`) and
   **`ctcf_cgi_profiles/`** — these consume the outputs above to make figure panels,
   so they belong under `main_figures/` or `supplementary_figures/`.
+- **The rest of `scnomehic_paper/s1/QC/`** — `runBisQC_cellline.sh`,
+  `run_summary.sh`, `run_preseq_gc_extrap.sh`, `complexity/`, and the per-dataset
+  cell lists and BAM manifests. Pipeline re-runs and library-complexity work behind
+  an earlier version of the S1 panels; the current ones come from the benchmark
+  repository.
 - Recovery, validation and superseded-parameter scripts from the original working
   directory. They record operational history, not the method.
