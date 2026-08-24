@@ -7,14 +7,34 @@ input.
 |---|---|---|
 | `fig1_methylation_accessibility.ipynb` | R 4.4.2, 4 code cells (2 with outputs). Pseudobulk vs bulk NOMe-HiC for CpG methylation and GpC accessibility. Reads the four per-site 6plus2 beds directly and bins to 250 kb itself. Publishes `newbulk_locus_HCG_methylation_minCT_10.pdf` and `newbulk_acc_250kb_GCH_quantileNorm.pdf`. | `sc_nomehic_cellline/single_cell_vs_bulk.ipynb` |
 | `fig1_hic_comparison.ipynb` | Python 3.12.8, 6 code cells (3 with outputs). chr1 contact-matrix heatmap (bulk above the diagonal, pseudobulk below, IC-balanced at 1 Mb, 2400 dpi) plus the HiCRep SCC calculation. Reads juicer text dumps and builds temporary `.cool` files for balancing. Publishes `gm_heatmap_chr1_combined_main_dot.pdf`. | `sc_nomehic_cellline/snakemake/hic_comparison_gm_clean.ipynb` |
-| `fig1_benchmark_violins.ipynb` | Python, **42 code cells** (51 empty ones dropped), kernel `scnomehic_python`. Cross-technology per-cell QC over eight single-cell methods: cells 1–31 load each method's tables, cells 32–42 draw 33 violins. Five are Figure 1 or Figure S1 panels; see the two READMEs for the mapping. Outputs preserved. | `snomehic_benchmark` @ `236719d`, `summary/qc.ipynb` |
+| `fig1_benchmark_violins.ipynb` | Python, **39 code cells**, kernel `scnomehic_python`. Cross-technology per-cell QC over six published methods plus scNOMe-HiC: cells 1–28 load each method's tables, cells 29–39 draw 33 violins. Eight are Figure 1 or Figure S1 panels; see the two READMEs for the mapping. | `snomehic_benchmark` @ `236719d`, `summary/qc.ipynb` |
 
 ## Trimming
 
 The first two were copied unmodified, then reduced to the cells leading to the
 published panels. Retained cells keep their source **and outputs** byte-identical.
-`fig1_benchmark_violins.ipynb` had only its 51 empty code cells removed — every
-substantive cell is kept, with its outputs.
+
+`fig1_benchmark_violins.ipynb` had its 51 empty code cells removed, then scHi-C
+(Nagano et al.) stripped out: the markdown header and three loading cells deleted,
+its entries removed from every label dict, palette and order list, and the cache
+load changed to drop its rows. It was loaded but plotted nowhere, so this changes
+no panel — verified by running the pre-edit and post-edit code in the same kernel
+and pixel-diffing the four Hi-C figures: **max difference 0**.
+
+The `*_no_nagano` filenames are deliberately unchanged; they are the files used in
+Figure 1 and Figure S1.
+
+Cells 32 and 36 both draw the four Hi-C metrics over the same three datasets, under
+the plain and `_no_nagano` names. Both are kept because Figure S1 takes the trans
+ratio from the first and the cis panels from the second.
+
+**Outputs.** Only two cells' stored outputs were affected — the cache load (row
+count 3,970 → 3,955, exactly the 15 scHi-C cells) and the Hi-C plotting cell (its
+`N per dataset` label). Both were re-executed and their outputs grafted back; every
+other cell keeps its original output untouched. The re-executed figures render at
+590×790 rather than 568×768 because they were produced headlessly rather than in an
+interactive kernel — same content, different canvas, the same font-metric effect
+seen in `fig3_umap.ipynb`.
 
 | Notebook | Cells | Removed |
 |---|---|---|

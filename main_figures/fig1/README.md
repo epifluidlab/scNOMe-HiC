@@ -11,8 +11,8 @@ published single-cell methods.
 | `newbulk_locus_HCG_methylation_minCT_10.pdf` | `fig1_methylation_accessibility.ipynb` |
 | `newbulk_acc_250kb_GCH_quantileNorm.pdf` | `fig1_methylation_accessibility.ipynb` |
 | `gm_heatmap_chr1_combined_main_dot.pdf` | `fig1_hic_comparison.ipynb` |
-| `hcg_loci_violin.pdf`, `gch_loci_violin.pdf` | `fig1_benchmark_violins.ipynb`, cell 41 |
-| `hic_cis_gt1kb_n_violin_no_nagano.pdf` | `fig1_benchmark_violins.ipynb`, cell 39 |
+| `hcg_loci_violin.pdf`, `gch_loci_violin.pdf` | `fig1_benchmark_violins.ipynb`, cell 38 |
+| `hic_cis_gt1kb_n_violin_no_nagano.pdf` | `fig1_benchmark_violins.ipynb`, cell 36 |
 
 `fig1_hic_comparison.ipynb` also produces `gm_scc_raw_clip95_only_1Mb.pdf` and
 `gm_scc_rawclip_by_resolution.pdf`, which are not placed in Figure 1.
@@ -25,7 +25,7 @@ Figure S1 — see `../../supplementary_figures/figS1/`.
 |---|---|
 | `fig1_methylation_accessibility.ipynb` | R 4.4.2 (`nomehic_r`), 4 code cells. Bins the per-site BEDs itself, then draws the locus methylation panel and the quantile-normalised 250 kb accessibility panel. |
 | `fig1_hic_comparison.ipynb` | Python 3.12.8 (`scnomehic_python`), 6 code cells. Reads juicer text dumps, draws the chr1 heatmap and computes HiCRep SCC. |
-| `fig1_benchmark_violins.ipynb` | Python (`scnomehic_python`), 42 code cells, 33 figures. Cross-technology per-cell QC: cells 1–31 load each method's QC tables, cells 32–42 draw the violins. |
+| `fig1_benchmark_violins.ipynb` | Python (`scnomehic_python`), 39 code cells, 33 figures. Cross-technology per-cell QC: cells 1–28 load each method's QC tables, cells 29–39 draw the violins. |
 
 ## Inputs
 
@@ -75,14 +75,17 @@ scWGBS (Smallwood et al. 2014), snmC-seq2 (Luo et al. 2018), snm3C-seq (Liu et a
   HiCRep uses). chr4 is excluded as an outlier.
 - The chr1 heatmap *is* IC-balanced, at 1 Mb with low-coverage bins dropped, 2400
   dpi. Balancing is for visual comparability only; it is not used for SCC.
-- **The `_no_nagano` suffix is vestigial.** Nagano et al. (scHi-C) is loaded into
-  `hic_df` — 15 cells — but plotted nowhere: cell 34 sets `dataset_order` to
-  droplethic / snmCseq3 / scnomehic, so cell 35's panels exclude it just as cell 39's
-  explicitly-named `_no_nagano` ones do. Both sets show the same three datasets. The
-  original reason for dropping it was that its contact counts sit far below the
-  others and compress the axis.
-- Methyl-HiC never enters the notebook. Neither it nor Nagano is carried in
+- **scHi-C (Nagano et al.) has been removed from the notebook.** It was loaded but
+  plotted nowhere — `dataset_order` excluded it before every panel was drawn — so the
+  `_no_nagano` filenames no longer distinguish anything. They are kept because those
+  are the files used in the figures. Verified: running the pre-edit and post-edit
+  code in the same kernel gives **pixel-identical panels**.
+- Methyl-HiC never entered the notebook at all. Neither method is in
   `data_processing/benchmark/`.
+- Cells 32 and 36 draw the same four Hi-C metrics over the same three datasets,
+  under the plain and `_no_nagano` filenames respectively. Both are needed: Fig. S1
+  takes the trans ratio from cell 32, and Fig. 1 and S1 take the cis panels from
+  cell 36.
 - All three notebooks keep the absolute paths they ran with; the benchmark notebook
   writes into a relative `figures/` directory and so must be run from the benchmark
   repository root.
