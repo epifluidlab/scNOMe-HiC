@@ -4,6 +4,26 @@ Mouse cortex, 1,577 cells. Panels drawn on the joint three-modality embedding,
 showing that the biological-replicate split is removed by Harmony and that no
 per-cell QC measure structures the embedding.
 
+## Figure legend
+
+**Supplementary Figure S7. Quality-control and batch diagnostics on the integrated
+three-modality embedding.** Single-cell NOMe-HiC profiles of mouse cortex (*n* = 1,577
+cells) were integrated across the three assayed modalities — CpG methylation (HCG),
+chromatin accessibility (GCH), and chromatin contacts (Hi-C) — by z-scoring and
+concatenating the per-modality SVD embeddings and computing a joint UMAP. Every panel
+shows this same joint UMAP, with cells coloured by a technical or per-cell
+quality-control covariate. **(A, B)** Biological replicate (two independent library
+preparations), shown on the uncorrected joint embedding built from the raw per-modality
+SVDs **(A)** and after Harmony batch correction **(B)**; the replicate-driven separation
+visible in A is removed in B, confirming that the three modalities integrate without
+residual batch structure. **(C)** Library-preparation batch (preparation date).
+**(D)** Uniquely aligned reads per cell (log₁₀; MAPQ ≥ 30). **(E)** Fraction of reads
+uniquely aligned (MAPQ ≥ 30). **(F)** Bisulfite incomplete-conversion rate, estimated
+from non-CpG methylation on the mitochondrial genome (chrM). **(G)** Fraction of *cis*
+(intra-chromosomal) contacts. No per-cell QC metric (C–G) organizes the embedding,
+indicating that its structure reflects biological rather than technical variation.
+Colour encodes categorical covariates in A–C and continuous values (viridis) in D–G.
+
 ## Panels
 
 | File | Made by |
@@ -12,12 +32,13 @@ per-cell QC measure structures the embedding.
 
 | Panel | Colour |
 |---|---|
-| A (×2) | biological replicate, before and after Harmony |
-| B | library-prep batch (date) |
-| C | uniquely aligned reads, log10 |
-| D | % aligned reads (MAPQ ≥ 30) |
-| E | bisulfite incomplete-conversion rate (chrM non-CpG) |
-| F | % cis reads |
+| A | biological replicate, before Harmony |
+| B | biological replicate, after Harmony |
+| C | library-prep batch (date) |
+| D | uniquely aligned reads, log10 |
+| E | % aligned reads (MAPQ ≥ 30) |
+| F | bisulfite incomplete-conversion rate (chrM non-CpG) |
+| G | % cis reads |
 
 ## Files
 
@@ -35,7 +56,7 @@ All from `../../data_processing/mouse_cortex/subset_clustering/250kb_denovo/`:
 
 - `tables/{hcg,hic,gch}_svd_raw.txt` — pre-Harmony SVDs
 - `tables/joint_umap.txt` — the Harmony-corrected joint layout
-- `annotation/metadata_with_cell_type.txt` — 1,577 cells × 32 fields. Panels B–F read
+- `annotation/metadata_with_cell_type.txt` — 1,577 cells × 32 fields. Panels C–G read
   `library_prep_date`, `mapq30num`, `mapq30rate`, `noncpg_chrM`, `cisnum`, `transnum`.
 
 ## Notes
