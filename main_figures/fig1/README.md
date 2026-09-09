@@ -89,3 +89,55 @@ scWGBS (Smallwood et al. 2014), snmC-seq2 (Luo et al. 2018), snm3C-seq (Liu et a
 - All three notebooks keep the absolute paths they ran with; the benchmark notebook
   writes into a relative `figures/` directory and so must be run from the benchmark
   repository root.
+
+## Data update 2026-09-09 — snm3C-seq replaced, Droplet Hi-C deduplicated
+
+Two source datasets behind the Hi-C panels were wrong and have been rebuilt.
+**The notebook must be re-run to regenerate the panels.**
+
+**snm3C-seq.** The `snmCseq3` arm was GSE213259, which GEO records as
+`Library strategy: snmC-seq2` — a methylome-only assay with no proximity
+ligation, mislabelled snm3C-seq. Replaced with 100 cells of genuine snm3C-seq
+(PRJNA658701, study title `[CEMBA snm3C-seq]`), randomly sampled (seed
+20260827) from 5,398 runs and processed with YAP `m3c` under a config
+byte-identical to YAP's shipped default except `min_gap=1000`. The internal key
+stays `snmCseq3`; the displayed label already read "snm3C-seq (Liu et al. 2023)",
+which is now correct for the first time.
+
+**Droplet Hi-C.** The previous source was pre-deduplication — snakemake had
+stopped at `pairtools_sort`, so step 9 never ran. `pairtools dedup` measured a
+**61.1% duplicate rate** (chr21 spot-check gave 59.3%; the paper's own
+174,600 → 73,813 arithmetic implies ~58%). Cells restricted to barcodes with
+≥10,000 unique pairs, recovering 3,646 of the previous 3,668.
+
+| dataset | metric | before | after |
+|---|---|---|---|
+| snm3C-seq | cis > 1 kb | 8,372 | **114,980** |
+| snm3C-seq | cis | 649,748 | 496,616 |
+| snm3C-seq | uniquely mapped fragments | 1,495,454 | 1,644,522 |
+| snm3C-seq | MAPQ30 rate | 74.04% | 88.37% |
+| snm3C-seq | HCG loci | 1,165,000 | 744,442 |
+| Droplet Hi-C | cis > 1 kb | 8,535 | **3,048** |
+| Droplet Hi-C | cells | 3,668 | 3,646 |
+
+scNOMe-HiC is unchanged (187 cells, 31,884).
+
+### A cache bug that silenced updates
+
+Cell 31 builds `hic_df` with `cis_per_million_uniqmapq30`, but cell 35's
+`REQUIRED` list and cell 36 use `cis_per_million_mapped`. The check therefore
+failed even after a fresh upstream run, and cell 35 fell through to the on-disk
+cache — so **Fig 1D and S1D plotted the cache, not the table just built**. Cell 35
+now aliases the column, and `summary/hic_cache/hic_df.csv` has been rebuilt from
+the new `hic.csv`. Cell 32 (→ S1E) was never affected; it reads cell 31 directly.
+
+### Rebuild scripts (in the benchmark repo's `summary/`)
+
+| script | what it does |
+|---|---|
+| `build_snm3c_new_arms.py` | builds all six arms for the new 100 cells from `MappingSummary.csv.gz` + ALLC. HCG uses `hcg_lib.classify()` against mm10 (GCG removed by reference lookup) — the same definition as every other dataset. |
+| `patch_summary_tables.py` | swaps the `snmCseq3` rows in `frag_counts_all.tsv`, the two trinuc files, `conversion_percell.csv` and `all_methods.summary.txt` |
+| `build_qc_tables.py` | edited: snm3C hic from `snm3c_new_hic.tsv`, droplethic hic from the deduplicated per-cell table |
+
+Originals are in `summary/_backups_20260909/`; the notebook in
+`fig1_benchmark_violins.ipynb.bak_20260909`.

@@ -53,3 +53,16 @@ full input list and the list of methods compared.
   scnomehic. scHi-C (Nagano et al.) has been removed from the notebook; the
   `_no_nagano` filenames are kept only because they are the files used in the
   figures, and no longer distinguish anything.
+
+## Data update 2026-09-09
+
+The `snmCseq3` arm (wrong assay — GSE213259 is snmC-seq2, methylome-only) has
+been replaced with 100 cells of genuine snm3C-seq (PRJNA658701), and Droplet Hi-C
+has been deduplicated (61.1% duplicate rate; it was previously pre-dedup because
+snakemake stopped at `pairtools_sort`). **Re-run the notebook to regenerate.**
+
+Affected panels: **S1A** (conversion), **S1B** (uniquely mapped fragments),
+**S1C** (MAPQ ≥ 30 rate), **S1D** (cis contacts), **S1E** (trans fraction).
+See `../../main_figures/fig1/README.md` for the before/after table, the
+rebuild scripts, and the cell-35 cache bug that had been silencing updates to
+S1D.
