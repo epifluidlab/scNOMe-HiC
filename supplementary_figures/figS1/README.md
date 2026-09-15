@@ -59,7 +59,7 @@ full input list and the list of methods compared.
 The `snmCseq3` arm (wrong assay — GSE213259 is snmC-seq2, methylome-only) has
 been replaced with 100 cells of genuine snm3C-seq (PRJNA658701), and Droplet Hi-C
 has been deduplicated (61.1% duplicate rate; it was previously pre-dedup because
-snakemake stopped at `pairtools_sort`). **Re-run the notebook to regenerate.**
+snakemake stopped at `pairtools_sort`). Panels regenerated 2026-09-15.
 
 Affected panels: **S1A** (conversion), **S1B** (uniquely mapped fragments),
 **S1C** (MAPQ ≥ 30 rate), **S1D** (cis contacts), **S1E** (trans fraction).

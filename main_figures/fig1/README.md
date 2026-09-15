@@ -93,7 +93,9 @@ scWGBS (Smallwood et al. 2014), snmC-seq2 (Luo et al. 2018), snm3C-seq (Liu et a
 ## Data update 2026-09-09 — snm3C-seq replaced, Droplet Hi-C deduplicated
 
 Two source datasets behind the Hi-C panels were wrong and have been rebuilt.
-**The notebook must be re-run to regenerate the panels.**
+Panels regenerated 2026-09-15 by running cells 29–39 from the benchmark root.
+Cells 1–28 no longer run — cells 21, 22 and 26 read `MappingSummary.csv.gz` files
+removed by the scratch purge — but none of them feed a panel.
 
 **snm3C-seq.** The `snmCseq3` arm was GSE213259, which GEO records as
 `Library strategy: snmC-seq2` — a methylome-only assay with no proximity
