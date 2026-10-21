@@ -103,8 +103,10 @@ ligation, mislabelled snm3C-seq. Replaced with 100 cells of genuine snm3C-seq
 (PRJNA658701, study title `[CEMBA snm3C-seq]`), randomly sampled (seed
 20260827) from 5,398 runs and processed with YAP `m3c` under a config
 byte-identical to YAP's shipped default except `min_gap=1000`. The internal key
-stays `snmCseq3`; the displayed label already read "snm3C-seq (Liu et al. 2023)",
-which is now correct for the first time.
+stays `snmCseq3`; the displayed label was corrected to "snm3C-seq (Liu et al.
+2021)" — PRJNA658701 is GEO series GSE156683, published as Liu et al., *Nature*
+598:120–128 (2021), doi 10.1038/s41586-020-03182-8. The label previously cited
+the 2023 whole-brain atlas, which is a different study.
 
 **Droplet Hi-C.** The previous source was pre-deduplication — snakemake had
 stopped at `pairtools_sort`, so step 9 never ran. `pairtools dedup` measured a

@@ -35,8 +35,13 @@ All datasets use the **same caller (BisSNP-0.90)** and all 6plus2 files are
   - snmCseq3:  `snmCseq3/04.bhmem_bam/<cell>.calmd.cpg.filtered.sort.CG.6plus2.bed` (CG → HCG; no GCH)
   GCH (GpC accessibility) exists only for the NOMe methods (scnome, scnomehic).
 - **count_gch_hcg.log** — run log.
-- **gch_hcg_counts/all_methods.gch_hcg_loci.txt** — combined per-cell table:
-  `dataset, sample, GCH_n, HCG_n`.
+- **gch_hcg_counts/all_methods.gch_hcg_loci.OLD_snmCseq2.txt** — combined per-cell
+  table: `dataset, sample, GCH_n, HCG_n`. **Superseded, not read by any figure.**
+  Renamed 2026-10-20: its `snmCseq3` rows are the 98 GSE213259 cells, which GEO
+  records as `Library strategy: snmC-seq2`. The snm3C-seq arm was replaced with
+  100 genuine cells (GSE156683 / PRJNA658701) and every table the figures read
+  was patched, but this one was not. Figures use `all_methods.summary.txt`;
+  the two agree exactly on all shared `scnomehic` cells.
 - **gch_hcg_counts/<dataset>.gchhcg.txt** — per-dataset `sample, GCH_n, HCG_n`.
 
 ### snmCseq3 cross-check vs YAP/allcools (BisSNP vs YAP)
