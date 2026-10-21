@@ -75,7 +75,12 @@ Pipeline: Trim Galore → **bhmem** (bisulfitehic BWA-MEM) → `samtools markdup
 - **Metric 1:** external `s1/QC/chrM_gch_hcg/gm.{chrM,chr21}.txt.gz` (`noncpg`).
 - **Loci:** BisSNP NOMe HCG/GCH `6plus2` → `summary/gch_hcg_counts/scnomehic.{hcg,gch}`.
 
-## snmCseq3/  — snm3C-seq (Liu 2023, mm10, 100 cells → 98 QC)
+## snmCseq3/  — SUPERSEDED (was labelled snm3C-seq; GEO records it as snmC-seq2)
+Removed from the repo 2026-10-20. The snm3C-seq arm is now `snm3cseq/`: 100 cells
+from PRJNA658701 / GSE156683 (Liu et al. 2021), YAP `m3c`. The section below
+describes the old arm and is kept only to explain earlier numbers.
+
+### (historical) snmCseq3/ — GSE213259, mm10, 100 cells → 98 QC
 Pipeline: cutadapt → **two aligners** (YAP bismark+bowtie2 m3C `alignment/`, and
 bhmem `04.bhmem_bam/`). Both consumed by qc.ipynb.
 - **Metrics 2,3:** `frag_counts.py` on `04.bhmem_bam/{cell}.calmd.bam` (bhmem,

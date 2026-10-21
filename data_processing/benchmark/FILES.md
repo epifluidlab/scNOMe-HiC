@@ -18,7 +18,7 @@ not part of this repository.
 | `smallwood/` | 17 |
 | `snmCAT/` | 15 |
 | `snmCseq2/` | 20 |
-| `snmCseq3/` | 12 |
+| `snm3cseq/` | 5 |
 | `summary/` | 26 |
 
 `droplethic/` is the exception to the `codes/` shape: upstream it runs out of
@@ -37,7 +37,7 @@ Every file is byte-identical to the upstream copy, and all shell scripts parse.
 | `summary/_archive/`, `_backups/` | One-off notebook-patching scripts and `.ipynb` snapshots. |
 | `summary/compare_qc*.py`, `build_data_summary_xlsx.py`, `make_dataset_summaries.py`, `dist_check.py`, `verify_scnome_merge.py` | Kept — they are in `summary/`. Listed here only to note they are side analyses, not on the panel path. |
 | `nagano/`, `methylhic/`, `methylhic_new/` | scHi-C and Methyl-HiC. Processed upstream but in no published panel: `dataset_order` is reassigned before each violin is drawn, so Nagano is excluded even from the panels not named `_no_nagano`, and Methyl-HiC never enters the notebook. |
-| `snmCseq3/codes/comparison/` | 51 files of BHMEM/NM alignment debugging (mismatch recomputation, MAPQ comparison, PBAT-correction checks). Investigation, not the processing path. |
+| `snmCseq3/` (the whole folder) | Removed 2026-10-20. It held the GSE213259 arm, which GEO records as `Library strategy: snmC-seq2` — a methylome-only assay with no proximity ligation, mislabelled snm3C-seq. Its cis>1 kb median was ~10,576 against 114,980 for genuine snm3C-seq through the same YAP pipeline. Replaced by `snm3cseq/` (PRJNA658701). Its `codes/comparison/` branch — 51 files of BHMEM/NM alignment debugging — was never part of the processing path either. |
 | `snmCAT/meta.tsv` | 3.3 MB ENA run manifest, 8,495 rows. The cell list actually used is `snmCAT/codes/cells_brain.tsv` with `download_list_brain.txt`. |
 | `notes/`, `PROJECT_CONTEXT.md`, `REORG_PLAN.md`, `cleanup/`, `tools/`, `SESSION_NOTE_*.md` | Session logs, project-management notes and git wrapper scripts. |
 | `scratch_keepalive/` | Operational — keeps the scratch tree from being purged. Lives on b1198 at `scnomehic_paper/benchmark/scratch_keepalive/`. |

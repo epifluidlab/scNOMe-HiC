@@ -322,15 +322,20 @@ def harmonize_dataset(df, dtype, label):
 # Trinuc: load pre-computed noncpg / endo / exo from summary/trinuc/
 # ═══════════════════════════════════════════════════════════════════
 
-# Mapping from dataset type → trinuc file basename (relative to config dir's trinuc/ subfolder)
+# Mapping from dataset label → trinuc file basename (relative to config dir's trinuc/ subfolder).
+# Keyed by label (not dtype) so multiple "yap" datasets can have distinct trinuc sources.
 TRINUC_FILE_MAP = {
-    "scnome":    "trinuc/scnome.chr21.txt",
-    "snmcseq2":  "trinuc/snmCseq2.chr21.txt",
-    "smallwood": "trinuc/smallwood.chr21.txt",
+    "scNOMe":     "trinuc/scnome.chr21.txt",
+    "snmC-seq2":  "trinuc/snmCseq2.chr21.txt",
+    "Smallwood":  "trinuc/smallwood.chr21.txt",
+    "snmC-seq3":  "trinuc/snmCseq3.chr21.txt",
+    "MethylHiC":  "trinuc/methylhic.chr19.txt",
+    "scNOME-HiC": "trinuc/scnomehic.chr21.txt",
 }
 
-# Types whose sample IDs have a read-number suffix (_1 or _2) that must be stripped
-TRINUC_READNUM_TYPES = {"scnome", "snmcseq2"}
+# Labels whose sample IDs have a read-number suffix (_1 or _2) that must be stripped
+# before matching against the harmonized CellID.
+TRINUC_READNUM_LABELS = {"scNOMe", "snmC-seq2"}
 
 
 def load_trinuc_data(config_dir, dtype_label_pairs):
@@ -344,8 +349,8 @@ def load_trinuc_data(config_dir, dtype_label_pairs):
     config_dir = pathlib.Path(config_dir)
     result = {}
 
-    for dtype, label in dtype_label_pairs:
-        rel = TRINUC_FILE_MAP.get(dtype)
+    for _dtype, label in dtype_label_pairs:
+        rel = TRINUC_FILE_MAP.get(label)
         if rel is None:
             continue
         path = config_dir / rel
@@ -356,7 +361,7 @@ def load_trinuc_data(config_dir, dtype_label_pairs):
         tdf = pd.read_csv(path, sep="\t")
         tdf = tdf.rename(columns={"sample": "CellID"})
 
-        if dtype in TRINUC_READNUM_TYPES:
+        if label in TRINUC_READNUM_LABELS:
             # Strip _1 / _2 suffix and average R1+R2 per cell
             tdf["CellID"] = tdf["CellID"].str.replace(r'_\d+$', '', regex=True)
             tdf = tdf.groupby("CellID", as_index=True)[["noncpg", "endo", "exo"]].mean()
@@ -694,6 +699,25 @@ def main():
                           pdf, hic_datasets)
         build_summary_table_page(hic_hdf, HIC_CONTACTS, hic_datasets, pdf)
     print(f"Saved: {hic_pdf}")
+
+    # ── PDF 4: Full combined (all three groups + summary tables) ─────
+    full_pdf = f"{args.output}.full.pdf"
+    with PdfPages(full_pdf) as pdf:
+        plot_metric_group(hdf, BASE_ALIGNMENT,
+                          "Base Alignment QC — All Methods",
+                          pdf, dataset_order)
+        build_summary_table_page(hdf, BASE_ALIGNMENT, dataset_order, pdf)
+
+        plot_metric_group(meth_hdf, METHYLATION,
+                          "Methylation QC — Bisulfite Methods",
+                          pdf, methyl_datasets)
+        build_summary_table_page(meth_hdf, METHYLATION, methyl_datasets, pdf)
+
+        plot_metric_group(hic_hdf, HIC_CONTACTS,
+                          "Hi-C Contact QC — 3C Methods",
+                          pdf, hic_datasets)
+        build_summary_table_page(hic_hdf, HIC_CONTACTS, hic_datasets, pdf)
+    print(f"Saved: {full_pdf}")
 
     print("\nDone.")
 

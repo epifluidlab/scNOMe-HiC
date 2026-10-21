@@ -12,7 +12,7 @@ scNOMe-HiC. The violins are drawn in
 | `scnome/` | scNOMe-seq | Pott et al. 2017 |
 | `smallwood/` | scWGBS | Smallwood et al. 2014 |
 | `snmCseq2/` | snmC-seq2 | Luo et al. 2018 |
-| `snmCseq3/` | snm3C-seq | Liu et al. 2023 |
+| `snm3cseq/` | snm3C-seq | Liu et al. 2021 |
 | `snmCAT/` | snmCAT-seq | Luo et al. 2022 |
 
 ## Layout

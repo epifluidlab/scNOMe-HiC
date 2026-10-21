@@ -58,11 +58,11 @@ DATASETS = [
      "GSE112471", "SRR6911624 ... (250-line acc_list)", "cutadapt -> Bismark SE per-mate -> dedup -> methyl-extractor; parallel YAP mc arm",
      "CpG-only methylome. mm10 subset used for the benchmark figures."],
 
-    ["snmCseq3/", "snm3C-seq", "Liu et al. 2023, Nature", "10.1038/s41586-023-06805-y", "mm10",
-     "Mouse brain (single nuclei)", "CpG methylation + Hi-C (m3C chimeric split-read contacts)",
-     "1,379 in SRA pool (100 aligned)", "98",
-     "GSE213259 (PRJNA880294)", "SRR21549289 ... (1379-line acc_list)", "cutadapt -> YAP bismark+bowtie2 m3C (alignment/) AND bhmem (04.bhmem_bam/)",
-     "Combined methylome + Hi-C. Final figures: align+contacts from YAP, conversion+HCG loci from bhmem. Contacts are chimeric multi-way (method-inherent difference)."],
+    ["snm3cseq/", "snm3C-seq", "Liu et al. 2021, Nature", "10.1038/s41586-020-03182-8", "mm10",
+     "Mouse hippocampus (single nuclei, CEMBA)", "CpG methylation + Hi-C (m3C chimeric split-read contacts)",
+     "100 sampled (seed 20260827)", "100",
+     "GSE156683 (PRJNA658701)", "SRR12498835 ... (100-line cells100.tsv)", "YAP bismark+bowtie2 m3C (alignment/), min_gap=1000",
+     "Combined methylome + Hi-C. Replaces the earlier GSE213259 arm, which GEO records as Library strategy: snmC-seq2 (methylome only, no proximity ligation)."],
 
     ["smallwood/", "Smallwood scBS-seq (scWGBS)", "Smallwood et al. 2014, Nat Methods", "10.1038/nmeth.3035", "mm10",
      "Mouse ESC (single cells)", "CpG methylation only (WGBS); no Hi-C, no GCH",
