@@ -29,5 +29,8 @@ notebooks). The latter is built by `../../env/create_diff_env.sh`.
   canonical GCH UMAP differed from the exploration version (Harmony has two stable
   attractors depending on k-means init). Useful history, not the published path.
 - **`scratchpad_modality_agreement.R`, `scratchpad_agreement_heatmap.R`** — the
-  inter-modality Leiden agreement analysis (ARI 0.833 HCG↔HiC, 0.714 HCG↔GCH, 0.616
-  HiC↔GCH). A separate result, not one of the panels listed here.
+  standalone first drafts of the inter-modality Leiden agreement analysis. Superseded:
+  the published form lives in `fig2_umap.ipynb` §10a/§10b, which computes the metrics
+  and draws `modality_leiden_agreement_heatmap.pdf`. The scratchpad heatmap differs —
+  it keys fill on ARI with a blue scale; the published panel keys fill on % cells
+  co-assigned with a red scale and labels ARI / NMI / kNN beneath each number.

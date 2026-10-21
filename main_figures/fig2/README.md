@@ -12,6 +12,7 @@ matching bulk data.
 | `fig2_gch250kb_pseudobulk_2row_heatmap.pdf`, `fig2_gch250kb_2row_colorbars.pdf` | `fig2_accessibility.ipynb` |
 | `metilene_dmr_pseudobulk_heatmap.pdf`, `metilene_dmr_colorbar.pdf` | `fig2_methylation.ipynb` |
 | `APA_2xN_insitu_diffloops.pdf` | `fig2_apa.ipynb` |
+| `modality_leiden_agreement_heatmap.pdf` | `fig2_umap.ipynb` (§10b) |
 
 ## Files
 
@@ -55,7 +56,8 @@ From `../../data_processing/mixture_cellline/` and `../../data_processing/bulk_o
 | Methylation | 3,890 DMRs at coverage ≥ 20 in both types; 3,804 direction-consistent (97.8%); r(sc Δ, bulk Δ) = 0.941 |
 | Accessibility | Spearman ρ = 0.767 on the differential, over the top 1,000 bins shown |
 
-§10 reports inter-modality Leiden agreement with no bulk reference:
+§10 reports inter-modality Leiden agreement with no bulk reference, and §10b
+draws `modality_leiden_agreement_heatmap.pdf` from it:
 
 | pair | % agree | ARI | NMI | kNN purity |
 |---|---|---|---|---|
