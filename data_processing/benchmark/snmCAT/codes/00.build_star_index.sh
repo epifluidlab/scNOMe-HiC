@@ -15,7 +15,8 @@
 
 # NOTE: source bashrc / activate conda BEFORE `set -u`; ~/.bashrc references an
 # unbound var (BASHRCSOURCED) that would abort the job under set -u.
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 conda activate mapping
 export PATH="$CONDA_PREFIX/bin:$PATH"
 

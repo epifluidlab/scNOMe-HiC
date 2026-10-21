@@ -17,7 +17,8 @@
 # unbound; -u would trip on `source ~/.bashrc`.
 set -eo pipefail
 
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 conda activate hic_env
 
 THIS_DIR=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb

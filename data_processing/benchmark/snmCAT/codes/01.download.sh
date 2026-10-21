@@ -11,7 +11,8 @@
 #SBATCH --error=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCAT/codes/logs/01.download/dl.%a.err
 
 # Download 100 cells from 190321_mCTseq_hs_29yr (UMB5580) = snmC2T-seq (NOMe) batch.
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 BASE="/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCAT"
 outfolder="${BASE}/fastq_brain"
 listfile="${BASE}/codes/download_list_brain.txt"

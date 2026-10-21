@@ -9,7 +9,8 @@
 #SBATCH --job-name=snmCAT_brain
 #SBATCH --output=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCAT/codes/logs/04.map/snakemake.%a.out
 #SBATCH --error=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCAT/codes/logs/04.map/snakemake.%a.err
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 conda activate mapping
 export PATH="$CONDA_PREFIX/bin:$PATH"
 BASE="/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCAT"

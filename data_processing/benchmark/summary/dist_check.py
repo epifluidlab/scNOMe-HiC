@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 B = "/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark"
-GM = "/home/jmj7858/epifluidlab/sc_nomehic_cellline/gm_sc_new/04.alignment_snakemake"
+GM = "/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/04.alignment_snakemake"
 
 
 def q(s):
@@ -59,7 +59,7 @@ for f in glob.glob(f"{B}/nagano/alignment/*.summary.txt"):
                  d.get("UniqMappedMapQ30NoPcrTrans")))
 hic["nagano"] = rows
 # scnomehic (187 passed)
-passed = set(pd.read_csv("/home/jmj7858/epifluidlab/scnomehic_paper/s1/QC/gm_passed.txt", header=None)[0].astype(str))
+passed = set(pd.read_csv("/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s1/QC/gm_passed.txt", header=None)[0].astype(str))
 rows = []
 for c in passed:
     f = f"{GM}/{c}.summary.txt.gz"

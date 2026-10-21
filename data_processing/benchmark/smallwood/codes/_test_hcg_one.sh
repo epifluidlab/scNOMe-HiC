@@ -1,7 +1,8 @@
 #!/bin/bash
 # Quick test: run coverage2cytosine --nome-seq on ONE Smallwood cell's CpG-only
 # cov to confirm it produces NOMe.CpG.cov.gz (HCG) correctly from a non-CX cov.
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 conda activate scnomehic
 set -o pipefail
 

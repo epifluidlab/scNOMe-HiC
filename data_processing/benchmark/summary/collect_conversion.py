@@ -28,7 +28,7 @@ import pandas as pd
 
 BASE = "/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark"
 TRI = os.path.join(BASE, "summary/trinuc")
-EXT = "/home/jmj7858/epifluidlab/scnomehic_paper/s1/QC"
+EXT = "/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s1/QC"
 rows = []
 
 

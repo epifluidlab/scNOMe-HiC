@@ -33,7 +33,8 @@
 #   --clip_r1/r2 9); scNOMe used clip 6 + extractor --ignore 6. Minor stage
 #   difference in end-bias handling; both remove the priming-biased region.
 
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 conda activate scnomehic
 set -o pipefail
 

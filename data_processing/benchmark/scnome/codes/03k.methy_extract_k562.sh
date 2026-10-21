@@ -17,7 +17,8 @@
 #   Step 2  coverage2cytosine --nome-seq -> NOMe CpG (ACG/TCG) and GpC (GCA/GCC/GCT)
 #           reports, ambiguous GCG dropped automatically.
 
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 conda activate scnomehic
 set -o pipefail
 

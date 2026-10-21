@@ -10,7 +10,8 @@
 #SBATCH --output=logs/01.qc_trim/qc_trim.%a.txt
 #SBATCH --error=logs/01.qc_trim/qc_trim.%a.err
 
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 # Fail-fast: a bad cd must abort the job, not silently run in the wrong dir.
 cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome || { echo "ERROR: cd to working dir failed"; exit 1; }
 

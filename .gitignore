@@ -11,3 +11,10 @@ __pycache__/
 # Internal working logs -- this repo is reviewer-facing.
 # They live in ../scNOMeHiC_code_notes/
 SESSION_NOTE_*.md
+
+# Downloaded reads and pipeline outputs under data/.
+# The folder structure and the READMEs are tracked; nothing else is.
+/data/**
+!/data/**/
+!/data/**/README.md
+!/data/**/.gitkeep

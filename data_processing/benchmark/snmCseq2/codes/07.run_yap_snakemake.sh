@@ -18,7 +18,8 @@
 #   yap_mapping_hg38 (153 cells) and yap_mapping_mm10 (96 cells).
 # Mirrors snmCAT/codes/02.run_snakemake.sh (incl. the --rerun-incomplete --unlock fix).
 
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 conda activate mapping
 export PATH="$CONDA_PREFIX/bin:$PATH"
 

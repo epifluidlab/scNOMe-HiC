@@ -21,7 +21,8 @@
 # --score_min L,0,-0.2). markdup is run WITHOUT -r (marks, not removes), identical
 # to how every other cell type was deduped -- only the trimming differs by type.
 
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome || { echo "ERROR: cd failed"; exit 1; }
 conda activate scnomehic
 set -o pipefail

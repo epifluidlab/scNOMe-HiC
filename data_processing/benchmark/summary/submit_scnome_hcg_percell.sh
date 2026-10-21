@@ -10,7 +10,8 @@
 #SBATCH --error=logs/hcg_genome/scnome_hcg_percell.err
 
 # Per-cell (R1 union R2) destranded HCG for scnome -- correct merge of the two mates.
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 conda activate scnomehic
 B=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark
 cd $B/summary

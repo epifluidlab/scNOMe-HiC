@@ -31,7 +31,8 @@
 # Each read of a pair was aligned independently (mates _1 and _2), so both are
 # extracted separately, matching how the libraries were aligned.
 
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 conda activate scnomehic
 set -o pipefail
 

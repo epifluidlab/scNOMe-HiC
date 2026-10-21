@@ -11,7 +11,8 @@
 #SBATCH --error=logs/00.rename_fastq/rename_fastq.%a.err
 
 
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 conda activate scnomehic
 BASE="/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new"
 IN_DIR="${BASE}/01.demul_fastq_snakemake"

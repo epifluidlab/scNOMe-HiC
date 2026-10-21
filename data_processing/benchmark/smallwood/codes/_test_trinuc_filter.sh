@@ -2,7 +2,8 @@
 # Isolate WHY Bismark-native != BisSNP: re-run SRR1248481 chr19 after applying
 # BisSNP-like filters (MAPQ>=30 + exclude duplicates). If endo jumps toward the
 # BisSNP value (77.606), filtering is the driver (not a context/strand bug).
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 conda activate scnomehic
 set -o pipefail
 cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/smallwood

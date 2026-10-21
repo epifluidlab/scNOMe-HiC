@@ -20,7 +20,8 @@
 # scripts from the submit directory instead, falling back to BASH_SOURCE when
 # run directly with bash.
 HERE="${SLURM_SUBMIT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 module load gcc/11.2.0 || true
 module load htslib || true
 conda activate scnomehic

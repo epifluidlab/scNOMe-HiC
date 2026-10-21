@@ -12,7 +12,7 @@ chmod +x "${WORKER}"
 
 BAM_DIR=${BASE}/04.alignment_snakemake
 RE_SITE=${RC}/hic/mm10_DpnII.txt
-JUICER=/home/jmj7858/epifluidlab/software/juicer/juicer_tools.jar
+JUICER=/projects/b1198/epifluidlab/yoshii/software/juicer/juicer_tools.jar
 SAM2JUICER=/gpfs/projects/b1198/epifluidlab/yoshii/software/bisulfiteHic/src/python/sam2juicer_new.py
 
 TMP_ROOT=/gpfs/projects/b1042/epifluidlab/yoshii/sc_nomehic_hic_tmp/replicate_comparison

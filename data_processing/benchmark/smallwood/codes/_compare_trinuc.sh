@@ -2,7 +2,8 @@
 # Compute Bismark-native trinuc QC on a few Smallwood ESC cells and compare to
 # the existing BisSNP-derived values. Uses the SAME shared script as scNOMe
 # (scnome/codes/nome_qc_sites_trinuc.py) with --mates "" (single no-mate cell).
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 conda activate scnomehic
 set -o pipefail
 

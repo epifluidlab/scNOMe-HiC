@@ -26,7 +26,8 @@
 
 # /etc/bashrc reads unbound vars, so enable -u only after sourcing it
 set -eo pipefail
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 conda activate hic_env
 set -u
 

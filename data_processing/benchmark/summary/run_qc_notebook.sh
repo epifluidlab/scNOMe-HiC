@@ -12,7 +12,8 @@
 # Execute qc.ipynb end-to-end to regenerate all figures with the corrected data.
 # Run a COPY at the benchmark root so the kernel CWD == benchmark/ and the notebook's
 # relative paths (droplethic/, summary/, figures/) resolve correctly.
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 conda activate scnomehic
 cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark
 mkdir -p summary/logs

@@ -9,7 +9,8 @@
 #SBATCH --output=logs/runsnakemake/runsnakemake.txt
 #SBATCH --error=logs/runsnakemake/runsnakemake.err
 
-source /home/jmj7858/.bashrc
+# conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
+source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
 cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/droplethic/my_project
 
 conda activate rupture

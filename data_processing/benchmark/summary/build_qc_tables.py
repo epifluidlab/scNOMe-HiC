@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 
 B = "/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark"
-GM = "/home/jmj7858/epifluidlab/sc_nomehic_cellline/gm_sc_new/04.alignment_snakemake"
+GM = "/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/04.alignment_snakemake"
 OUT = f"{B}/summary/qc_tables"
 os.makedirs(OUT, exist_ok=True)
 

@@ -22,7 +22,7 @@ module load java/jdk-17.0.2+8
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RC=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake/replicate_comparison
-JUICER=/home/jmj7858/epifluidlab/software/juicer/juicer_tools.jar
+JUICER=/projects/b1198/epifluidlab/yoshii/software/juicer/juicer_tools.jar
 
 python "${HERE}/03_dump_hic.py" \
   --hic1 "${RC}/hic/rep1.mapQ30.hic" \
