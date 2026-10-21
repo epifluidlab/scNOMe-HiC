@@ -14,14 +14,21 @@ methods. Figure 1 shows three panels from the same comparison; S1 shows the rest
 | `hic_cis_gt1kb_n_violin_no_nagano.pdf` | 36 |
 | `hic_trans_ratio_violin.pdf` | 32 |
 
+| File | Made by |
+|---|---|
+| `hic_loglog_contact_vs_distance.fullonly.smoothed.zoom.pdf` | `figS1_contact_distance.ipynb` |
+
 `hic_cis_gt1kb_n_violin_no_nagano.pdf` is also a Figure 1 panel.
 
-## This folder ships no notebook
+## The violin panels have no notebook here
 
-Every panel comes from `../../main_figures/fig1/fig1_benchmark_violins.ipynb`, from
+The six violins come from `../../main_figures/fig1/fig1_benchmark_violins.ipynb`, from
 the same cells that produce the Figure 1 benchmark panels. Cells 1–28 load the
 methods' QC tables and cells 29–39 draw every violin in one pass, so there is no
 seam to split on; this folder documents the mapping instead of carrying a near-copy.
+
+The contact-vs-distance panel is unrelated to that notebook and ships here as
+`figS1_contact_distance.ipynb`.
 
 | Cell | Draws |
 |---|---|
@@ -31,6 +38,19 @@ seam to split on; this folder documents the mapping instead of carrying a near-c
 | 36 | the same four, re-drawn under `_no_nagano` names — S1 takes cis and cis > 1 kb |
 | 38 | HCG and GCH detected loci (Figure 1) |
 | 39 | bisulfite non-conversion, chrM and chr21/chr19 |
+
+## Contact frequency vs. distance
+
+`figS1_contact_distance.ipynb` draws the HOMER log-log decay for three GM12878
+samples — bulk NOMe-HiC, pseudobulk NOMe-HiC and ENCODE in-situ Hi-C — at full
+depth, log-binned 20/decade, zoomed to 10^5–10^8 bp.
+
+It reads `<sample>_full.petag.FreqDistribution_1000.txt`, which HOMER
+`makeTagDirectory` writes from a HiCsummary read-pair file. **The step that produces
+those files is not in this repository**: `sample_pipeline.sh` in
+`scnomehic_paper/fig1/codes/hic_qc_loglog/` needs the ~115 GB ENCODE
+`ENCFF447ERX.pairs.gz` download plus the bulk and pseudobulk read-pair files. The
+notebook starts from the small per-sample distribution tables.
 
 ## Inputs
 
