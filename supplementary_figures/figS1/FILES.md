@@ -18,10 +18,13 @@ cell-to-panel mapping.
   PNG/PDF variant to disk. The published panel is the full-depth zoomed curve only;
   `make_fig()` still takes the `full_only` / `sub_only` / `zoom` / `smoothed` flags,
   so any of the others can be redrawn in one call.
-- **`download_insitu_pairs.sh`, `sample_pipeline.sh`, `submit_insitu.sh`,
-  `aggregate_insitu_full_from_hicsummary.sh`, `plot_loglog.py`** — the read-pair
-  download and the HiCsummary → `makeTagDirectory` chain that writes the `petag`
-  tables, plus the batch version of the plotting code. See `README.md`.
+- **`plot_loglog.py`** — the batch equivalent of `figS1_contact_distance.ipynb`,
+  emitting all 12 combined/full/sub × raw/smoothed/zoom variants. The notebook
+  carries the same `make_fig()` and draws the published panel.
+
+The read-pair download and the HiCsummary → `makeTagDirectory` chain that writes
+the `petag` tables now lives in
+`../../data_processing/bulk_others/05_hic_loglog/` (steps 01–04).
 
 ## Why the violin panels have no notebook here
 

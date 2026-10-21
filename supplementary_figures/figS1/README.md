@@ -46,11 +46,11 @@ samples — bulk NOMe-HiC, pseudobulk NOMe-HiC and ENCODE in-situ Hi-C — at fu
 depth, log-binned 20/decade, zoomed to 10^5–10^8 bp.
 
 It reads `<sample>_full.petag.FreqDistribution_1000.txt`, which HOMER
-`makeTagDirectory` writes from a HiCsummary read-pair file. **The step that produces
-those files is not in this repository**: `sample_pipeline.sh` in
-`scnomehic_paper/fig1/codes/hic_qc_loglog/` needs the ~115 GB ENCODE
-`ENCFF447ERX.pairs.gz` download plus the bulk and pseudobulk read-pair files. The
-notebook starts from the small per-sample distribution tables.
+`makeTagDirectory` writes from a HiCsummary read-pair file. Those tables are produced
+by `../../data_processing/bulk_others/05_hic_loglog/` (steps 01–04): download the
+ENCODE `ENCFF447ERX.pairs.gz` read pairs (~115 GB), convert each sample's read-pair
+file to HiCsummary, downsample, and run `makeTagDirectory`. The notebook starts from
+the small per-sample distribution tables those steps emit.
 
 ## Inputs
 
