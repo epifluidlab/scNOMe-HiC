@@ -11,7 +11,7 @@ matching bulk data.
 | UMAPs (HCG, GCH, Hi-C, joint) | `fig2_umap.ipynb` |
 | `fig2_gch250kb_pseudobulk_2row_heatmap.pdf`, `fig2_gch250kb_2row_colorbars.pdf` | `fig2_accessibility.ipynb` |
 | `metilene_dmr_pseudobulk_heatmap.pdf`, `metilene_dmr_colorbar.pdf` | `fig2_methylation.ipynb` |
-| `APA_2xN_insituHCD_diffloops_diffmap.pdf` | `fig2_apa.ipynb` |
+| `APA_2xN_insituHCD_diffloops_bgnorm.pdf` | `fig2_apa.ipynb` |
 | `modality_leiden_agreement_heatmap.pdf` | `fig2_umap.ipynb` (§10b) |
 
 ## Files
@@ -21,7 +21,7 @@ matching bulk data.
 | `fig2_umap.ipynb` | R (`scnomehic` env, kernel `ir`). SVD → Harmony → Leiden → UMAP for HCG, GCH, Hi-C and the joint embedding; §9 calls the cell types and writes the label table; §10 scores inter-modality agreement. |
 | `fig2_accessibility.ipynb` | R (`scnomehic_diff`). Single-cell GpC pseudobulk vs bulk ATAC over 250 kb bins → two-row heatmap and colorbars. |
 | `fig2_methylation.ipynb` | R (`scnomehic_diff`). Metilene de-novo DMRs → single-cell pseudobulk → heatmap and colorbar. |
-| `fig2_apa.ipynb` | Python (`hic_cooler`), 3 code cells. Plots the cached APA pile-up of **in-situ-defined** differential loops against the single-cell pseudobulk: a median-per-loop log2(GM12878 / IMR90) difference map. |
+| `fig2_apa.ipynb` | Python (`hic_cooler`), 5 code cells. Plots the cached APA pile-up of **in-situ-defined** differential loops against the single-cell pseudobulk: a 2×2 grid, rows = pseudobulk, columns = loop set, each panel divided by its own 4-corner background. |
 
 ## Run order
 
@@ -64,7 +64,7 @@ From `../../data_processing/mixture_cellline/` and `../../data_processing/bulk_o
 |---|---|
 | Methylation | 3,890 DMRs at coverage ≥ 20 in both types; 3,804 direction-consistent (97.8%); r(sc Δ, bulk Δ) = 0.941 |
 | Accessibility | Spearman ρ = 0.767 on the differential, over the top 1,000 bins shown |
-| APA | GM12878-specific loops centre log2(GM/IMR) = **+0.50** (1.41×, n = 285); IMR90-specific = **−0.38** (0.77×, n = 665); paired Mann–Whitney p = 1.5 × 10⁻¹⁶. The centre values are printed by the notebook; the test and the APA scores come from `apa_insituHCD_stats.tsv`, written by `bulk_others/04_hic_loops/05_apa_pileup_insitu.py`. |
+| APA | On-diagonal enrichment: GM12878-specific loops (n = 287) score **1.74** on the GM12878 pseudobulk against 1.32 on IMR90; IMR90-specific loops (n = 666) score **1.56** on IMR90 against 1.36 on GM12878 (min-max APA). Paired Mann–Whitney p = 1.5 × 10⁻¹⁶. Scores and test come from `apa_insituHCD_stats.tsv`, written by `bulk_others/04_hic_loops/05_apa_pileup_insitu.py`. |
 
 §10 reports inter-modality Leiden agreement with no bulk reference, and §10b
 draws `modality_leiden_agreement_heatmap.pdf` from it:
@@ -85,10 +85,12 @@ shared the underlying data and a clean diagonal was partly guaranteed by winner'
 curse. An independent selection can only attenuate a real effect, never manufacture
 one, so the surviving diagonal is evidence.
 
-The panel divides rather than asking the eye to compare across rows: per loop, pixel
-by pixel, log2(O/E in GM12878 ÷ O/E in IMR90), then the median across loops. Because
-it is a ratio of the *same* loops in both pseudobulks, intrinsic loop strength, loop
-length and the GM-subsample enrichment all cancel.
+The panel divides each 2×N tile by its own background rather than asking the eye to
+compare raw rows: the background is the mean of the four corners of that tile, so
+1.0 is "no enrichment over this panel's own background". Without it an entire row can
+sit lighter or darker because the two pseudobulks have different within-window value
+distributions, which has nothing to do with the loops. The four corners disagree by
+6–18% per panel, printed by the cell.
 
 ## Notes
 

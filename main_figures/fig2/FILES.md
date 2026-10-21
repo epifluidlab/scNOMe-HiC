@@ -6,7 +6,7 @@
 |---|---|---|
 | `fig2_umap.ipynb` | R, **21 code cells** (trimmed from 32, plus §10), kernel `ir` (scnomehic env). SVD → Harmony → Leiden + UMAP over HCG, GCH, Hi-C and a joint embedding; §8–9 call cell types against bulk methylation and **write the cell-type labels the pseudobulk builders need**. Outputs preserved. | `sc_nomehic_cellline/snakemake/subset_clustering/250kb/subset_final_snakemake.ipynb` |
 | `fig2_accessibility.ipynb` | R, **4 code cells** (trimmed from 26), kernel `scnomehic_diff`. Single-cell GpC pseudobulk vs bulk ATAC at 250 kb → two-row heatmap + colorbars. The DiffBind, per-peak sc GCH and RWR-imputation branches were removed entirely. Figure outputs preserved. | `scnomehic_paper/fig2/codes/fig2_accessibility.ipynb` |
-| `fig2_apa.ipynb` | Python, **3 code cells** (trimmed from 11), kernel `hic_cooler`. Plotting only: setup → load the cached pile-up → draw the panel. The pile-up is cached in `apa_insituHCD.npz` by `bulk_others/04_hic_loops/05_apa_pileup_insitu.py`, which the load cell imports (as `step08_apa_insitu_defined`, its working-directory name) when `RECOMPUTE = True`. `LOOPSET` picks the loop definition; `hiccupsdiff` is the published one. Outputs preserved, no errors. | `sc_nomehic_cellline/snakemake/APA/insitu/loop_insitu_apa_plot.ipynb` |
+| `fig2_apa.ipynb` | Python, **5 code cells** (trimmed from 11), kernel `hic_cooler`. Plotting only: setup → load the cached pile-up → APA scores → the `draw()` helper → the background-normalised panel. The pile-up is cached in `apa_insituHCD.npz` by `bulk_others/04_hic_loops/05_apa_pileup_insitu.py`, which the load cell imports (as `step08_apa_insitu_defined`, its working-directory name) when `RECOMPUTE = True`. `LOOPSET` picks the loop definition; `hiccupsdiff` is the published one. Outputs preserved, no errors. | `sc_nomehic_cellline/snakemake/APA/insitu/loop_insitu_apa_plot.ipynb` |
 | `fig2_methylation.ipynb` | R, **5 code cells** (trimmed from 17), kernel `scnomehic_diff`. Metilene de-novo DMRs → single-cell pseudobulk direction check → heatmap + colorbar. The methylKit 250 kb branch was removed entirely. Outputs preserved. | `scnomehic_paper/fig2/codes/fig2_methylation_250kb.ipynb` |
 
 Renamed only — no cell edits, no path rewriting.
@@ -28,12 +28,13 @@ notebooks). The latter is built by `../../env/create_diff_env.sh`.
   diagnostics from `subset_clustering/250kb/`. The diagnostics investigated why the
   canonical GCH UMAP differed from the exploration version (Harmony has two stable
   attractors depending on k-means init). Useful history, not the published path.
-- **`loop_insitu_apa_plot.ipynb` §3, §4, §6, §7** — the diagnostic sections of the
-  source notebook: the APA-score conventions, the min-max / raw O/E / background-
-  normalised 2×N renderings, the paired Mann–Whitney with its violin, and the stats
-  writer. None produces a published panel, and the statistics they report are also
+- **`loop_insitu_apa_plot.ipynb` §4a, §4b, §5, §6, §7** — the alternative renderings
+  and side outputs: the min-max and raw O/E 2×N panels, the median-per-loop
+  log2(GM/IMR) difference map, the paired Mann–Whitney with its violin, and the stats
+  writer. None is the published panel, and the statistics they report are also
   computed by `05_apa_pileup_insitu.py`, which writes `apa_insituHCD_stats.tsv`.
-  The retained cells depend on none of them (verified by name resolution).
+  §3 and the §4 `draw()` helper ARE retained: the published panel needs `score_mm`
+  from §3 and `draw()` from §4 (dependency resolved by AST name analysis).
 - **`sc_nomehic_cellline/snakemake/APA/insitu/loop_insitu_apa.ipynb`** — the previous APA notebook, which
   produced `APA_2xN_insitu_diffloops.pdf` and was carried here until 2026-10-20.
   **Circular**: it selected differential loops from `loopq`/`loopt`, statistics
