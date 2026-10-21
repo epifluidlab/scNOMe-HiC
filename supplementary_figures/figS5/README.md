@@ -6,10 +6,10 @@ How much of each library's complexity the sequencing captured. 180 QC-passing ce
 
 | File | Made by |
 |---|---|
-| `s5_saturation.pdf` | `figS5_saturation.ipynb` §3 |
+| `s7_saturation.pdf` | `figS5_saturation.ipynb` §3 |
 
-Also drawn, not panels: `s5_library_complexity` (§4, unique molecules vs raw
-fragments) and `s5_saturation_byfraction` (§5, the same curves against subsample
+Also drawn, not panels: `s7_library_complexity` (§4, unique molecules vs raw
+fragments) and `s7_saturation_byfraction` (§5, the same curves against subsample
 fraction). Both are how the fit was checked.
 
 ## Files
@@ -34,6 +34,18 @@ Four metrics per depth:
 
 Fractions: 0.05, 0.1, 0.2, 0.4, 0.6, 0.8, plus 1.0 taken from the full-depth
 pipeline outputs rather than recomputed.
+
+## Status of the inputs
+
+The per-(cell, fraction) TSVs lived on b1042 scratch
+(`scnomehic_paper/s7/results`) and have since been purged, so the notebook cannot
+be re-run as-is. Its stored outputs record the run that made the panel: 1,260
+result files, 180 cells × 7 fractions, no missing rows. Regenerating them means
+re-running `../../data_processing/gm12878_cellline/04_saturation/` (steps 00–05)
+against the per-cell BAMs, which are still on b1198.
+
+The figure files keep the `s7_` prefix they were written with in 2026-06-30, from
+before this figure was renumbered S7 → S5.
 
 ## Notes
 

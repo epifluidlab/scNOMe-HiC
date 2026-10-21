@@ -11,7 +11,7 @@ matching bulk data.
 | UMAPs (HCG, GCH, Hi-C, joint) | `fig2_umap.ipynb` |
 | `fig2_gch250kb_pseudobulk_2row_heatmap.pdf`, `fig2_gch250kb_2row_colorbars.pdf` | `fig2_accessibility.ipynb` |
 | `metilene_dmr_pseudobulk_heatmap.pdf`, `metilene_dmr_colorbar.pdf` | `fig2_methylation.ipynb` |
-| `APA_2xN_insitu_diffloops.pdf` | `fig2_apa.ipynb` |
+| `APA_2xN_insituHCD_diffloops_diffmap.pdf` | `fig2_apa.ipynb` §5 |
 | `modality_leiden_agreement_heatmap.pdf` | `fig2_umap.ipynb` (§10b) |
 
 ## Files
@@ -21,7 +21,7 @@ matching bulk data.
 | `fig2_umap.ipynb` | R (`scnomehic` env, kernel `ir`). SVD → Harmony → Leiden → UMAP for HCG, GCH, Hi-C and the joint embedding; §9 calls the cell types and writes the label table; §10 scores inter-modality agreement. |
 | `fig2_accessibility.ipynb` | R (`scnomehic_diff`). Single-cell GpC pseudobulk vs bulk ATAC over 250 kb bins → two-row heatmap and colorbars. |
 | `fig2_methylation.ipynb` | R (`scnomehic_diff`). Metilene de-novo DMRs → single-cell pseudobulk → heatmap and colorbar. |
-| `fig2_apa.ipynb` | Python (`hic_cooler`). ANOVA over the per-cell-type imputed matrices → differential loops → APA pile-up. |
+| `fig2_apa.ipynb` | Python (`hic_cooler`). Plots the cached APA pile-up of **in-situ-defined** differential loops against the single-cell pseudobulk. §5 is the panel: a median-per-loop log2(GM12878 / IMR90) difference map. |
 
 ## Run order
 
@@ -32,7 +32,8 @@ read.
 ```
 pipeline → 02_qc → fig2_umap.ipynb (§9 labels)
                      ├─ 03_pseudobulk    → fig2_accessibility.ipynb, fig2_methylation.ipynb
-                     └─ 04_hic_imputation → fig2_apa.ipynb
+                     └─ 04_hic_imputation ─┐
+bulk_others/04_hic_loops (01–05) ──────────┴→ fig2_apa.ipynb
 ```
 
 ## Inputs
@@ -48,6 +49,8 @@ From `../../data_processing/mixture_cellline/` and `../../data_processing/bulk_o
 | `sc_pseudobulk_GCH_250kb.tsv.gz`, `bulk_atac_250kb.tsv` | `mixture_cellline/03_pseudobulk/`, `bulk_others/02_process/` |
 | `sc_pseudobulk_metilene_dmr_top2000.tsv.gz` | `mixture_cellline/03_pseudobulk/02_metilene_dmr` |
 | `per_celltype/*.{Q,T,E}.cool` | `mixture_cellline/04_hic_imputation/` |
+| `{GM12878,IMR90}_specific_hiccupsdiff.bedpe` | `bulk_others/04_hic_loops/04_hiccupsdiff.sbatch` |
+| `apa_insituHCD.npz` (pile-up cache) | `bulk_others/04_hic_loops/05_apa_pileup_insitu.py` |
 
 ## Reported statistics
 
@@ -55,6 +58,7 @@ From `../../data_processing/mixture_cellline/` and `../../data_processing/bulk_o
 |---|---|
 | Methylation | 3,890 DMRs at coverage ≥ 20 in both types; 3,804 direction-consistent (97.8%); r(sc Δ, bulk Δ) = 0.941 |
 | Accessibility | Spearman ρ = 0.767 on the differential, over the top 1,000 bins shown |
+| APA | GM12878-specific loops centre log2(GM/IMR) = **+0.50** (1.41×, n = 285); IMR90-specific = **−0.38** (0.77×, n = 665); paired Mann–Whitney p = 1.5 × 10⁻¹⁶ |
 
 §10 reports inter-modality Leiden agreement with no bulk reference, and §10b
 draws `modality_leiden_agreement_heatmap.pdf` from it:
@@ -64,6 +68,21 @@ draws `modality_leiden_agreement_heatmap.pdf` from it:
 | HCG ↔ Hi-C | 95.7 | 0.833 | 0.745 | 0.933 |
 | HCG ↔ GCH | 92.3 | 0.714 | 0.600 | 0.898 |
 | Hi-C ↔ GCH | 89.3 | 0.616 | 0.509 | 0.854 |
+
+## Why the loops are defined by the in-situ Hi-C
+
+The loop sets come from juicer `hiccupsdiff` on the two bulk in-situ Hi-C maps and
+never see the single-cell data; the single-cell pseudobulk only supplies the signal
+piled up on them. An earlier version selected differential loops from statistics
+derived from the same imputed matrices it then displayed, so selection and display
+shared the underlying data and a clean diagonal was partly guaranteed by winner's
+curse. An independent selection can only attenuate a real effect, never manufacture
+one, so the surviving diagonal is evidence.
+
+§5 divides rather than asking the eye to compare across rows: per loop, pixel by
+pixel, log2(O/E in GM12878 ÷ O/E in IMR90), then the median across loops. Because it
+is a ratio of the *same* loops in both pseudobulks, intrinsic loop strength, loop
+length and the GM-subsample enrichment all cancel.
 
 ## Notes
 
