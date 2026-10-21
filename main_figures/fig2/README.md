@@ -36,6 +36,12 @@ pipeline → 02_qc → fig2_umap.ipynb (§9 labels)
 bulk_others/04_hic_loops (01–05) ──────────┴→ fig2_apa.ipynb
 ```
 
+`fig2_apa.ipynb` plots a cached pile-up and computes nothing itself. On a fresh run,
+`bulk_others/04_hic_loops/05_apa_pileup_insitu.sbatch` must be submitted first — it
+writes the `apa_insituHCD.npz` the notebook loads.
+```
+```
+
 ## Inputs
 
 From `../../data_processing/mixture_cellline/` and `../../data_processing/bulk_others/`:
