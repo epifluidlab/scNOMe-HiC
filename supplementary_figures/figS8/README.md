@@ -27,12 +27,12 @@ this folder points at fig4 rather than carrying a near-copy.
 
 §8b writes two cell-type annotations from the same cells:
 
-| | tumor1 | monocyte | tumor2 |
+| | tumor1 | macrophage | tumor2 |
 |---|---|---|---|
 | `cell_type_joint` | 122 | 91 | 79 |
 | `cell_type_hcg` | 118 | 108 | 66 |
 
-They disagree on 17 cells, all at the monocyte/tumor2 boundary. Figure 4 uses the
+They disagree on 17 cells, all at the macrophage/tumor2 boundary. Figure 4 uses the
 joint annotation; showing both here makes the disagreement visible.
 
 ## Notes

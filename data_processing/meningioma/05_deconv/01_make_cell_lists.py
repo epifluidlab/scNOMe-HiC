@@ -12,7 +12,7 @@ asking — which methylomes are tumour and which are the normal compartment.
     cna_group 3  chr22q loss + chr1p loss       -> tumour
 
 Set SPLIT to a cell-type column instead ("cell_type_joint" / "cell_type_hcg") to
-split on an annotation; then tumour = {tumor1, tumor2} and non-tumour = monocyte.
+split on an annotation; then tumour = {tumor1, tumor2} and non-tumour = macrophage.
 
 Reads `tables/final_metadata.tsv`, so run the final notebook
 (`subset_final_snakemake.ipynb`) and the CNA notebook first.
@@ -41,8 +41,8 @@ if SPLIT == "cna_group":
     how = f"cna_group (non-tumour = group {NORMAL_GROUP}, tumour = all others)"
 else:
     tumor    = df.loc[df[SPLIT].isin(["tumor1", "tumor2"]), "cell"]
-    nontumor = df.loc[df[SPLIT] == "monocyte", "cell"]
-    how = f"{SPLIT} (tumour = tumor1 + tumor2, non-tumour = monocyte)"
+    nontumor = df.loc[df[SPLIT] == "macrophage", "cell"]
+    how = f"{SPLIT} (tumour = tumor1 + tumor2, non-tumour = macrophage)"
 
 tumor.to_csv(os.path.join(OUTDIR, "cell_tumor.txt"), index=False, header=False)
 nontumor.to_csv(os.path.join(OUTDIR, "cell_nontumor.txt"), index=False, header=False)

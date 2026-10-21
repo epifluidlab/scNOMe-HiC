@@ -39,12 +39,12 @@ heatmap cell is kept ahead of it as the view the calling is read against.
 
 §8b writes two annotations; both are published:
 
-| | tumor1 | monocyte | tumor2 | used by |
+| | tumor1 | macrophage | tumor2 | used by |
 |---|---|---|---|---|
 | `cell_type_joint` | 122 | 91 | 79 | **Figure 4** and S8 |
 | `cell_type_hcg` | 118 | 108 | 66 | S8 only |
 
-They disagree on 17 cells, at the monocyte/tumor2 boundary. The paper uses
+They disagree on 17 cells, at the macrophage/tumor2 boundary. The paper uses
 `cell_type_joint`; §8d supports that — the joint embedding tracks the CNA groups
 better than any single modality.
 
