@@ -51,28 +51,42 @@ for f in glob.glob(f"{B}/nagano/alignment/*.summary.txt"):
     add("nagano", os.path.basename(f)[:-len(".summary.txt")],
         d.get("UniqMappedMapQ30NoPcrCis", np.nan), d.get("UniqMappedMapQ30NoPcrCisMore1kb", np.nan),
         d.get("UniqMappedMapQ30NoPcrTrans", np.nan), d.get("UniqMappedMapQ30", np.nan))
-# scnomehic (187 passed)
-passed = set(pd.read_csv("/home/jmj7858/epifluidlab/scnomehic_paper/s1/QC/gm_passed.txt", header=None)[0].astype(str))
+# scnomehic (180 QC-passing cells). The previous list (gm_passed.txt, 187) was
+# built WITHOUT the chrM non-CpG gate -- the 7 extra cells carry 5.17-6.81% chrM
+# non-CpG against a <5 threshold, i.e. incomplete bisulfite conversion. 180 is the
+# set Supp Table 1's "QC pass" column and every gm_sc_new figure use.
+PASSED_180 = os.path.join(B, "summary", "gm12878_passed_180.txt")
+passed = set(pd.read_csv(PASSED_180, header=None)[0].astype(str))
 for c in passed:
     f = f"{GM}/{c}.summary.txt.gz"
     if os.path.exists(f):
         d = parse_summary(f, gzip.open)
         add("scnomehic", c, d.get("UniqMappedMapQ30NoPcrCis", np.nan), d.get("UniqMappedMapQ30NoPcrCisMore1kb", np.nan),
             d.get("UniqMappedMapQ30NoPcrTrans", np.nan), d.get("UniqMappedMapQ30", np.nan))
-# droplethic (valid.tsv) -- NOTE: pre-dedup (dedup never run); flagged in analysis_pipeline.md
-dt = pd.read_csv(f"{B}/droplethic/my_project/SRR27586278_hg38.per_cell_qc.valid.tsv", sep="\t")
-cc = {c.lower(): c for c in dt.columns}
-gc = lambda *n: next((cc[x.lower()] for x in n if x.lower() in cc), None)
-c_cis, c_1kb, c_tr, c_mq = gc("UniqMappedMapQ30NoPcrCis"), gc("UniqMappedMapQ30NoPcrCisMore1kb", "UniqMappedMapQ30NoDup_Cis1kb"), gc("UniqMappedMapQ30NoPcrTrans"), gc("UniqMappedMapQ30")
-cbcol = gc("CB", "cell", "barcode")
+# droplethic -- DEDUPLICATED (pairtools dedup, job 4568716; 61.1% duplicate rate,
+# confirmed by chr21 spot-check 59.3% and the paper's own 174,600->73,813 arithmetic).
+# The previous source (SRR27586278_hg38.per_cell_qc.valid.tsv) was PRE-dedup because
+# snakemake stopped at pairtools_sort, so the bar was ~2.8x inflated (8,535 -> 3,048).
+# Restricted to barcodes with >=10,000 unique pairs, which recovers 3,646 cells,
+# matching the 3,668-barcode set the pre-dedup table used (the rest are ambient
+# droplets with a median of 2 pairs).
+dt = pd.read_csv(f"{B}/droplethic/my_project/droplethic_percell_DEDUP.tsv", sep="\t")
+dt = dt[dt["total"] >= 10000]
 for _, r in dt.iterrows():
-    add("droplethic", r[cbcol], r[c_cis], r[c_1kb], r[c_tr], r.get(c_mq, np.nan))
-# snmCseq3 MapQ30 (regenerated counts.txt)
-for f in glob.glob(f"{B}/summary/frag_counts/snmCseq3_contacts_q30/*.q30.counts.txt"):
-    d = dict(l.strip().split(",") for l in open(f) if "," in l)
-    short, lng, tr = float(d["CisShortContact"]), float(d["CisLongContact"]), float(d["TransContact"])
-    cell = os.path.basename(f)[:-len(".q30.counts.txt")]
-    add("snmCseq3", cell, short + lng, lng, tr, short + lng + tr)  # normalize by total contacts
+    # cis_short + cis_gt1kb = all cis; `total` = cis + trans (already MapQ30 via
+    # pairtools parse --min-mapq 30, and deduplicated)
+    add("droplethic", r["cell"], r["cis_short"] + r["cis_gt1kb"], r["cis_gt1kb"],
+        r["trans"], r["total"])
+# snmCseq3 -> GENUINE snm3C-seq (PRJNA658701, "[CEMBA snm3C-seq]", 100 cells).
+# The old source was GSE213259, which GEO records as "Library strategy: snmC-seq2"
+# -- a methylome-only assay with NO proximity ligation, mislabelled snm3C-seq.
+# Its cis>1kb median was 8,372 against 114,980 for genuine snm3C-seq through the
+# same YAP m3c pipeline. The internal key stays `snmCseq3`; the displayed label is
+# "snm3C-seq (Liu et al. 2021)" -- PRJNA658701 is GEO GSE156683, published as
+# Liu et al., Nature 598:120-128 (2021), doi 10.1038/s41586-020-03182-8.
+sn = pd.read_csv(f"{B}/summary/snm3c_new_hic.tsv", sep="\t")
+for _, r in sn.iterrows():
+    add("snmCseq3", r["cell"], r["cis_n"], r["cis_gt1kb"], r["trans"], r["mapped_mapq30"])
 
 hic = pd.DataFrame(rows)
 hic.to_csv(f"{OUT}/hic.csv", index=False)

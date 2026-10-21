@@ -87,6 +87,20 @@ have no such cut, so calling AND GCG removal are consistent across the 4.
 NOTE: scnomehic (BisSNP NOMe) still carries the MAPQ>=30 cut -- it's the one
 exception, kept on its native NOMe pipeline per user.
 
+## Fig 1 panel inputs (`qc_tables/`)
+
+- **build_qc_tables.py** — builds `qc_tables/align.csv` (metrics 2-3) and
+  `qc_tables/hic.csv` (metrics 4-6), the tables Fig 1 cells 35 and 37 plot.
+  Synced from the b1042 working copy 2026-10-20; the version previously carried
+  here was stale (pre-dedup Droplet Hi-C, superseded snmCseq3 source) and did
+  **not** reproduce the published panels.
+- **gm12878_passed_180.txt** — the 180 QC-passing GM12878 cells, vendored here
+  so `build_qc_tables.py` no longer reads a hardcoded `/home/jmj7858/...` path.
+  Replaces the former 187-cell `gm_passed.txt`, which was built without the
+  chrM non-CpG gate: the 7 extra cells carry 5.17-6.81% chrM non-CpG against a
+  <5 threshold (incomplete bisulfite conversion). 180 is the set Supp Table 1's
+  `QC pass` column and every gm_sc_new figure use.
+
 ## Pre-existing comparison artifacts (not generated here)
 - compare_qc*.py / *.csv / *.pdf, all_methods_qc.*, extract_trinuc.py,
   run_extract_trinuc.sh, trinuc/ — earlier QC pipeline outputs.
