@@ -7,7 +7,7 @@ methods. Figure 1 shows three panels from the same comparison; S1 shows the rest
 
 | File | Made by (cell in `fig1_benchmark_violins.ipynb`) |
 |---|---|
-| `readcount_beforeDedup_violin.pdf` | 30 |
+| `mapq30count_beforeDedup_violin.pdf` | 30 |
 | `mapq30rate_beforeDedup_violin.pdf` | 29 |
 | `conversion_chrM_violin.pdf` | 39 |
 | `hic_cis_n_violin_no_nagano.pdf` | 36 |
@@ -32,8 +32,8 @@ The contact-vs-distance panel is unrelated to that notebook and ships here as
 
 | Cell | Draws |
 |---|---|
-| 29 | mapping rate, before and after dedup |
-| 30 | read count, before and after dedup |
+| 29 | uniquely-mapped MAPQ ≥ 30 **rate**, before and after dedup |
+| 30 | uniquely-mapped MAPQ ≥ 30 **count**, before and after dedup |
 | 32 | the four Hi-C metrics — S1 takes the trans ratio |
 | 36 | the same four, re-drawn under `_no_nagano` names — S1 takes cis and cis > 1 kb |
 | 38 | HCG and GCH detected loci (Figure 1) |
@@ -66,9 +66,14 @@ full input list and the list of methods compared.
 
 ## Notes
 
-- `readcount_beforeDedup` and `mapq30rate_beforeDedup` are the **pre-deduplication**
-  measures. Cells 32 and 33 also draw the post-dedup versions, which are not S1
-  panels.
+- `mapq30count_beforeDedup` and `mapq30rate_beforeDedup` are the **pre-deduplication**
+  measures. The same cells also draw the post-dedup versions, which are not S1 panels.
+- **S1B and S1C are two views of the same quantity.** `mapq30_*` is the MAPQ ≥ 30
+  subset of the uniquely-mapped fragments; `rate_*` is that subset as a percentage of
+  them. S1B is the count, S1C the rate.
+- S1B previously plotted `uniq_preDedup`, the uniquely-mapped count with **no** MAPQ
+  filter, under the name `readcount_beforeDedup_violin.pdf`. Changed 2026-10-21 to the
+  MAPQ ≥ 30 count, and renamed so the filename matches what it shows.
 - **All four Hi-C panels show the same three datasets** — droplethic, snmCseq3 and
   scnomehic. scHi-C (Nagano et al.) has been removed from the notebook; the
   `_no_nagano` filenames are kept only because they are the files used in the
@@ -81,8 +86,9 @@ been replaced with 100 cells of genuine snm3C-seq (PRJNA658701), and Droplet Hi-
 has been deduplicated (61.1% duplicate rate; it was previously pre-dedup because
 snakemake stopped at `pairtools_sort`). Panels regenerated 2026-09-15.
 
-Affected panels: **S1A** (conversion), **S1B** (uniquely mapped fragments),
-**S1C** (MAPQ ≥ 30 rate), **S1D** (cis contacts), **S1E** (trans fraction).
+Affected panels: **S1A** (conversion), **S1B** (uniquely mapped, MAPQ ≥ 30 count),
+**S1C** (uniquely mapped, MAPQ ≥ 30 rate), **S1D** (cis contacts), **S1E** (trans
+fraction).
 See `../../main_figures/fig1/README.md` for the before/after table, the
 rebuild scripts, and the cell-35 cache bug that had been silencing updates to
 S1D.

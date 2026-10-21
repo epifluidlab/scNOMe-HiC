@@ -21,6 +21,7 @@ os.makedirs(OUT, exist_ok=True)
 # ---------- metrics 2 & 3 ----------
 fc = pd.read_csv(f"{B}/summary/frag_counts_all.tsv", sep="\t")
 fc[["dataset", "cell", "uniq_preDedup", "uniq_postDedup",
+    "mapq30_preDedup", "mapq30_postDedup",
     "rate_preDedup", "rate_postDedup"]].to_csv(f"{OUT}/align.csv", index=False)
 print(f"align.csv: {len(fc)} cells")
 
