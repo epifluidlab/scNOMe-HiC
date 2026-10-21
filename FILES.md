@@ -6,6 +6,7 @@
 | `RUNNING.md` | How to run the pipeline from scratch: prerequisites, machine-specific config keys, and the raw-FASTQ vs GEO entry points. |
 | `FILES.md` | This file. Index of top-level entries. Each subfolder keeps its own `FILES.md`. |
 | `.gitignore` | Minimal — only auto-generated junk (`__pycache__`, `.ipynb_checkpoints`, …). Everything in this repo is copied in deliberately, so nothing else is filtered. |
+| `supplemental table.xlsx` | Supplementary Tables 1-5: per-cell QC for each dataset plus the benchmark dataset descriptions. Built from the per-dataset `02_qc/qc_plots.ipynb` outputs. |
 | `env/` | Conda environment YAMLs, `requirements.txt`, recorded R `sessionInfo()`. |
 | `data_processing/` | Per-dataset processing code: raw reads → analysis-ready matrices. |
 | `main_figures/` | Code producing main-text figure panels, one folder per figure. |

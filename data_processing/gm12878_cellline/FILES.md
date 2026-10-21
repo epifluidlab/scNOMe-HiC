@@ -24,7 +24,7 @@
 
 | File | What it is | Origin |
 |---|---|---|
-| `qc_plots.ipynb` | Per-cell QC metrics, threshold filtering, and summary plots. Run top to bottom in Jupyter. Produces `QC/cellline_passed.txt` (180 of 188 cells) and the `figures/cellline_*` PDFs. Outputs preserved. | `$GM/` |
+| `qc_plots.ipynb` | Per-cell QC metrics, threshold filtering, and summary plots. Run top to bottom in Jupyter. Produces `QC/cellline_passed.txt` (180 of 188 cells) and the `figures/cellline_*` PDFs. GCH/HCG site counts come from the BisSNP-1.0.1 `.cyt.filtered.sort.` BEDs; WCG has no 1.0.1 output and is read from the BisSNP-0.90 path, for QC plots only. Outputs preserved. | `$GM/` |
 
 ## 03_pseudobulk
 
