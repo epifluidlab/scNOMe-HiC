@@ -5,7 +5,7 @@
 | File | What it is | Origin |
 |---|---|---|
 | `figS2_methylation_persite.ipynb` | R, 12 code cells, kernel `nomehic_r`. Per-CpG HCG across scNOMe-HiC, Drop-BS scWGBS and sci-MET. Cells 1–4 Drop-BS vs NOMe-HiC, 6–8 sci-MET vs NOMe-HiC, 10 both side by side, 12–14 sci-MET vs scWGBS, **16 the three-way panel**. Outputs preserved. | `s2_new/code/13_persite_compare_nomehic.ipynb` |
-| `figS2_accessibility.ipynb` | R, 5 code cells, kernel `scnomehic`. Loads `peak_signal.tab` + `peak_gch_coverage.tab`, quantile-normalises, draws the smoothScatter. §2 is the panel; §3 is the coverage > 10 variant. Outputs preserved. | `s2_new/atac_dnase_gm12878/analysis_figures_R.ipynb` |
+| `figS2_accessibility.ipynb` | R, **2 code cells** (trimmed from 5), kernel `scnomehic`. Loads `peak_signal.tab` + `peak_gch_coverage.tab`, quantile-normalises, draws the smoothScatter. The last cell is the panel: n = 54,010 peaks, Pearson r = 0.524, Spearman ρ = 0.567. Outputs preserved. | `s2_new/atac_dnase_gm12878/analysis_figures_R.ipynb` |
 | `figS2_schic_scc.ipynb` | Python, 9 code cells, kernel `scnomehic`. Self-contained: reads the dumps and recomputes HiCRep SCC rather than reading a table. §7 is the panel. Outputs preserved. | `s2_new/schic_gm12878/analysis_scc.ipynb` |
 
 Renamed only — no cell edits, no path rewriting. All three keep the absolute paths
@@ -25,6 +25,13 @@ Kernels `nomehic_r` (R 4.4.2) and `scnomehic`. Neither is captured in `../../env
 
 | File | Why not |
 |---|---|
+- **the GCH coverage > 10 variant** (`R_gch_vs_snatac_qnorm_cov10`) — the same
+  comparison restricted to peaks with GCH coverage > 10: n = 53,698,
+  Pearson r = 0.536, Spearman ρ = 0.572. A robustness check, not the panel, and
+  easy to mistake for it — the two plots are identical apart from the printed r
+  and the `_cov10` filename suffix. Removed 2026-10-21 so only the published
+  figure remains. Dropping to coverage > 10 excludes 312 of 54,010 peaks (0.6%)
+  and moves r by 0.012.
 | `atac_dnase_gm12878/analysis_figures.ipynb` | The Python version of the accessibility analysis, plus the deepTools quartile profiles. The published panel is the R smoothScatter. |
 | `code/12_compare_nomehic.ipynb`, `14_bulkwgbs_compare_nomehic.ipynb`, `code/scmet/15_compare_3way.ipynb`, `16_methylation_levels.ipynb` | The 250 kb binned comparisons. The S2 panel is per-CpG-site. |
 | `code/scmet/_add_three_way_bars.py`, `_add_sci_vs_wgbs.py`, `_fix_combined_bars.py`, `_fix_pdf_glyphs.py` | Scripts that appended or patched cells in the persite notebook. The notebook now carries those cells; the patchers are authoring tooling. |

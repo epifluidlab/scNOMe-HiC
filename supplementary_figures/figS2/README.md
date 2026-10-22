@@ -9,7 +9,7 @@ against snATAC, contacts against sci-Hi-C.
 | File | Made by |
 |---|---|
 | `three_way_persite_corr_bars.pdf` | `figS2_methylation_persite.ipynb`, last cell |
-| `R_gch_vs_snatac_qnorm.pdf` | `figS2_accessibility.ipynb`, §2 |
+| `R_gch_vs_snatac_qnorm.pdf` | `figS2_accessibility.ipynb`, last cell |
 | `schic_scc_rawclip_by_resolution.pdf` | `figS2_schic_scc.ipynb`, §7 |
 
 ## Files
@@ -17,7 +17,7 @@ against snATAC, contacts against sci-Hi-C.
 | File | What it is |
 |---|---|
 | `figS2_methylation_persite.ipynb` | R (`nomehic_r`), 12 code cells, 8 figures. Per-CpG HCG for scNOMe-HiC, Drop-BS scWGBS and sci-MET; smoothScatter grids and correlation bars for each pair, then the three-way panel. |
-| `figS2_accessibility.ipynb` | R (`scnomehic`), 5 code cells, 2 figures. Per-peak GCH vs snATAC over the merged DNase peaks, quantile-normalised. §3 repeats it at GCH coverage > 10. |
+| `figS2_accessibility.ipynb` | R (`scnomehic`), 2 code cells, 1 figure. Per-peak GCH vs snATAC over the merged DNase peaks, quantile-normalised. |
 | `figS2_schic_scc.ipynb` | Python (`scnomehic`), 9 code cells, 5 figures. Recomputes HiCRep SCC from the contact dumps, then draws the boxplots, per-chromosome bars, example heatmaps, matched-bin scatter and the by-resolution panel. |
 
 The three notebooks are unrelated and run in any order.
