@@ -24,6 +24,7 @@
 
 | File | What it is | Origin |
 |---|---|---|
+| `build_sample_tables.py` | Writes `sample_table_{gch,hcg}_bissnp101.tsv.gz` in `$GM`: one row per cell, `<cell>\t<path to its .cyt.filtered.sort.{GCH,HCG}.6plus2.bed.gz>`. Read by `../../../supplementary_figures/figS4/figS4_distributions.ipynb`. The unsuffixed `sample_table_{gch,hcg}.tsv.gz` point at the superseded BisSNP-0.90 files and are left alone — `collapse.sh` still consumes them. | written for this repo |
 | `qc_plots.ipynb` | Per-cell QC metrics, threshold filtering, and summary plots. Run top to bottom in Jupyter. Produces `QC/cellline_passed.txt` (180 of 188 cells) and the `figures/cellline_*` PDFs. GCH/HCG site counts come from the BisSNP-1.0.1 `.cyt.filtered.sort.` BEDs; WCG has no 1.0.1 output and is read from the BisSNP-0.90 path, for QC plots only. Outputs preserved. | `$GM/` |
 
 ## 03_pseudobulk

@@ -24,7 +24,15 @@ The two notebooks are unrelated and run in either order.
 - Barnyard: `../../data_processing/barnyard_mixing/` — per-cell human and mouse
   high-quality read counts (proper-pair, MAPQ ≥ 30, deduplicated primary).
 - Distributions: `../../data_processing/gm12878_cellline/` — per-cell
-  `.6plus2.bed` files, column 7 (methy/cov).
+  `.6plus2.bed.gz` files, column 7 (methy/cov), read via the sample tables that
+  `02_qc/build_sample_tables.py` writes.
+
+  **BisSNP-1.0.1** (`.cyt.filtered.sort.*`). Regenerated 2026-10-21: the panels had
+  been built from the superseded BisSNP-0.90 (`.calmd.cytosine.filtered.sort.*`)
+  tables dated 2026-05-17. 1.0.1 calls ~2.3x more sites per cell, but the
+  distribution is caller-robust — both are ~98% bimodal at 0 and 1 because most
+  sites are covered by one read. On a sampled cell the intermediate fraction roughly
+  doubles (GCH 1.3% -> 2.5%, HCG 1.2% -> 2.2%) and the GCH mean moves 0.626 -> 0.637.
 
 ## Notes
 
