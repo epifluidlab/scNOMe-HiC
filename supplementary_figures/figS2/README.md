@@ -1,7 +1,7 @@
 # Supplementary Figure S2 — scNOMe-HiC vs published single-cell assays
 
 Each scNOMe-HiC modality compared, in GM12878, against an independent single-cell
-assay of the same thing: methylation against scWGBS and sci-MET, accessibility
+assay of the same thing: methylation against Drop-BS and sci-MET, accessibility
 against snATAC, contacts against sci-Hi-C.
 
 ## Panels
@@ -16,7 +16,7 @@ against snATAC, contacts against sci-Hi-C.
 
 | File | What it is |
 |---|---|
-| `figS2_methylation_persite.ipynb` | R (`nomehic_r`), 12 code cells, 8 figures. Per-CpG HCG for scNOMe-HiC, Drop-BS scWGBS and sci-MET; smoothScatter grids and correlation bars for each pair, then the three-way panel. |
+| `figS2_methylation_persite.ipynb` | R (`nomehic_r`), 12 code cells, 8 figures. Per-CpG HCG for scNOMe-HiC, Drop-BS and sci-MET; smoothScatter grids and correlation bars for each pair, then the three-way panel. |
 | `figS2_accessibility.ipynb` | R (`scnomehic`), 2 code cells, 1 figure. Per-peak GCH vs snATAC over the merged DNase peaks, quantile-normalised. |
 | `figS2_schic_scc.ipynb` | Python (`scnomehic`), 9 code cells, 5 figures. Recomputes HiCRep SCC from the contact dumps, then draws the boxplots, per-chromosome bars, example heatmaps, matched-bin scatter and the by-resolution panel. |
 
@@ -41,8 +41,8 @@ Per-CpG Pearson r, by minimum coverage on both sides:
 
 | pair | ≥ 1 | ≥ 2 | ≥ 3 |
 |---|---|---|---|
-| Drop-BS vs NOMe-HiC | 0.607 | 0.661 | 0.699 |
-| sci-MET vs NOMe-HiC | 0.589 | 0.649 | 0.676 |
+| Drop-BS vs scNOMe-HiC | 0.607 | 0.661 | 0.699 |
+| sci-MET vs scNOMe-HiC | 0.589 | 0.649 | 0.676 |
 | sci-MET vs Drop-BS | 0.595 | 0.688 | 0.744 |
 
 Accessibility: 54,010 DNase peaks, Pearson r = 0.524, Spearman ρ = 0.567.

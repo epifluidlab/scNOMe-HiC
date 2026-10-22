@@ -6,7 +6,7 @@ same thing. Panels are built in `../../supplementary_figures/figS2/`.
 
 | Folder | Dataset | Compared against |
 |---|---|---|
-| `scwgbs_dropbs/` | Drop-BS scWGBS, GM12878, SRA `SRR19391270` | HCG methylation |
+| `scwgbs_dropbs/` | Drop-BS, GM12878, SRA `SRR19391270` | HCG methylation |
 | `scimet/` | sci-MET, Mulqueen et al. 2018, SRA `SRR6398696` (GSE112554) | HCG methylation |
 | `snatac_dnase/` | ENCODE snATAC `ENCSR680NPV` + DNase `ENCSR581CCT` | GCH accessibility |
 | `schic/` | sci-Hi-C, Kim et al. 2020, `GM12878-IMR90.R1` | Hi-C contacts |
@@ -14,7 +14,12 @@ same thing. Panels are built in `../../supplementary_figures/figS2/`.
 Each chain is self-contained; they can be run in any order. The scNOMe-HiC side of
 every comparison is the GM12878 pseudobulk from `../gm12878_cellline/03_pseudobulk/`.
 
-## scwgbs_dropbs — Drop-BS scWGBS
+## scwgbs_dropbs — Drop-BS
+
+Droplet-based bisulfite sequencing. Zhang et al., *Nature Communications* 14, 4672
+(2023), doi 10.1038/s41467-023-40411-w; BioProject `PRJNA841973`, GM12878 run
+`SRR19391270` (`GSM6185939`). **Drop-BS** is the authors' name for the method;
+the folder name keeps the older `scwgbs_dropbs` spelling.
 
 `config.sh` holds every shared path and threshold and is sourced by all steps.
 `run_all.sh` submits them to SLURM in dependency-chained phases
