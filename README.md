@@ -160,8 +160,14 @@ accepted the journal reference and DOI will be added here and to that file.
 
 ## Licence
 
-<!-- FILL: licence. Nothing is granted until this is chosen -- see CONTRIBUTING
-     note in the repository history, or ask the corresponding authors. -->
+[MIT](LICENSE), matching the Liu lab's `bisulfiteHic`, on which the aligner used
+here is built.
+
+The licence covers **the code in this repository only**. It does not cover the
+sequencing data (see Data availability above — the meningioma reads are
+controlled-access), the reference genomes and annotation you download yourself,
+or the external tools listed in [`software/README.md`](software/README.md), each
+of which carries its own licence.
 
 ## Contact
 

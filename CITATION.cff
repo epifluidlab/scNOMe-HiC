@@ -6,6 +6,7 @@ abstract: >-
   methylation, chromatin accessibility and 3D genome architecture.
 type: software
 repository-code: "https://github.com/epifluidlab/scNOMe-HiC"
+license: MIT
 authors:
   - family-names: Fu
     given-names: Hailu
