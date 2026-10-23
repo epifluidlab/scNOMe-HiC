@@ -15,7 +15,7 @@
 | `FILES.md` | This file. Index of top-level entries. Each subfolder keeps its own `FILES.md`. |
 | `.gitignore` | Auto-generated junk (`__pycache__`, `.ipynb_checkpoints`, …), the internal session notes, `paths.local.yaml`, and the contents of `data/`, `reference/`, `software/` and `work/` — those four keep their folder structure and READMEs tracked and nothing else. Code is copied in deliberately, so no code is filtered. |
 | `supplemental table.xlsx` | Supplementary Tables 1-5: per-cell QC for each dataset plus the benchmark dataset descriptions. Built from the per-dataset `02_qc/qc_plots.ipynb` outputs. `QC pass` marks the cells each dataset's figures actually use, so for mouse cortex and meningioma it also applies the downstream Hi-C-usability check on top of the config thresholds (cortex 1,580 -> 1,577; meningioma 294 -> 292). |
-| `env/` | Conda environment YAMLs, `requirements.txt`, recorded R `sessionInfo()`. |
+| `env/` | Conda environment files for all five environments (`*.yml`, plus pip and R package lists), and `env/README.md` mapping every notebook to the environment it needs. |
 | `data_processing/` | Per-dataset processing code: raw reads → analysis-ready matrices. |
 | `main_figures/` | Code producing main-text figure panels, one folder per figure. |
 | `supplementary_figures/` | Code producing supplementary figure panels, one folder per figure. |
@@ -48,4 +48,3 @@ Remote: <https://github.com/yoshihiko1218/scNOMe-HiC> (`origin`, branch `main`).
   reads. The GEO accession (GSE346089) is filled in.
 - Code for **Figures 5 and 6** (contact-linked epigenetic concordance;
   allele-resolved X inactivation), which is not in this repository.
-- Four of the five conda environments in `env/` are not exported.
