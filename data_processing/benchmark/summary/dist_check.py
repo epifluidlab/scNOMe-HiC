@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """Cross-technology distribution sanity-check of the (now-consistent) metrics.
 Prints n / median / Q1 / Q3 / min / max per technology for each metric so we can
 eyeball whether the distributions are sensible and comparable."""
@@ -6,8 +14,8 @@ import glob, gzip, os
 import numpy as np
 import pandas as pd
 
-B = "/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark"
-GM = "/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/04.alignment_snakemake"
+B = WORK + "/benchmark"
+GM = WORK + "/gm12878_cellline/04.alignment_snakemake"
 
 
 def q(s):
@@ -59,7 +67,7 @@ for f in glob.glob(f"{B}/nagano/alignment/*.summary.txt"):
                  d.get("UniqMappedMapQ30NoPcrTrans")))
 hic["nagano"] = rows
 # scnomehic (187 passed)
-passed = set(pd.read_csv("/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s1/QC/gm_passed.txt", header=None)[0].astype(str))
+passed = set(pd.read_csv(WORK + "/analysis/s1/QC/gm_passed.txt", header=None)[0].astype(str))
 rows = []
 for c in passed:
     f = f"{GM}/{c}.summary.txt.gz"

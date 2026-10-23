@@ -8,8 +8,8 @@
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=64G
 #SBATCH --time=48:00:00
-#SBATCH --output=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/06_bamproc_rep_%A_%a.out
-#SBATCH --error=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/06_bamproc_rep_%A_%a.err
+#SBATCH --output=${TMP_ROOT}/bulk_gm/pipeline/logs/06_bamproc_rep_%A_%a.out
+#SBATCH --error=${TMP_ROOT}/bulk_gm/pipeline/logs/06_bamproc_rep_%A_%a.err
 
 # Step 12: per REPLICATE (array 1-3). Merge all of this rep's per-chunk BAMs into
 # one raw BAM, then run bamprocess ONCE on the merge so PCR dedup (markdup) is
@@ -21,8 +21,13 @@
 # RAW/CALMD to per-job temp files + quickcheck + atomic mv, and make the resume
 # guard require a VALID calmd (not just non-empty) so a killed/overlapping job
 # can never leave a truncated file that later looks "done".
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-source /gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch/00_paths.sh
+source ${WORK_ROOT}/analysis/bulk_scNOMeHiC/00_paths.sh
 export PATH="${SCNOMEHIC_ENV}/bin:${PATH}"
 
 mkdir -p "${BAMPROC_REP}" "${WORK}/logs"

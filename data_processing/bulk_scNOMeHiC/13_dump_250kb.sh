@@ -7,19 +7,24 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=24G
 #SBATCH --time=02:00:00
-#SBATCH --output=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/13_dump250kb_%j.out
-#SBATCH --error=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/13_dump250kb_%j.err
+#SBATCH --output=${TMP_ROOT}/bulk_gm/pipeline/logs/13_dump250kb_%j.out
+#SBATCH --error=${TMP_ROOT}/bulk_gm/pipeline/logs/13_dump250kb_%j.err
 
 # Step 13: dump the from-scratch BULK and the DEDUP PSEUDOBULK .hic at 250kb per chr
 # (juicer "observed NONE") into the notebook's dumps dir, so the comparison can add
 # a 250kb resolution. Prefixes match the notebook: newbulk, gm_pseudobulk_dedup.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-source /gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch/00_paths.sh
+source ${WORK_ROOT}/analysis/bulk_scNOMeHiC/00_paths.sh
 module load java/jdk-17.0.2+8 2>/dev/null || module load java 2>/dev/null || true
 
 # NEWBULK = reran NON-PBAT 3-rep merged bulk (06c, built 2026-06-09 by 13d_); was PBAT 05_ output, superseded.
 NEWBULK_HIC="${WORK}/06c.hic_merged_nopbat/bulk_GM12878_merged.mapQ30.hic"
-DEDUP_HIC="/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/hic_comparison/gm_pseudobulk.dedup.mapQ30.hic"
+DEDUP_HIC="${WORK_ROOT}/gm12878_cellline/hic_comparison/gm_pseudobulk.dedup.mapQ30.hic"
 DUMPS="${WORK}/hic_comparison/dumps"
 mkdir -p "${DUMPS}" "${WORK}/logs"
 BS=250000

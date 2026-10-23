@@ -7,9 +7,9 @@ while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; don
 source "$_r/paths.sh"
 
 set -euo pipefail
-BASE=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s2_new/atac_dnase_gm12878
+BASE=${WORK_ROOT}/analysis/s2_new/atac_dnase_gm12878
 DATA="$BASE/data"
-GCH6=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation/gm_pseudobulk_merged.GCH.6plus2.bed.gz
+GCH6=${WORK_ROOT}/gm12878_cellline/pseudobulk_methylation/gm_pseudobulk_merged.GCH.6plus2.bed.gz
 CHROM=${REFERENCE_ROOT}/hg38/autosomes.chrom.sizes
 TMP="${TMPDIR:-/tmp}/gchcov_${SLURM_JOB_ID:-$$}"; mkdir -p "$TMP"
 SORTMEM="${SORTMEM:-8G}"

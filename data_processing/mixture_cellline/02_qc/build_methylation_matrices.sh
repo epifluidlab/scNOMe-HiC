@@ -39,7 +39,7 @@ source ${CONDA_SH}
 conda activate scnomehic
 set -u
 
-WORK=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake
+WORK=${WORK_ROOT}/mixture_cellline
 cd "$WORK"; mkdir -p logs
 
 if [ "$#" -gt 0 ]; then BINS=("$@"); else BINS=(250kb); fi

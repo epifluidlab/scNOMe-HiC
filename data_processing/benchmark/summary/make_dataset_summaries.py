@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """
 Per-dataset, per-cell summary of HCG and GCH detected loci.
 
@@ -16,7 +24,7 @@ import os
 import numpy as np
 import pandas as pd
 
-OUT = "/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/summary/gch_hcg_counts"
+OUT = WORK + "/benchmark/summary/gch_hcg_counts"
 DATASETS = ["scnome", "smallwood", "snmCseq2", "snmCseq3", "snmCAT", "scnomehic"]
 # Datasets to drop LOW outliers from (log-scale lower whisker on HCG, since the
 # violins are log-scaled). scnomehic has one failed cell ~50x below the rest.

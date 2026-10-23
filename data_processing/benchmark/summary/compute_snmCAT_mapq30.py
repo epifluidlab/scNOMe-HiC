@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """
 snmCAT has no MapQ30 columns in its YAP MappingSummary, so compute the MapQ30 rate
 directly from the correct BAM = the DNA-reads BAM (mapping_brain/Group*/bam/<cell>.dna_reads.bam).
@@ -11,7 +19,7 @@ Writes summary/snmCAT_mapq30_percell.tsv:
 import glob, os, subprocess
 import pandas as pd
 
-BASE = "/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark"
+BASE = WORK + "/benchmark"
 bams = sorted(glob.glob(f"{BASE}/snmCAT/mapping_brain/Group*/bam/*.dna_reads.bam"))
 ms = pd.read_csv(f"{BASE}/snmCAT/mapping_brain/stats/MappingSummary.csv.gz",
                  compression="gzip", index_col=0)

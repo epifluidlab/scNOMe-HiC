@@ -17,7 +17,7 @@ while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; don
 source "$_r/paths.sh"
 
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome
+cd ${WORK_ROOT}/benchmark/scnome
 
 conda activate scnomehic
 
@@ -79,5 +79,5 @@ samtools index "${outdir}/${prefix}_2.rmdup.RG.bam"
 # left out of the core rerun.
 
 # ---- Per-mate BAM mapping summary ----
-python /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/bam_summary_universal.py --in_bam ${outdir}/${prefix}_1.rmdup.RG.bam  --out_summary  ${outdir}/${prefix}_1.summary.txt
-python /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/bam_summary_universal.py --in_bam ${outdir}/${prefix}_2.rmdup.RG.bam  --out_summary  ${outdir}/${prefix}_2.summary.txt
+python ${WORK_ROOT}/benchmark/bam_summary_universal.py --in_bam ${outdir}/${prefix}_1.rmdup.RG.bam  --out_summary  ${outdir}/${prefix}_1.summary.txt
+python ${WORK_ROOT}/benchmark/bam_summary_universal.py --in_bam ${outdir}/${prefix}_2.rmdup.RG.bam  --out_summary  ${outdir}/${prefix}_2.summary.txt

@@ -4,8 +4,8 @@
 #SBATCH -t 8:00:00
 #SBATCH -N 1 -n 1 --cpus-per-task=8 --mem=32G
 #SBATCH --job-name=snm3c_01_setup
-#SBATCH --output=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snm3c_100/logs/setup_%j.out
-#SBATCH --error=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snm3c_100/logs/setup_%j.out
+#SBATCH --output=${WORK_ROOT}/benchmark/snm3c_100/logs/setup_%j.out
+#SBATCH --error=${WORK_ROOT}/benchmark/snm3c_100/logs/setup_%j.out
 #
 # STEP 01 -- download+verify 100 cells, then ONE `yap start-from-cell-fastq`,
 # which emits one Group (and one `snakemake -j 10` command) per cell.
@@ -19,7 +19,7 @@ set +u
 source ${CONDA_SH}
 conda activate mapping
 export PATH="$CONDA_PREFIX/bin:$PATH"
-W=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snm3c_100
+W=${WORK_ROOT}/benchmark/snm3c_100
 mkdir -p "$W/fastq" "$W/cell_fastq"; cd "$W" || exit 1
 
 get_one () {

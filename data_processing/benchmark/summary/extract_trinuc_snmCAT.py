@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """
 Compute per-cell non-CpG / CpG / GpC conversion proxies for snmCAT the SAME way as
 the other datasets' trinuc tables (noncpg=ACT%, endo=ACG%, exo=GCT%), but sourced
@@ -15,7 +23,7 @@ Outputs (matching summary/trinuc/<ds>.<region>.txt; cols sample/noncpg/endo/exo)
 """
 import glob, os, subprocess, sys
 
-BASE = "/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark"
+BASE = WORK + "/benchmark"
 ALLC_GLOB = os.path.join(BASE, "snmCAT/mapping_brain/Group*/allc/*.allc.tsv.gz")
 TRINUC = {"noncpg": "ACT", "endo": "ACG", "exo": "GCT"}
 

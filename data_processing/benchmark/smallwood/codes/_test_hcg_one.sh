@@ -11,7 +11,7 @@ source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate scnomehic
 set -o pipefail
 
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/smallwood
+cd ${WORK_ROOT}/benchmark/smallwood
 BIS=${REFERENCE_ROOT}/mm10_bismark/
 cell=SRR1248457
 cov=06.methy/${cell}.dedup.bismark.cov.gz

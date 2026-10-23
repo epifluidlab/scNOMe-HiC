@@ -21,7 +21,7 @@ Writes (overwrites) summary/trinuc/snmCseq3.chrM.txt and snmCseq3.chr21.txt (aut
 import glob, os, subprocess
 import pysam
 
-B = "/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark"
+B = WORK + "/benchmark"
 MM10 = REFERENCE + "/mm10/mm10.fa"
 TRI = {"noncpg": "ACT", "endo": "ACG", "exo": "GCT"}
 COMP = str.maketrans("ACGTNacgtn", "TGCANtgcan")

@@ -7,8 +7,8 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=128G
 #SBATCH --time=12:00:00
-#SBATCH --output=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/09_meth_bin_%j.out
-#SBATCH --error=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/09_meth_bin_%j.err
+#SBATCH --output=${TMP_ROOT}/bulk_gm/pipeline/logs/09_meth_bin_%j.out
+#SBATCH --error=${TMP_ROOT}/bulk_gm/pipeline/logs/09_meth_bin_%j.err
 
 # Step 09: concatenate the per-chromosome 6plus2 beds from 13b into genome-wide
 # GCH/HCG per-base beds, then bin into fixed-bin methylation tables (1kb/50kb/
@@ -20,8 +20,13 @@
 #   PHASE 2 (high memory): bin each context. calcmethylation.py loads the whole
 #           bed into pandas + groupby -> needs ~tens of GB for genome-wide GCH;
 #           a previous 16G run was OOM-killed, hence --mem=128G here.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-source /gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch/00_paths.sh
+source ${WORK_ROOT}/analysis/bulk_scNOMeHiC/00_paths.sh
 export PATH="${SCNOMEHIC_ENV}/bin:${PATH}"
 
 SCRIPTS="${PIPELINE}/scripts"

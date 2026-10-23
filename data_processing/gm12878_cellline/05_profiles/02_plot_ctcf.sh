@@ -7,8 +7,8 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
 #SBATCH --time=04:00:00
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s3/analysis/logs/s3_ctcf_mat_%j.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s3/analysis/logs/s3_ctcf_mat_%j.err
+#SBATCH --output=${WORK_ROOT}/analysis/s3/analysis/logs/s3_ctcf_mat_%j.out
+#SBATCH --error=${WORK_ROOT}/analysis/s3/analysis/logs/s3_ctcf_mat_%j.err
 
 # ============================================================================
 # CTCF metaplot for the GM12878 PSEUDOBULK NOMe tracks, both contexts in ONE
@@ -32,12 +32,12 @@ source "$_r/paths.sh"
 set -euo pipefail
 export PATH="${CONDA_ENVS}/scnomehic/bin:$PATH"
 
-S3=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s3
-PSB=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation
+S3=${WORK_ROOT}/analysis/s3
+PSB=${WORK_ROOT}/gm12878_cellline/pseudobulk_methylation
 
 GCH_BW="${PSB}/gm_pseudobulk_merged.GCH.methlevel.bw"   # accessibility
 HCG_BW="${PSB}/gm_pseudobulk_merged.HCG.methlevel.bw"   # methylation
-REGION=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/ctcf_cgi_profiles/regions/CTCF_chipseq.GM12878.ENCFF960ZGP.optimalIDR.hg38.noTSS4kb.sort.bed
+REGION=${WORK_ROOT}/gm12878_cellline/ctcf_cgi_profiles/regions/CTCF_chipseq.GM12878.ENCFF960ZGP.optimalIDR.hg38.noTSS4kb.sort.bed
 
 OUT_MAT="${S3}/analysis/ctcf/matrices"
 OUT_FIG="${S3}/analysis/ctcf/figures"

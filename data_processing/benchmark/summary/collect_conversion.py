@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """
 Collect per-cell bisulfite-conversion proxy (non-CpG methylation %, = trinuc ACT%)
 for the 6 methylation datasets, for two genomic contexts:
@@ -26,9 +34,9 @@ import os
 import numpy as np
 import pandas as pd
 
-BASE = "/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark"
+BASE = WORK + "/benchmark"
 TRI = os.path.join(BASE, "summary/trinuc")
-EXT = "/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s1/QC"
+EXT = WORK + "/analysis/s1/QC"
 rows = []
 
 

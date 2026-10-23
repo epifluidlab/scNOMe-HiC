@@ -17,7 +17,7 @@ _r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
 while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
 source "$_r/paths.sh"
 
-export ROOT=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s2_new/schic_gm12878
+export ROOT=${WORK_ROOT}/analysis/s2_new/schic_gm12878
 export CODE=$ROOT/code
 export DATA=$ROOT/data
 export WORK=$ROOT/work
@@ -36,7 +36,7 @@ export CHAIN=$DATA/hg19ToHg38.over.chain.gz
 export HG19_SIZES=$DATA/hg19.chrom.sizes
 
 # ---- scNOMe-HiC pseudobulk reference (hg38) --------------------------------
-export NOMEHIC_HIC=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/hic_comparison/gm_pseudobulk.dedup.mapQ30.hic
+export NOMEHIC_HIC=${WORK_ROOT}/gm12878_cellline/hic_comparison/gm_pseudobulk.dedup.mapQ30.hic
 
 # ---- SCC settings (match the existing bulk comparison) ---------------------
 export BIN=2500000                     # default/primary SCC resolution (hg38)

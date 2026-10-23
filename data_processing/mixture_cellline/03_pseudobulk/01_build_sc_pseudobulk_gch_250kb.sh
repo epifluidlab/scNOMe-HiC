@@ -19,7 +19,7 @@ source ${CONDA_SH}
 conda activate scnomehic
 set -u
 
-WORK=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig2
+WORK=${WORK_ROOT}/analysis/fig2
 cd "$WORK"; mkdir -p logs
 export NCPU=8
 echo "=== $(date) | host $(hostname) ==="

@@ -5,8 +5,8 @@
 #SBATCH --time=04:00:00
 #SBATCH --mem=24G
 #SBATCH --cpus-per-task=1
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb/logs/%x_%A_%a.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb/logs/%x_%A_%a.err
+#SBATCH --output=${WORK_ROOT}/mixture_cellline/loop_majortype_25kb/logs/%x_%A_%a.out
+#SBATCH --error=${WORK_ROOT}/mixture_cellline/loop_majortype_25kb/logs/%x_%A_%a.err
 #SBATCH --array=0-43
 # STEP 03 — Per (celltype, chr) SLURM array, calling hicluster loop-sumcell-chr.
 #
@@ -26,9 +26,9 @@ set -eo pipefail
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate hic_env
 
-THIS_DIR=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb
+THIS_DIR=${WORK_ROOT}/mixture_cellline/loop_majortype_25kb
 CELL_TABLE=$THIS_DIR/cell_table.tsv
-ROOT=/scratch/jmj7858/scnomehic/loop_majortype_25kb
+ROOT=${TMP_ROOT}/loop_majortype_25kb
 IMP_DIR=$ROOT/hicluster_impute
 PER_CT=$ROOT/per_celltype
 RES=25000

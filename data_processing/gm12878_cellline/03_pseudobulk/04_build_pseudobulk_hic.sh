@@ -22,8 +22,8 @@
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=150G
 #SBATCH --job-name=gm_psb_dedup
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/hic_comparison/logs/build_pseudobulk_dedup.%j.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/hic_comparison/logs/build_pseudobulk_dedup.%j.err
+#SBATCH --output=${WORK_ROOT}/gm12878_cellline/hic_comparison/logs/build_pseudobulk_dedup.%j.out
+#SBATCH --error=${WORK_ROOT}/gm12878_cellline/hic_comparison/logs/build_pseudobulk_dedup.%j.err
 
 # --- repo paths: edit paths.yaml at the repository root, not this file -------
 _r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
@@ -36,7 +36,7 @@ source ${CONDA_SH}
 conda activate scnomehic
 module load java/jdk-17.0.2+8 2>/dev/null || module load java 2>/dev/null || true
 
-D=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new
+D=${WORK_ROOT}/gm12878_cellline
 ALN="${D}/04.alignment_snakemake"
 OUT="${D}/hic_comparison"
 SAM2JUICER=${SOFTWARE_ROOT}/bisulfiteHic/src/python/sam2juicer_new.py
@@ -46,7 +46,7 @@ JUICER=${SOFTWARE_ROOT}/juicer/juicer_tools.jar
 SHORT_GZ="${OUT}/gm_pseudobulk.dedup.short.sorted.txt.gz"
 HICOUT="${OUT}/gm_pseudobulk.dedup.mapQ30.hic"
 
-TMP="/scratch/jmj7858/scnomehic/gm_psb_dedup.${SLURM_JOB_ID}"
+TMP="${TMP_ROOT}/gm_psb_dedup.${SLURM_JOB_ID}"
 SHORT="${TMP}/short"
 mkdir -p "${SHORT}" "${OUT}/logs"
 

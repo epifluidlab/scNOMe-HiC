@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """
 Plot per-cell bisulfite-conversion proxy (non-CpG methylation %, = trinuc ACT%)
 across methylation methods, as two violin figures matching the qc.ipynb style:
@@ -12,7 +20,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-BASE = "/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark"
+BASE = WORK + "/benchmark"
 df = pd.read_csv(f"{BASE}/summary/conversion_percell.csv")
 
 # methylation methods only (no pure-Hi-C nagano/droplethic), low->high coverage order

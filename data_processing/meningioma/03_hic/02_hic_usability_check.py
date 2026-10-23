@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """HiC usability check (headless) — same logic as qc_plots.ipynb's usability cell.
 
 Drops methylation-QC-passed cells whose Hi-C would crash hicluster's
@@ -18,7 +26,7 @@ from pathlib import Path
 import multiprocessing as mp
 import yaml
 
-WORK = Path('/gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/snakemake')
+WORK = Path(WORK + '/meningioma')
 CFG = yaml.safe_load(open(WORK / 'config.yaml'))
 HIC_DIR = WORK / '06.hiccluster_snakemake'
 OUT_QC = WORK / 'QC'

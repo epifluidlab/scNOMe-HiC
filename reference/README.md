@@ -56,3 +56,9 @@ bismark_genome_preparation --bowtie2 reference/hg38_bismark/
 `737K-cratac-v1_rc` — the 10x scATAC barcode whitelist, reverse-complemented and
 built as a **bowtie v1** index. Only `data_processing/benchmark/droplethic/` uses
 it, and only to assign reads to barcodes.
+
+### atlas/ — methylation deconvolution reference (Figure 4 only)
+
+`Atlas.U25.l4.hg38.monofixed_newoligo_micro40.tsv` — the UXM tissue-of-origin
+reference atlas used by `data_processing/meningioma/05_deconv/`. Obtain it from
+the UXM authors; it is not redistributed here.

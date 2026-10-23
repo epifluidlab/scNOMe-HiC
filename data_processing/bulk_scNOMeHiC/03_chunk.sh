@@ -8,14 +8,19 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=16G
 #SBATCH --time=12:00:00
-#SBATCH --output=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/03_chunk_%A_%a.out
-#SBATCH --error=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/03_chunk_%A_%a.err
+#SBATCH --output=${TMP_ROOT}/bulk_gm/pipeline/logs/03_chunk_%A_%a.out
+#SBATCH --error=${TMP_ROOT}/bulk_gm/pipeline/logs/03_chunk_%A_%a.err
 
 # Step 2: split each rep's trimmed pair into chunks of CHUNK_READS read-pairs and
 # stage them into the pipeline trimmed dir, named so the pipeline treats each
 # chunk as one "cell": {prefix=repN}.{index=chunkNNN}.R{1,2}_val_{1,2}.fq.gz
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-source /gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch/00_paths.sh
+source ${WORK_ROOT}/analysis/bulk_scNOMeHiC/00_paths.sh
 activate_scnomehic
 mkdir -p "${CHUNK}" "${WORK}/logs"
 

@@ -19,10 +19,10 @@ source "$_r/paths.sh"
 
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate scnomehic
-BASE="/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new"
+BASE="${WORK_ROOT}/gm12878_cellline"
 IN_DIR="${BASE}/01.demul_fastq_snakemake"
-OUT_DIR="/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnomehic/fastq"
-SCRIPT="/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnomehic/codes/rename_fastq_single.sh"
+OUT_DIR="${WORK_ROOT}/benchmark/scnomehic/fastq"
+SCRIPT="${WORK_ROOT}/benchmark/scnomehic/codes/rename_fastq_single.sh"
 
 mkdir -p "$OUT_DIR" "${BASE}/logs/00.rename_fastq"
 

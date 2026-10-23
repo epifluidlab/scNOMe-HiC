@@ -21,7 +21,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=64G
 #SBATCH -t 8:00:00
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/hic/loop_final/logs/loop1577_%A_%a.log
+#SBATCH --output=${WORK_ROOT}/mouse_cortex/hic/loop_final/logs/loop1577_%A_%a.log
 
 # /etc/bashrc references unbound vars, so enable -u only AFTER sourcing it
 # --- repo paths: edit paths.yaml at the repository root, not this file -------
@@ -35,7 +35,7 @@ source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate hic_env
 set -u
 
-HIC="/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/hic"
+HIC="${WORK_ROOT}/mouse_cortex/hic"
 L="${HIC}/loop_final"
 CELL_TABLE="${L}/cell_table_all1577_25kb.tsv"
 IMP_DIR="${HIC}/hicluster_25kb/hicluster_25kb_impute_dir"

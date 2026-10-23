@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """Write the per-cell sample tables that figS4_distributions.ipynb reads:
    <cell>\t<path to that cell's per-site .6plus2.bed.gz>
 
@@ -12,7 +20,7 @@ Usage:  python build_sample_tables.py [GM_DIR]
 import gzip, os, sys
 
 GM = sys.argv[1] if len(sys.argv) > 1 else \
-    "/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new"
+    WORK + "/gm12878_cellline"
 METH = os.path.join(GM, "07.bistools_snakemake", "methylation")
 
 for ctx in ("GCH", "HCG"):

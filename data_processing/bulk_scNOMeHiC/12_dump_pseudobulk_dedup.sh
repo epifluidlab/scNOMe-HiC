@@ -7,18 +7,23 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=24G
 #SBATCH --time=02:00:00
-#SBATCH --output=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/12_psbdedup_dump_%j.out
-#SBATCH --error=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/12_psbdedup_dump_%j.err
+#SBATCH --output=${TMP_ROOT}/bulk_gm/pipeline/logs/12_psbdedup_dump_%j.out
+#SBATCH --error=${TMP_ROOT}/bulk_gm/pipeline/logs/12_psbdedup_dump_%j.err
 
 # Step 12: dump the DEDUP pseudobulk .hic (gm_pseudobulk.dedup.mapQ30.hic) at
 # 2.5Mb/1Mb/500kb per chr (juicer "observed NONE") into the SAME dumps dir used
 # by the notebook, with prefix gm_pseudobulk_dedup -> so the notebook can switch
 # PSEUDO to it while the original gm_pseudobulk dumps stay intact.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-source /gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch/00_paths.sh
+source ${WORK_ROOT}/analysis/bulk_scNOMeHiC/00_paths.sh
 module load java/jdk-17.0.2+8 2>/dev/null || module load java 2>/dev/null || true
 
-DEDUP_HIC="/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/hic_comparison/gm_pseudobulk.dedup.mapQ30.hic"
+DEDUP_HIC="${WORK_ROOT}/gm12878_cellline/hic_comparison/gm_pseudobulk.dedup.mapQ30.hic"
 DUMPS="${WORK}/hic_comparison/dumps"
 mkdir -p "${DUMPS}" "${WORK}/logs"
 declare -A LABELS=( [2500000]=2.5Mb [1000000]=1Mb [500000]=500kb )

@@ -7,7 +7,7 @@ set -uo pipefail
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate scnomehic
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome
+cd ${WORK_ROOT}/benchmark/scnome
 BIS=${REFERENCE_ROOT}/hg38_bismark/
 METHY=05.methy
 bam=04.alignment/SRR3729670_1.rmdup.bam

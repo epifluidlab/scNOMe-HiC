@@ -10,7 +10,7 @@ source "$_r/paths.sh"
 
 set -eo pipefail
 
-BASE=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake
+BASE=${WORK_ROOT}/mouse_cortex
 RC=${BASE}/replicate_comparison
 WORKER=${RC}/code/02_merge_bam_to_hic.sh
 chmod +x "${WORKER}"
@@ -20,7 +20,7 @@ RE_SITE=${RC}/hic/mm10_DpnII.txt
 JUICER=${SOFTWARE_ROOT}/juicer/juicer_tools.jar
 SAM2JUICER=${SOFTWARE_ROOT}/bisulfiteHic/src/python/sam2juicer_new.py
 
-TMP_ROOT=/gpfs/projects/b1042/epifluidlab/yoshii/sc_nomehic_hic_tmp/replicate_comparison
+TMP_ROOT=${TMP_ROOT}/replicate_comparison
 
 for REP in rep1 rep2; do
     CELL_LIST=${RC}/cell_lists/${REP}.txt

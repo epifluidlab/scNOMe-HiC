@@ -18,7 +18,7 @@ source "$_r/paths.sh"
 CONFIG="$(bash "$_r/data_processing/render_config.sh" "$_r/data_processing/benchmark/droplethic/config.template.yaml" "${WORK_ROOT}/benchmark/droplethic")"
 
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/droplethic/my_project
+cd ${WORK_ROOT}/benchmark/droplethic/my_project
 
 conda activate rupture
 

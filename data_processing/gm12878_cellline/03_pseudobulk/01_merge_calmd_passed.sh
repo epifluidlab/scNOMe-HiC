@@ -5,8 +5,8 @@
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=64G
 #SBATCH --time=12:00:00
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/logs/merge_calmd_%j.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/logs/merge_calmd_%j.err
+#SBATCH --output=${WORK_ROOT}/gm12878_cellline/logs/merge_calmd_%j.out
+#SBATCH --error=${WORK_ROOT}/gm12878_cellline/logs/merge_calmd_%j.err
 #
 # Merge all per-cell .calmd.bam files for QC-passing cells into a single
 # pseudobulk BAM. Reads cell prefixes from QC/cellline_passed.txt, pulls each
@@ -22,7 +22,7 @@ source "$_r/paths.sh"
 
 set -uo pipefail
 
-PROJECT=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new
+PROJECT=${WORK_ROOT}/gm12878_cellline
 PASSED=${PROJECT}/QC/cellline_passed.txt
 ALIGN_DIR=${PROJECT}/04.alignment_snakemake
 OUT_BAM=${ALIGN_DIR}/merged.bam

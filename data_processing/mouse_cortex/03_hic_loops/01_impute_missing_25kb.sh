@@ -22,7 +22,7 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=32G
 #SBATCH -t 8:00:00
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/hic/loop_final/logs/impute_%A_%a.log
+#SBATCH --output=${WORK_ROOT}/mouse_cortex/hic/loop_final/logs/impute_%A_%a.log
 
 # /etc/bashrc reads unbound vars, so enable -u only after sourcing it
 # --- repo paths: edit paths.yaml at the repository root, not this file -------
@@ -36,9 +36,9 @@ source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate hic_env
 set -u
 
-HIC="/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/hic"
+HIC="${WORK_ROOT}/mouse_cortex/hic"
 L="${HIC}/loop_final"
-W="/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake/06.hiccluster_snakemake_run3_1577cells"
+W="${WORK_ROOT}/mouse_cortex/06.hiccluster_snakemake_run3_1577cells"
 RAW="${HIC}/hicluster_25kb/hicluster_25kb_raw_dir"
 IMP="${HIC}/hicluster_25kb/hicluster_25kb_impute_dir"
 CHROM_FILE="${REFERENCE_ROOT}/mm10/mm10.noX.autosome.sizes"

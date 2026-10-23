@@ -2,11 +2,16 @@
 # STEP 01 — Build cell_table.tsv with dot IDs and verify all 441 source
 # .hic_matrix.txt.gz files exist in the snakemake output.
 # No symlinks — step02 derives the underscore-format source path directly.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 
 THIS_DIR=$(dirname "$(readlink -f "$0")")
-SRC_TABLE=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/subset_clustering/250kb/annotation/cell_type_table.tsv
-SRC_HIC_DIR=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/06.hiccluster_snakemake
+SRC_TABLE=${WORK_ROOT}/mixture_cellline/subset_clustering/250kb/annotation/cell_type_table.tsv
+SRC_HIC_DIR=${WORK_ROOT}/mixture_cellline/06.hiccluster_snakemake
 OUT_TABLE=$THIS_DIR/cell_table.tsv
 
 echo "=== build cell_table.tsv with dot IDs ==="

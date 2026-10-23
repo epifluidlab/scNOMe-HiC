@@ -32,7 +32,7 @@ data: "00.raw_data/"
 # Trimmed-fastq directory. Used as the output dir for demultiplex_fastqc_trim
 # (raw mode), as the input dir for `mapping` (both modes), and as the scan
 # dir for auto-discovery (trimmed mode, no fastq_prefixes/fastq_prefixes_file).
-trimmed_data: "/scratch/jmj7858/scnomehic/cellline_fastq"
+trimmed_data: "${TMP_ROOT}/cellline_fastq"
 
 # Which cell prefixes to process under start_from == "trimmed". Pick at most ONE
 # (ignored when start_from == "raw"):

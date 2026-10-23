@@ -7,9 +7,14 @@
 # Usage:
 #   bash codes/util_clear_control_files.sh         # DRY RUN: only lists what would be deleted
 #   bash codes/util_clear_control_files.sh --yes   # actually delete
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -u
 
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome
+cd ${WORK_ROOT}/benchmark/scnome
 
 CONTROLS="SRR3729654 SRR3729655 SRR3729656 SRR3729657 SRR3729658 SRR3729659 SRR3729660"
 DIRS="01.fastq 02.fastqc_out 03.trimmed_fastq 04.alignment 05.methy qc_stats"

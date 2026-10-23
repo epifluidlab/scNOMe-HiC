@@ -2,8 +2,13 @@
 # Download reference files needed for the hg19->hg38 liftOver of the Kim2020 sci-Hi-C
 # matrices (which are hg19). Run on the LOGIN node (needs internet).
 #   bash code/00_download_refs.sh
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-ROOT=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s2_new/schic_gm12878
+ROOT=${WORK_ROOT}/analysis/s2_new/schic_gm12878
 DATA=$ROOT/data
 cd "$DATA"
 

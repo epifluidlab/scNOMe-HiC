@@ -7,7 +7,7 @@ _r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
 while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
 source "$_r/paths.sh"
 
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/summary
+cd ${WORK_ROOT}/benchmark/summary
 
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"

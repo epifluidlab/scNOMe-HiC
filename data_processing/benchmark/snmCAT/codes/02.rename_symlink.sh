@@ -1,6 +1,11 @@
 #!/bin/bash
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-FASTQ_DIR="/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCAT/fastq_brain"
+FASTQ_DIR="${WORK_ROOT}/benchmark/snmCAT/fastq_brain"
 cd "${FASTQ_DIR}"
 n=0
 for f1 in *_1.fastq.gz; do

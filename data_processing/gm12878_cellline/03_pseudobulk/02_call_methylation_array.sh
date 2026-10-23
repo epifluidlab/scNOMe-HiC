@@ -20,8 +20,8 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=56G
 #SBATCH --time=48:00:00
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation/logs/psb_methyl_%A_%a.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation/logs/psb_methyl_%A_%a.err
+#SBATCH --output=${WORK_ROOT}/gm12878_cellline/pseudobulk_methylation/logs/psb_methyl_%A_%a.out
+#SBATCH --error=${WORK_ROOT}/gm12878_cellline/pseudobulk_methylation/logs/psb_methyl_%A_%a.err
 
 # --- repo paths: edit paths.yaml at the repository root, not this file -------
 _r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
@@ -33,12 +33,12 @@ source ${CONDA_SH}
 conda activate scnomehic   # samtools/perl/bedtools/tabix on PATH; BisSNP jar runs on its own java8
 
 # --- references / tools (from sc_NOMeHiC_pipeline configs/config.yaml) ---
-BAM=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/04.alignment_snakemake/merged.sorted.bam
+BAM=${WORK_ROOT}/gm12878_cellline/04.alignment_snakemake/merged.sorted.bam
 REF=${REFERENCE_ROOT}/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set
 VCF=${REFERENCE_ROOT}/hg38/Homo_sapiens_assembly38.dbsnp138.vcf
 BIS=${SOFTWARE_ROOT}/Bis-tools
 JAR=${BIS}/Bis-SNP/Bis-SNP.latest.jar
-OUTROOT=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation
+OUTROOT=${WORK_ROOT}/gm12878_cellline/pseudobulk_methylation
 
 # --- pick this task's chromosome ---
 CHROMS=(chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 \

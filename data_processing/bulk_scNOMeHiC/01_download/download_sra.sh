@@ -8,13 +8,18 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=24G
 #SBATCH --time=24:00:00
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch/download_scripts/logs/sra_%A_%a.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch/download_scripts/logs/sra_%A_%a.err
+#SBATCH --output=${WORK_ROOT}/analysis/bulk_scNOMeHiC/download_scripts/logs/sra_%A_%a.out
+#SBATCH --error=${WORK_ROOT}/analysis/bulk_scNOMeHiC/download_scripts/logs/sra_%A_%a.err
+
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
 
 set -euo pipefail
 
-SCRIPT_DIR="/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch/download_scripts"
-DEST_DIR="/scratch/jmj7858/scnomehic/bulk_gm"
+SCRIPT_DIR="${WORK_ROOT}/analysis/bulk_scNOMeHiC/download_scripts"
+DEST_DIR="${TMP_ROOT}/bulk_gm"
 SRA_DIR="${DEST_DIR}/sra_tmp"
 MANIFEST="${SCRIPT_DIR}/accessions.tsv"
 THREADS=${SLURM_CPUS_PER_TASK:-8}

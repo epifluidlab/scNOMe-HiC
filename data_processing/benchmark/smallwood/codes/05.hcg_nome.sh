@@ -43,7 +43,7 @@ source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate scnomehic
 set -o pipefail
 
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/smallwood
+cd ${WORK_ROOT}/benchmark/smallwood
 mkdir -p logs/05.hcg_nome
 
 BIS=${REFERENCE_ROOT}/mm10_bismark/

@@ -8,9 +8,14 @@
 # yap takes ONE bismark reference per run, so we make two yap runs. This script links:
 #   01.fastq/SRRxxx_{1,2}.fq.gz  ->  fastq_yap_<genome>/SRRxxx-R{1,2}.fq.gz
 # and writes codes/cells_<genome>.txt (one cell_id per line).
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 
-BASE="/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCseq2"
+BASE="${WORK_ROOT}/benchmark/snmCseq2"
 SRC="${BASE}/01.fastq"
 MAP="${BASE}/snmCseq2_genome_map.tsv"
 

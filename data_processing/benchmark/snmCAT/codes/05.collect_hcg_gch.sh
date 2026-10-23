@@ -6,8 +6,8 @@
 #SBATCH --mem=8G
 #SBATCH --cpus-per-task=1
 #SBATCH --job-name=gch_brain
-#SBATCH --output=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCAT/codes/logs/05.gch/collect.out
-#SBATCH --error=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCAT/codes/logs/05.gch/collect.err
+#SBATCH --output=${WORK_ROOT}/benchmark/snmCAT/codes/logs/05.gch/collect.out
+#SBATCH --error=${WORK_ROOT}/benchmark/snmCAT/codes/logs/05.gch/collect.err
 
 # Per-cell HCG/GCH/HCH site counts + methylation from the brain snmC2T-seq --nome ALLC.
 # yap --nome ALLC context = upstream(1)+C+downstr(2) = 4 chars (substr 1-indexed):
@@ -15,8 +15,13 @@
 #   HCG = substr1 in {A,C,T} & substr3=='G'   -> CpG methylation
 #   GCH = substr1=='G'     & substr3 in {A,C,T} -> NOMe accessibility (expect HIGH if real NOMe)
 #   HCH = both in {A,C,T}                       -> background
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -o pipefail   # no -e/-u/bashrc: keep going past any single unreadable file
-BASE="/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCAT"
+BASE="${WORK_ROOT}/benchmark/snmCAT"
 OUT="${BASE}/mapping_brain/stats/hcg_gch_nome.tsv"
 mkdir -p "${BASE}/mapping_brain/stats" "${BASE}/codes/logs/05.gch"
 

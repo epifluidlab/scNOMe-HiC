@@ -14,7 +14,7 @@ _r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
 while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
 source "$_r/paths.sh"
 
-export PROJ=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s2_new
+export PROJ=${WORK_ROOT}/analysis/s2_new
 export CODE=$PROJ/code
 export DATA=$PROJ/data/scWGBS
 export WORK=$PROJ/work            # all intermediate outputs live here
@@ -73,7 +73,7 @@ export CELL_LIST=$WORK/cell_list.txt   # one cell barcode per line (built after 
 # NOMe-HiC pseudobulk reference (GM12878 sc NOMe-HiC, hg38).
 # Use the variant-aware merged-BAM pseudobulk in pseudobulk_methylation/ (BisSNP,
 # same caller as the sc pipeline) — per-site HCG 6plus2; we bin it ourselves.
-export NOMEHIC_DIR=/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new
+export NOMEHIC_DIR=${WORK_ROOT}/gm12878_cellline
 export NOMEHIC_HCG_6PLUS2=$NOMEHIC_DIR/pseudobulk_methylation/gm_pseudobulk_merged.HCG.6plus2.bed.gz
 export NOMEHIC_HCG_250KB=$D12/nomehic_pseudobulk_HCG_250kb.bed   # binned from 6plus2 by 14_bin_nomehic_250kb.py
 export BIN=250000

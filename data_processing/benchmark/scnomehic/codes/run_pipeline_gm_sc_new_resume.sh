@@ -35,8 +35,8 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=8G
 #SBATCH --job-name=scnh_resume
-#SBATCH --output=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnomehic/logs/pipeline_rerun/resume.%j.out
-#SBATCH --error=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnomehic/logs/pipeline_rerun/resume.%j.err
+#SBATCH --output=${WORK_ROOT}/benchmark/scnomehic/logs/pipeline_rerun/resume.%j.out
+#SBATCH --error=${WORK_ROOT}/benchmark/scnomehic/logs/pipeline_rerun/resume.%j.err
 
 # --- repo paths: edit paths.yaml at the repository root, not this file -------
 _r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"

@@ -10,10 +10,15 @@
 #   - TSS non-CGI (+/- shore 2kb), canonical
 # Sources live in scnomehic_paper/s2 (already prepared for the paper).
 # =============================================================================
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -eo pipefail
 
-S2=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s2
-REG=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/ctcf_cgi_profiles/regions
+S2=${WORK_ROOT}/analysis/s2
+REG=${WORK_ROOT}/gm12878_cellline/ctcf_cgi_profiles/regions
 mkdir -p "${REG}"
 
 # source .bed.gz -> staged .bed (decompressed)

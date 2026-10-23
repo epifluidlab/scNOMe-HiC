@@ -7,7 +7,7 @@ source "$_r/paths.sh"
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate scnomehic
 set -o pipefail
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome
+cd ${WORK_ROOT}/benchmark/scnome
 BIS=${REFERENCE_ROOT}/hg38_bismark/
 METHY=05.methy
 echo "[$(date)] c2c --nome-seq (no --CX) start"

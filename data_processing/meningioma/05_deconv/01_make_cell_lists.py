@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """Build tumor / non-tumor cell lists for UXM deconvolution.
 
 The split is **copy-number driven**: tumour status is defined by the CNA groups
@@ -23,7 +31,7 @@ import pandas as pd
 SET   = "all_batches"      # cell set (subfolder under subset_clustering/250kb)
 SPLIT = "cna_group"        # "cna_group", or "cell_type_joint" / "cell_type_hcg"
 NORMAL_GROUP = "1"         # cna_group value that is the diploid / non-tumour group
-WORK  = "/gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/snakemake"
+WORK  = WORK + "/meningioma"
 
 SETDIR = os.path.join(WORK, "subset_clustering", "250kb", SET)
 META   = os.path.join(SETDIR, "tables", "final_metadata.tsv")

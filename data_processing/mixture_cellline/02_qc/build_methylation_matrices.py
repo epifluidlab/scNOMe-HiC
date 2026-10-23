@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """Build cells x bins methylation matrices for HCG and GCH at multiple bin sizes.
 
 Same logic as the matrix-building cell in qc_plots.ipynb. Reads per-cell *_methylation.txt.gz files
@@ -15,7 +23,7 @@ from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
 
-WORKDIR      = Path('/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake')
+WORKDIR      = Path(WORK + '/mixture_cellline')
 METH_BIN_DIR = WORKDIR / '08.methylation_snakemake'
 OUT_QC       = WORKDIR / 'QC'
 OUT_MATRIX   = OUT_QC / 'methylation_matrices'

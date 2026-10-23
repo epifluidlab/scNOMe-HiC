@@ -4,9 +4,14 @@
 # placeholder). `yap default-mapping-config` leaves that placeholder line in, so the
 # generated mc.Snakefile (which calls `bismark {bismark_reference}`) hits a NameError.
 # Fix = delete the hisat3n_dna_reference line so yap keeps bismark_reference.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 
-BASE="/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCseq2"
+BASE="${WORK_ROOT}/benchmark/snmCseq2"
 
 CONFIGS=(
   "${BASE}/codes/mapping_config_yap_hg38.ini"

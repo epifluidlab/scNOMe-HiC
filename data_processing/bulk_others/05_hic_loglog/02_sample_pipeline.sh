@@ -4,8 +4,8 @@
 #SBATCH --time=08:00:00
 #SBATCH --mem=48G
 #SBATCH --cpus-per-task=6
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig1/codes/hic_qc_loglog/logs/%x_%j.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig1/codes/hic_qc_loglog/logs/%x_%j.out
+#SBATCH --output=${WORK_ROOT}/analysis/fig1/codes/hic_qc_loglog/logs/%x_%j.out
+#SBATCH --error=${WORK_ROOT}/analysis/fig1/codes/hic_qc_loglog/logs/%x_%j.out
 # ---------------------------------------------------------------------------
 # HOMER contact-frequency-vs-distance (log-log) pipeline for ONE sample.
 # Builds a HOMER HiCsummary from a read-pair-level file, runs makeTagDirectory,
@@ -20,14 +20,19 @@
 #           pairs   = 4DN .pairs     : readID chr1 pos1 chr2 pos2 strand1 strand2
 #   TARGET: max read pairs to keep (downsample cap; 0 = keep all)
 # ---------------------------------------------------------------------------
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -eo pipefail
 [ -f /etc/profile.d/modules.sh ] && source /etc/profile.d/modules.sh 2>/dev/null || true
 source ~/.bashrc 2>/dev/null || true
 module load homer/5.1
 
 : "${NAME:?}"; : "${SRC:?}"; : "${FMT:?}"; : "${TARGET:=100000000}"
-OUTROOT=/scratch/jmj7858/scnomehic/hic_qc_loglog
-RESULTS=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig1/results/hic_qc_loglog
+OUTROOT=${TMP_ROOT}/hic_qc_loglog
+RESULTS=${WORK_ROOT}/analysis/fig1/results/hic_qc_loglog
 WORK=$OUTROOT/$NAME
 mkdir -p "$WORK" "$RESULTS"
 SUMMARY=$WORK/$NAME.hicsummary.txt

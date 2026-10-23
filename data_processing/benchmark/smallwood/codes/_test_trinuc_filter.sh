@@ -11,9 +11,9 @@ source "$_r/paths.sh"
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate scnomehic
 set -o pipefail
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/smallwood
+cd ${WORK_ROOT}/benchmark/smallwood
 SAM=${SOFTWARE_ROOT}/samtools-1.16/bin/samtools
-QC=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome/codes/nome_qc_sites_trinuc.py
+QC=${WORK_ROOT}/benchmark/scnome/codes/nome_qc_sites_trinuc.py
 REF=${REFERENCE_ROOT}/mm10/mm10.fa
 cell=SRR1248481
 mkdir -p qc_stats/trinuc_filter_test

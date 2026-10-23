@@ -2,10 +2,15 @@
 # Set up fig2/data/bulk: per-cell-line reference data.
 # GM12878 -> softlinks to fig1 bulk data (already downloaded/processed).
 # IMR90   -> empty folders, awaiting download links.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 
-FIG2_DATA="/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig2/data/bulk"
-FIG1_BULK="/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig1/data/bulk"
+FIG2_DATA="${WORK_ROOT}/analysis/fig2/data/bulk"
+FIG1_BULK="${WORK_ROOT}/analysis/fig1/data/bulk"
 
 # Create folder structure
 for cell in GM12878 IMR90; do

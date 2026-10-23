@@ -12,7 +12,7 @@ while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; don
 source "$_r/paths.sh"
 
 set -euo pipefail
-cd /gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/snakemake
+cd ${WORK_ROOT}/meningioma
 
 PIPELINE=${SOFTWARE_ROOT}/sc_NOMeHiC_pipeline
 SNK=${CONDA_ENVS}/scnomehic/bin/snakemake

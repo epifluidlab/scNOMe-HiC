@@ -2,8 +2,13 @@
 # Submit the HOMER log-log pipeline for the ENCODE in-situ Hi-C sample.
 # Runs BOTH the 100M-cap subsample and the full-depth version.
 # Run this AFTER the ENCFF447ERX.pairs.gz download finishes.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-PAIRS=/scratch/jmj7858/scnomehic/insitu_hic/pairs/ENCFF447ERX.pairs.gz
+PAIRS=${TMP_ROOT}/insitu_hic/pairs/ENCFF447ERX.pairs.gz
 SP="$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")/02_sample_pipeline.sh"
 # sanity: file present and gzip intact
 if ! pigz -t "$PAIRS" 2>/dev/null; then

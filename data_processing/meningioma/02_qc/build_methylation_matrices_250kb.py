@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """Build cell x 250kb-bin methylation matrices (GCH + HCG) for subset clustering.
 Mirrors qc_plots.ipynb's matrix builder, restricted to the 250kb label.
 Writes QC/methylation_matrices/methylation_matrix_{GCH,HCG}_250kb.tsv.gz (+ bins).
@@ -7,7 +15,7 @@ from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
 
-WORK = Path('/gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/snakemake')
+WORK = Path(WORK + '/meningioma')
 METH = WORK / '08.methylation_snakemake'
 OUT = WORK / 'QC' / 'methylation_matrices'
 OUT.mkdir(parents=True, exist_ok=True)

@@ -2,8 +2,13 @@
 # Download DNase signal bigWigs (3 bioreps) + snATAC aggregate BAM from ENCODE
 # via the direct public-S3 HTTPS endpoints (much faster than the @@download redirect).
 # Size-aware: skips files already fully present; resumes partial ones.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-DATA=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s2_new/atac_dnase_gm12878/data
+DATA=${WORK_ROOT}/analysis/s2_new/atac_dnase_gm12878/data
 cd "$DATA"
 
 declare -A URL=(

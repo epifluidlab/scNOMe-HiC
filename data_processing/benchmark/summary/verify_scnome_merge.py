@@ -10,7 +10,7 @@ import gzip, subprocess
 
 HG = REFERENCE + "/hg38_bismark/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa"
 SAM = SOFTWARE + "/samtools-1.16/bin/samtools"
-METHY = "/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome/05.methy"
+METHY = WORK + "/benchmark/scnome/05.methy"
 CELL = "K562_01"
 CHROM = "chr21"
 

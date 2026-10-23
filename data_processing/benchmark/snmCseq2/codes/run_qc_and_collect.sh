@@ -18,7 +18,7 @@ source "$_r/paths.sh"
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate scnomehic
 
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCseq2
+cd ${WORK_ROOT}/benchmark/snmCseq2
 
 mkdir -p logs/04.qc qc_stats
 

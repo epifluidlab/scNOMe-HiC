@@ -11,13 +11,13 @@ while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; don
 source "$_r/paths.sh"
 
 export CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-export SCRATCH_DIR=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/s7
+export SCRATCH_DIR=${WORK_ROOT}/analysis/s7
 export WORK_DIR=${SCRATCH_DIR}/work        # per-task scratch BAMs (deleted after each task)
 export RESULTS_DIR=${SCRATCH_DIR}/results  # one tiny .tsv per (cell,fraction)
 export LOG_DIR=${SCRATCH_DIR}/logs         # slurm stdout/stderr
 
 # ---- input data (gm_sc_new) ----
-export GM=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new
+export GM=${WORK_ROOT}/gm12878_cellline
 export RAW_BAM_DIR=${GM}/04.alignment_snakemake                 # {cell}.bam = pre-markdup mapped reads
 export METHYL_DIR=${GM}/07.bistools_snakemake/methylation       # existing full-depth 6plus2 beds (f=1.0)
 export CELLS_FILE=${GM}/QC/cellline_passed.txt                  # 180 QC-passing cells

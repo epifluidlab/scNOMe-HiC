@@ -18,7 +18,7 @@ set -eo pipefail
 source ${CONDA_SH}
 conda activate scnomehic
 set -u
-cd /gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig2; mkdir -p logs
+cd ${WORK_ROOT}/analysis/fig2; mkdir -p logs
 export NCPU=8 N_PER_DIR=2000
 echo "=== $(date) | host $(hostname) ==="
 python "$(dirname "$(readlink -f "$0")")/02_build_sc_pseudobulk_metilene_dmr.py"

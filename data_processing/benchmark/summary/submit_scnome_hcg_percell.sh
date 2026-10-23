@@ -18,7 +18,7 @@ source "$_r/paths.sh"
 
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate scnomehic
-B=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark
+B=${WORK_ROOT}/benchmark
 cd $B/summary
 mkdir -p logs/hcg_genome
 echo "[$(date)] scnome_hcg_percell.py"

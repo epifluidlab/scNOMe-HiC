@@ -1,5 +1,13 @@
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 from pathlib import Path
-QC = Path('/gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/snakemake/QC')
+QC = Path(WORK + '/meningioma/QC')
 
 # all 7 control / titration wells (blank, 10c, 100c, 1000c) — never real single cells
 CONTROLS = [

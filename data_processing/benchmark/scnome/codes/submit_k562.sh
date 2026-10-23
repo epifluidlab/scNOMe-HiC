@@ -3,9 +3,14 @@
 # SRR pairs). Reuses existing per-run bismark BAMs (trim+align already done), so
 # the chain is: merge+dedup (per cell) -> NOMe methylation extraction (per cell).
 # QC (04.qc_* steps) is run separately afterward.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome
+cd ${WORK_ROOT}/benchmark/scnome
 
 j1=$(sbatch --parsable codes/02k.merge_dedup_k562.sh)
 echo "02k.merge_dedup_k562.sh   -> ${j1}"

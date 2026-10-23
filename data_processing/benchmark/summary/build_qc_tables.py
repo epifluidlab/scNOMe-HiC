@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """
 Assemble the CONSISTENT per-cell QC tables that qc.ipynb plots, from the harmonized
 sources. Writes:
@@ -13,8 +21,8 @@ import glob, gzip, os
 import numpy as np
 import pandas as pd
 
-B = "/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark"
-GM = "/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/04.alignment_snakemake"
+B = WORK + "/benchmark"
+GM = WORK + "/gm12878_cellline/04.alignment_snakemake"
 OUT = f"{B}/summary/qc_tables"
 os.makedirs(OUT, exist_ok=True)
 

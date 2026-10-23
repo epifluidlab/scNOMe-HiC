@@ -7,9 +7,14 @@
 # Usage:
 #   bash codes/util_clear_gm_stale.sh         # DRY RUN: only lists what would be deleted
 #   bash codes/util_clear_gm_stale.sh --yes   # actually delete
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -u
 
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome
+cd ${WORK_ROOT}/benchmark/scnome
 
 # GM12878 cells = first 12 lines of acc_list.txt (SRR3729642-SRR3729653)
 GM=$(awk 'NR>=1 && NR<=12' acc_list.txt)

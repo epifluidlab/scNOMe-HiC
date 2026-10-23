@@ -17,7 +17,7 @@ while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; don
 source "$_r/paths.sh"
 
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome
+cd ${WORK_ROOT}/benchmark/scnome
 
 conda activate scnomehic
 

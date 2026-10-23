@@ -41,7 +41,7 @@ source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate scnomehic
 set -o pipefail
 
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome
+cd ${WORK_ROOT}/benchmark/scnome
 mkdir -p logs/03.methy_extract
 
 BIS=${REFERENCE_ROOT}/hg38_bismark/

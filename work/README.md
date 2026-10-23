@@ -21,5 +21,19 @@ writes several TB. The default is this folder.
 | `analysis/` | `../data_processing/bulk_others/`, `../data_processing/published_singlecell/`, `../data_processing/bulk_scNOMeHiC/` | Figure 1, 2, 3, S1, S2 |
 | `tmp/` | large, short-lived intermediates | — |
 
+## Inside `analysis/`
+
+The cross-dataset steps keep the short names they ran under. What each holds:
+
+| Folder | What | Feeds |
+|---|---|---|
+| `s1/` | per-cell QC tables for the GM12878 benchmark arm | Figure 1, S1 |
+| `s2_new/` | the published single-cell comparisons — Drop-BS, sci-MET, snATAC, sci-Hi-C | Figure S2 |
+| `s3/` | CTCF and CpG-island profile matrices | Figure S3 |
+| `s7/` | the sequencing-saturation subsampling results | Figure S5 |
+| `fig1/` | contact-frequency-vs-distance (HOMER log-log) tables | Figure S1 |
+| `fig2/` | metilene DMRs and the bulk ATAC bins | Figure 2 |
+| `bulk_scNOMeHiC/` | the bulk NOMe-HiC GM12878 chain | Figure 1 |
+
 `tmp/` is separately configurable as `tmp_root`. On a cluster, point it at fast
 scratch; the steps that use it do not expect its contents to survive.

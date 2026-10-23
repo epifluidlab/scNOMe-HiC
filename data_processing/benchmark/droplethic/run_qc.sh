@@ -14,10 +14,15 @@
 # Set --array=1-N where N = number of samples in config.yaml
 # e.g. for 5 samples: --array=1-5
 
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 source ~/.bashrc
 conda activate rupture
 
-PROJECT_DIR=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/droplethic/my_project
+PROJECT_DIR=${WORK_ROOT}/benchmark/droplethic/my_project
 GENOME=hg38
 MAPQ=30
 

@@ -7,15 +7,20 @@
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=120G
 #SBATCH --time=24:00:00
-#SBATCH --output=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/05_align_nopbat_%A_%a.out
-#SBATCH --error=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/05_align_nopbat_%A_%a.err
+#SBATCH --output=${TMP_ROOT}/bulk_gm/pipeline/logs/05_align_nopbat_%A_%a.out
+#SBATCH --error=${TMP_ROOT}/bulk_gm/pipeline/logs/05_align_nopbat_%A_%a.err
 
 # Step 11: align ONE chunk (selected by SLURM array index from chunk_list.txt)
 # with bisulfiteHic Bhmem. SAME command as the pipeline's `rule mapping` EXCEPT
 # BOTH `-pbat` and `-nonDirectional` are removed (different, directional protocol).
 # Output: ${ALN_NOPBAT}/repN.chunkNNN.bam  (raw, name-sorted by the aligner).
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-source /gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch/00_paths.sh
+source ${WORK_ROOT}/analysis/bulk_scNOMeHiC/00_paths.sh
 export PATH="${SCNOMEHIC_ENV}/bin:${PATH}"
 module load java/jdk-17.0.2+8
 

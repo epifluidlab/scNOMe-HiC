@@ -7,8 +7,8 @@
 #SBATCH --cpus-per-task=24
 #SBATCH --mem=200G
 #SBATCH --time=4-00:00:00
-#SBATCH --output=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/10_hic_nopbat_%j.out
-#SBATCH --error=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/10_hic_nopbat_%j.err
+#SBATCH --output=${TMP_ROOT}/bulk_gm/pipeline/logs/10_hic_nopbat_%j.out
+#SBATCH --error=${TMP_ROOT}/bulk_gm/pipeline/logs/10_hic_nopbat_%j.err
 
 # Step 10: build the bulk .hic from the RERAN (non-PBAT) 3-rep merged BAM.
 # Unlike the superseded PBAT flow, the input here is ALREADY merged + deduped:
@@ -18,8 +18,13 @@
 # build the .hic, following the canonical recipe used throughout this paper:
 #   good-reads filter (-q 30 -f 1 -F 1804) -> sam2juicer_new.py -f DpnII
 #   -> LC_ALL=C sort -k2,2d -k6,6d -> juicer_tools pre -q 30 ... hg38
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-source /gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch/00_paths.sh
+source ${WORK_ROOT}/analysis/bulk_scNOMeHiC/00_paths.sh
 export PATH="${SCNOMEHIC_ENV}/bin:${PATH}"
 module load java/jdk-17.0.2+8
 

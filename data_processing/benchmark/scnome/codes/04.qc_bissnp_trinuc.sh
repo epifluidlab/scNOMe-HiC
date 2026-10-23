@@ -27,7 +27,7 @@ source "$_r/paths.sh"
 
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 module load java/jdk1.8.0_191
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome || { echo "ERROR: cd failed"; exit 1; }
+cd ${WORK_ROOT}/benchmark/scnome || { echo "ERROR: cd failed"; exit 1; }
 mkdir -p logs/05.bissnp_trinuc
 
 export BISTOOLS=${SOFTWARE_ROOT}/Bis-tools

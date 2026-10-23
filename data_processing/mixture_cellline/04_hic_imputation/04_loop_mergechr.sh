@@ -13,7 +13,7 @@ set -eo pipefail
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate hic_env
 
-ROOT=/scratch/jmj7858/scnomehic/loop_majortype_25kb
+ROOT=${TMP_ROOT}/loop_majortype_25kb
 PER_CT=$ROOT/per_celltype
 CHROM_FILE=${REFERENCE_ROOT}/hg38/autosomes.chrom.sizes
 RES=25000

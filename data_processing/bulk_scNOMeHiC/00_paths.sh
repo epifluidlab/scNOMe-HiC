@@ -14,10 +14,10 @@ _r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
 while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
 source "$_r/paths.sh"
 
-export REPO="/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch"
+export REPO="${WORK_ROOT}/analysis/bulk_scNOMeHiC"
 
 # ---- scratch (all heavy outputs live here, NOT in the repo) ----
-export DL="/scratch/jmj7858/scnomehic/bulk_gm"                 # raw downloaded fq.gz
+export DL="${TMP_ROOT}/bulk_gm"                 # raw downloaded fq.gz
 export TRIMWHOLE="${DL}/trimmed_whole"                         # per-rep trimmed (pre-chunk)
 export WORK="${DL}/pipeline"                                   # snakemake workdir
 export CHUNK="${WORK}/03.trimmed_fastq_snakemake"              # chunked, pipeline-named cells

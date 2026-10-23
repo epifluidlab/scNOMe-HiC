@@ -18,7 +18,7 @@ source "$_r/paths.sh"
 
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 # Fail-fast: a bad cd must abort the job, not silently run in the wrong dir.
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome || { echo "ERROR: cd to working dir failed"; exit 1; }
+cd ${WORK_ROOT}/benchmark/scnome || { echo "ERROR: cd to working dir failed"; exit 1; }
 
 conda activate scnomehic
 

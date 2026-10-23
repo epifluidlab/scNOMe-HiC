@@ -6,8 +6,8 @@
 #SBATCH --time=06:00:00
 #SBATCH --mem=128G
 #SBATCH --cpus-per-task=8
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/APA/insitu/logs/%x_%j.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/APA/insitu/logs/%x_%j.err
+#SBATCH --output=${WORK_ROOT}/mixture_cellline/APA/insitu/logs/%x_%j.out
+#SBATCH --error=${WORK_ROOT}/mixture_cellline/APA/insitu/logs/%x_%j.err
 # STEP 03 (in-situ) -- GPU HICCUPS on the IMR90 in-situ .hic (full depth).
 # Same params as step02.
 # --- repo paths: edit paths.yaml at the repository root, not this file -------
@@ -23,8 +23,8 @@ module load cuda/11.3.1-gcc-10.4.0
 module load gcc/10.4.0-gcc-4.8.5
 
 JUICER=${SOFTWARE_ROOT}/juicer_tools.jar  # 2.20 needed for v9 hic
-HIC=/scratch/jmj7858/scnomehic/insitu_hic/ENCFF188SSH_IMR90_insitu.hic
-OUT=/scratch/jmj7858/scnomehic/insitu_hic/imr_insitu_hiccups_25kb_loops
+HIC=${TMP_ROOT}/insitu_hic/ENCFF188SSH_IMR90_insitu.hic
+OUT=${TMP_ROOT}/insitu_hic/imr_insitu_hiccups_25kb_loops
 
 echo "[$(date +%H:%M:%S)] HICCUPS IMR in-situ 25kb"
 echo "  hic: $HIC"

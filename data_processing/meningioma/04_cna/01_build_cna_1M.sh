@@ -8,7 +8,7 @@ while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; don
 source "$_r/paths.sh"
 
 set -euo pipefail
-cd /gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/snakemake
+cd ${WORK_ROOT}/meningioma
 
 PY=${CONDA_ENVS}/scnomehic/bin/python
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

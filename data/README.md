@@ -34,3 +34,12 @@ run its `01_pipeline/01_run_pipeline.sh`. See `../RUNNING.md`, Entry point B.
 The pipeline writes its numbered output folders (`03.trimmed_fastq_snakemake/`,
 `04.alignment_snakemake/`, `07.bistools_snakemake/`, …) alongside
 `01.demul_fastq_snakemake/` inside the same dataset folder.
+
+## external/
+
+One benchmark comparison reads QC tables produced elsewhere, not from these
+reads: `data_processing/gm12878_cellline/06_benchmark_qc/` expects bulk IMR90
+trinucleotide QC under `external/scNOMe_celllines_20240314/bam/IMR90/QC/`. Those
+files came from a collaborator's run of the same pipeline on the bulk IMR90
+libraries. Without them the two `extract_trinuc_*` steps have nothing to read;
+every other step is unaffected.

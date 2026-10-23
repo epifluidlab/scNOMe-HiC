@@ -2,9 +2,14 @@
 # Submit the GM12878 rerun as a dependency chain (array 1-12 = GM cells).
 # Each step starts only if the previous array completes successfully (afterok).
 # Run AFTER clearing stale GM outputs (codes/util_clear_gm_stale.sh --yes).
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome
+cd ${WORK_ROOT}/benchmark/scnome
 
 j1=$(sbatch --parsable codes/01.trim.sh)
 echo "01.trim.sh           -> ${j1}"

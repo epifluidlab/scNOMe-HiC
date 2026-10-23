@@ -2,9 +2,14 @@
 # Extract per-cell human vs mouse read counts for all 96 GM_F123 cells, from the
 # combined hg38_mm10 alignments. Runs _species_worker.sh (sibling) over every
 # {cell}.calmd.bam in parallel and writes species_read_counts.tsv.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 
-WORKDIR=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s3/snakemake
+WORKDIR=${WORK_ROOT}/barnyard_mixing
 cd "$WORKDIR"
 ALN=04.alignment_snakemake
 OUT=species_read_counts.tsv

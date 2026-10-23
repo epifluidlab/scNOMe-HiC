@@ -6,8 +6,8 @@
 #SBATCH --mem=32G
 #SBATCH --cpus-per-task=16
 #SBATCH --job-name=deconv_allb
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/snakemake/subset_clustering/250kb/all_batches/deconv/deconv_allb.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/snakemake/subset_clustering/250kb/all_batches/deconv/deconv_allb.err
+#SBATCH --output=${WORK_ROOT}/meningioma/subset_clustering/250kb/all_batches/deconv/deconv_allb.out
+#SBATCH --error=${WORK_ROOT}/meningioma/subset_clustering/250kb/all_batches/deconv/deconv_allb.err
 # UXM tumor-vs-non-tumor deconvolution for the all_batches (3-batch) set.
 # Split is copy-number driven: non-tumour = cna_group 1 (chr22q intact).
 # Mirrors Combined_sample2/09.deconv.sh. Scripts live in snakemake/code/; outputs go to
@@ -33,14 +33,14 @@ conda activate scnomehic
 set -eo pipefail          # strict error checking (no -u; bashrc trips it)
 
 SET=all_batches
-WORK=/gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/snakemake
+WORK=${WORK_ROOT}/meningioma
 OUTDIR=$WORK/subset_clustering/250kb/$SET/deconv
 mkdir -p "$OUTDIR"; cd "$OUTDIR"          # all outputs land here
 
 WGBS=${SOFTWARE_ROOT}/wgbs_tools/wgbstools
 UXM=${SOFTWARE_ROOT}/UXM_deconv/uxm
 # Newoligo brain atlas (has Microglia) — the one used for the original barplot.
-ATLAS=/projects/b1198/epifluidlab/jocelyn/project/ms/atlas/Atlas.U25.l4.hg38.monofixed_newoligo_micro40.tsv
+ATLAS=${REFERENCE_ROOT}/atlas/Atlas.U25.l4.hg38.monofixed_newoligo_micro40.tsv
 
 # 1) tumor / non-tumor cell lists from the CNA groups (cna_group; 1 = diploid) -> $OUTDIR
 python "${HERE}/01_make_cell_lists.py"

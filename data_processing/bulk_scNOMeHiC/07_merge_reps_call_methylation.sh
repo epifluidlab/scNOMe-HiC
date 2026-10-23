@@ -7,8 +7,8 @@
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=64G
 #SBATCH --time=48:00:00
-#SBATCH --output=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/07_meth_merged_%j.out
-#SBATCH --error=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/07_meth_merged_%j.err
+#SBATCH --output=${TMP_ROOT}/bulk_gm/pipeline/logs/07_meth_merged_%j.out
+#SBATCH --error=${TMP_ROOT}/bulk_gm/pipeline/logs/07_meth_merged_%j.err
 
 # Step 07: merge the 3 per-rep bamprocessed (calmd, dedup) BAMs into ONE bulk
 # BAM, then CALL METHYLATION on the merge with the non-directional bissnp wrapper
@@ -21,7 +21,7 @@ while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; don
 source "$_r/paths.sh"
 
 set -euo pipefail
-source /gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch/00_paths.sh
+source ${WORK_ROOT}/analysis/bulk_scNOMeHiC/00_paths.sh
 export PATH="${SCNOMEHIC_ENV}/bin:${PATH}"
 T="${SLURM_CPUS_PER_TASK}"
 

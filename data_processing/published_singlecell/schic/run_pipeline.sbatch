@@ -12,11 +12,16 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
 #SBATCH --job-name=schic_scc
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s2_new/schic_gm12878/logs/scc.%j.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s2_new/schic_gm12878/logs/scc.%j.err
+#SBATCH --output=${WORK_ROOT}/analysis/s2_new/schic_gm12878/logs/scc.%j.out
+#SBATCH --error=${WORK_ROOT}/analysis/s2_new/schic_gm12878/logs/scc.%j.err
+
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
 
 set -euo pipefail
-ROOT=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s2_new/schic_gm12878
+ROOT=${WORK_ROOT}/analysis/s2_new/schic_gm12878
 cd "$ROOT"
 source "$ROOT/code/config.sh"
 activate_env

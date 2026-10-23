@@ -20,7 +20,7 @@ source "$_r/paths.sh"
 
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate scnomehic
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark
+cd ${WORK_ROOT}/benchmark
 mkdir -p summary/logs
 
 cp summary/qc.ipynb _tmp_qc_run.ipynb

@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """Read-weighted single-cell pseudobulk GpC (GCH) accessibility over 250 kb bins, per cell type.
 
 GCH analogue of build_sc_pseudobulk_hcg_250kb.py. For each 250 kb bin and each cell type
@@ -25,8 +33,8 @@ from concurrent.futures import ProcessPoolExecutor
 import numpy as np
 import pandas as pd
 
-FIG2   = "/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig2"
-SCSNK  = "/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake"
+FIG2   = WORK + "/analysis/fig2"
+SCSNK  = WORK + "/mixture_cellline"
 BINS   = os.path.join(SCSNK, "QC/methylation_matrices/bins_250kb.tsv")
 PASSED = os.path.join(SCSNK, "QC/cellline_passed.txt")
 LABELS = os.path.join(SCSNK, "subset_clustering/250kb/annotation/cell_type_table.tsv")

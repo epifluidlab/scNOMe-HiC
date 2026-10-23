@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """Bin bulk WGBS methylation into the same bins as the single-cell matrices.
 
 Produces the GM12878 and IMR90 bulk references that the Figure 2 UMAP notebook
@@ -111,7 +119,7 @@ def compute_bin_methylation_from_bed_fast(bed_path, bins_df, chromosomes=None):
 
 
 def main():
-    root = Path("/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline")
+    root = Path(WORK + "/mouse_cortex_cellline")
     bins_root = root / "snakemake" / "QC" / "methylation_matrices"
 
     # ENCODE bulk WGBS, converted from bigBed with bigBedToBed

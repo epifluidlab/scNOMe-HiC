@@ -9,8 +9,8 @@
 #SBATCH --cpus-per-task=10
 #SBATCH --array=1-64
 #SBATCH --job-name=sc2_yap_mc
-#SBATCH --output=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCseq2/codes/logs/07.yap_mc/%x.%a.out
-#SBATCH --error=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCseq2/codes/logs/07.yap_mc/%x.%a.err
+#SBATCH --output=${WORK_ROOT}/benchmark/snmCseq2/codes/logs/07.yap_mc/%x.%a.out
+#SBATCH --error=${WORK_ROOT}/benchmark/snmCseq2/codes/logs/07.yap_mc/%x.%a.err
 
 # Run yap mc mapping, one SLURM array task per snakemake Group command.
 # GENOME (hg38 | mm10) is passed via sbatch --export=ALL,GENOME=<genome>.
@@ -30,7 +30,7 @@ export PATH="$CONDA_PREFIX/bin:$PATH"
 
 : "${GENOME:?Must pass GENOME=hg38 or GENOME=mm10 via sbatch --export}"
 
-BASE="/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCseq2"
+BASE="${WORK_ROOT}/benchmark/snmCseq2"
 RUN_DIR="${BASE}/yap_mapping_${GENOME}"
 CMD_FILE="${RUN_DIR}/snakemake/snakemake_cmd.txt"
 

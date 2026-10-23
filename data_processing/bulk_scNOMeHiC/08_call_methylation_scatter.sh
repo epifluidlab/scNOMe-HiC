@@ -8,8 +8,8 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=48G
 #SBATCH --time=48:00:00
-#SBATCH --output=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/08_meth_scatter_%A_%a.out
-#SBATCH --error=/scratch/jmj7858/scnomehic/bulk_gm/pipeline/logs/08_meth_scatter_%A_%a.err
+#SBATCH --output=${TMP_ROOT}/bulk_gm/pipeline/logs/08_meth_scatter_%A_%a.out
+#SBATCH --error=${TMP_ROOT}/bulk_gm/pipeline/logs/08_meth_scatter_%A_%a.err
 
 # Step 08: call methylation on the ALREADY-MERGED 3-rep BAM, SCATTERED BY
 # CHROMOSOME (array 1-25 = chr1-22,X,Y,M). The monolithic single-threaded BisSNP
@@ -24,7 +24,7 @@ while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; don
 source "$_r/paths.sh"
 
 set -euo pipefail
-source /gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch/00_paths.sh
+source ${WORK_ROOT}/analysis/bulk_scNOMeHiC/00_paths.sh
 export PATH="${SCNOMEHIC_ENV}/bin:${PATH}"
 
 BISTOOLS="${SOFTWARE_ROOT}/Bis-tools"

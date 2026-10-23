@@ -5,8 +5,8 @@
 #SBATCH --time=02:00:00
 #SBATCH --mem=64G
 #SBATCH --cpus-per-task=2
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb/logs/%x_%j.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb/logs/%x_%j.err
+#SBATCH --output=${WORK_ROOT}/mixture_cellline/loop_majortype_25kb/logs/%x_%j.out
+#SBATCH --error=${WORK_ROOT}/mixture_cellline/loop_majortype_25kb/logs/%x_%j.err
 # STEP 05 — Build per-celltype Q/E/T cool files (and their *2.cool sum-of-squares).
 # --- repo paths: edit paths.yaml at the repository root, not this file -------
 _r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
@@ -19,9 +19,9 @@ set -eo pipefail
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate hic_env
 
-THIS_DIR=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb
+THIS_DIR=${WORK_ROOT}/mixture_cellline/loop_majortype_25kb
 CELL_TABLE=$THIS_DIR/cell_table.tsv
-ROOT=/scratch/jmj7858/scnomehic/loop_majortype_25kb
+ROOT=${TMP_ROOT}/loop_majortype_25kb
 IMP_DIR=$ROOT/hicluster_impute
 OUT_DIR=$ROOT/per_celltype
 CHROM_FILE=${REFERENCE_ROOT}/hg38/autosomes.chrom.sizes

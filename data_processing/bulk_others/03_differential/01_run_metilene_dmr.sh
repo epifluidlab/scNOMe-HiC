@@ -30,11 +30,11 @@ source ${CONDA_SH}
 conda activate scnomehic   # bedtools, perl, R+ggplot2; metilene on PATH (yaping/software)
 set -u
 
-MET=/gpfs/projects/b1198/epifluidlab/yaping/software/metilene/default
-FIG2=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig2
+MET=${SOFTWARE_ROOT}/metilene
+FIG2=${WORK_ROOT}/analysis/fig2
 B=$FIG2/data/bulk
 OUT=$FIG2/analysis/dmr_metilene_hcg
-WORK=/scratch/jmj7858/scnomehic/metilene_work
+WORK=${TMP_ROOT}/metilene_work
 cd "$FIG2"; mkdir -p "$OUT" logs "$WORK"
 export TMPDIR="$WORK/tmp"; mkdir -p "$TMPDIR"
 

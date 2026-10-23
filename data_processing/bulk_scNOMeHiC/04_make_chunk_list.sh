@@ -2,8 +2,13 @@
 # Step 11a (run on the LOGIN node, NOT via sbatch): build the chunk manifest the
 # alignment array reads. One line per staged chunk ("repN.chunkNNN"), sorted.
 # Prints the SLURM array range to use for 05_align_nopbat.sh.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-source /gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch/00_paths.sh
+source ${WORK_ROOT}/analysis/bulk_scNOMeHiC/00_paths.sh
 
 mkdir -p "${ALN_NOPBAT}"
 

@@ -7,8 +7,8 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=48G
 #SBATCH --time=06:00:00
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation/logs/psb_bg2bw_%j.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation/logs/psb_bg2bw_%j.err
+#SBATCH --output=${WORK_ROOT}/gm12878_cellline/pseudobulk_methylation/logs/psb_bg2bw_%j.out
+#SBATCH --error=${WORK_ROOT}/gm12878_cellline/pseudobulk_methylation/logs/psb_bg2bw_%j.err
 
 # Convert the genome-wide pseudobulk 6plus2 per-site methylation beds into
 # 4-column bedGraph (chrom start end methylation%) and then bigWig.
@@ -24,7 +24,7 @@ source "$_r/paths.sh"
 
 set -euo pipefail
 
-OUTROOT=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation
+OUTROOT=${WORK_ROOT}/gm12878_cellline/pseudobulk_methylation
 REF=${REFERENCE_ROOT}/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set
 CHROMSIZES="${REF}.chrom.sizes"
 BG2BW=${CONDA_ENVS}/scnomehic/bin/bedGraphToBigWig

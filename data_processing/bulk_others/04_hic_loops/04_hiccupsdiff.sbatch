@@ -6,8 +6,8 @@
 #SBATCH --time=12:00:00
 #SBATCH --mem=128G
 #SBATCH --cpus-per-task=8
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/APA/insitu/logs/%x_%j.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/APA/insitu/logs/%x_%j.err
+#SBATCH --output=${WORK_ROOT}/mixture_cellline/APA/insitu/logs/%x_%j.out
+#SBATCH --error=${WORK_ROOT}/mixture_cellline/APA/insitu/logs/%x_%j.err
 # STEP 04 (in-situ) -- juicer hiccupsdiff, rerun after the 2026-08-24 scratch purge.
 #
 # This supersedes an earlier hiccupsdiff wrapper, with two fixes:
@@ -35,11 +35,11 @@ module load java/jdk-17.0.2+8
 module load cuda/11.3.1-gcc-10.4.0
 module load gcc/10.4.0-gcc-4.8.5
 
-BASE=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/APA/insitu
+BASE=${WORK_ROOT}/mixture_cellline/APA/insitu
 JUICER=${SOFTWARE_ROOT}/juicer_tools.jar  # 2.20 needed for v9 hic
 
-HIC_GM=/scratch/jmj7858/scnomehic/insitu_hic/gm_subsampled/GM_insitu.subsampled_p0.307.hic
-HIC_IMR=/scratch/jmj7858/scnomehic/insitu_hic/ENCFF188SSH_IMR90_insitu.hic
+HIC_GM=${TMP_ROOT}/insitu_hic/gm_subsampled/GM_insitu.subsampled_p0.307.hic
+HIC_IMR=${TMP_ROOT}/insitu_hic/ENCFF188SSH_IMR90_insitu.hic
 
 # Loop lists: GPFS copies, not the purged /scratch originals
 LOOPS_GM=$BASE/data/loops/gm_insitu_sub_hiccups_25kb_loops/merged_loops.bedpe
@@ -52,7 +52,7 @@ FDR=${HICCUPSDIFF_FDR:-0.1}
 SFX=""
 if [ "$FDR" != "0.1" ]; then SFX="_fdr${FDR}"; fi
 
-OUT=/scratch/jmj7858/scnomehic/insitu_hic/hiccupsdiff_25kb${SFX}
+OUT=${TMP_ROOT}/insitu_hic/hiccupsdiff_25kb${SFX}
 GPFS_OUT=$BASE/data/loops/hiccupsdiff_25kb${SFX}
 
 for f in "$HIC_GM" "$HIC_IMR" "$LOOPS_GM" "$LOOPS_IMR"; do

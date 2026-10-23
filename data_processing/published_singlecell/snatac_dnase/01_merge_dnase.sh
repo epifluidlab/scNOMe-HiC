@@ -6,7 +6,7 @@ while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; don
 source "$_r/paths.sh"
 
 set -euo pipefail
-BASE=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s2_new/atac_dnase_gm12878
+BASE=${WORK_ROOT}/analysis/s2_new/atac_dnase_gm12878
 DATA="$BASE/data"
 CHROM=${REFERENCE_ROOT}/hg38/autosomes.chrom.sizes
 THREADS="${THREADS:-8}"

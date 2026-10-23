@@ -6,8 +6,8 @@
 #SBATCH --mem=32G
 #SBATCH --cpus-per-task=2
 #SBATCH --job-name=rc_dump
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake/replicate_comparison/logs/dump.%j.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake/replicate_comparison/logs/dump.%j.err
+#SBATCH --output=${WORK_ROOT}/mouse_cortex/replicate_comparison/logs/dump.%j.out
+#SBATCH --error=${WORK_ROOT}/mouse_cortex/replicate_comparison/logs/dump.%j.err
 #
 # Step 3: dump per-chromosome contact matrices from rep1.hic and rep2.hic at
 # 1Mb/500kb/250kb. The SCC itself is computed in the Figure S6 notebook from
@@ -26,7 +26,7 @@ conda activate scnomehic
 module load java/jdk-17.0.2+8
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-RC=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake/replicate_comparison
+RC=${WORK_ROOT}/mouse_cortex/replicate_comparison
 JUICER=${SOFTWARE_ROOT}/juicer/juicer_tools.jar
 
 python "${HERE}/03_dump_hic.py" \

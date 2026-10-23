@@ -27,7 +27,7 @@ export PATH="$CONDA_PREFIX/bin:$PATH"
 
 ALIGNMENT_FOLDER="alignment"
 
-BASE="/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnomehic"
+BASE="${WORK_ROOT}/benchmark/scnomehic"
 CMD_FILE="${BASE}/${ALIGNMENT_FOLDER}/snakemake/snakemake_cmd.txt"
 
 mkdir -p "${BASE}/${ALIGNMENT_FOLDER}/logs/02.alignment" "${BASE}/${ALIGNMENT_FOLDER}/.slurm_tmp"

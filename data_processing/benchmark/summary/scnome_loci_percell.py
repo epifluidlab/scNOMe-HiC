@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """
 scnome per-cell UNIQUE HCG and GCH detected-loci, MERGED across the two R1/R2 mates.
 
@@ -16,11 +24,11 @@ Output: summary/gch_hcg_counts/scnome.loci_percell.txt  (sample, HCG_n, GCH_n)
 import os, glob, gzip, sys
 from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor
-sys.path.insert(0, "/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/summary")
+sys.path.insert(0, WORK + "/benchmark/summary")
 import hcg_lib
 import pandas as pd
 
-BASE = "/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark"
+BASE = WORK + "/benchmark"
 METHY = os.path.join(BASE, "scnome/05.methy")
 OUT = os.path.join(BASE, "summary/gch_hcg_counts/scnome.loci_percell.txt")
 SUF = ".rmdup.bismark.cov.gz"

@@ -27,7 +27,7 @@ source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate scnomehic
 set -o pipefail
 
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome || { echo "ERROR: cd failed"; exit 1; }
+cd ${WORK_ROOT}/benchmark/scnome || { echo "ERROR: cd failed"; exit 1; }
 mkdir -p logs/04.k562_methy
 
 BIS=${REFERENCE_ROOT}/hg38_bismark/

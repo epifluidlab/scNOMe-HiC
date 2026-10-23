@@ -17,7 +17,7 @@ source "$_r/paths.sh"
 set -euo pipefail
 export PATH="${CONDA_ENVS}/scnomehic/bin:$PATH"
 
-S3=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s3
+S3=${WORK_ROOT}/analysis/s3
 OUT_MAT="${S3}/analysis/tss_cgi/matrices"
 OUT_FIG="${S3}/analysis/tss_cgi/figures"
 COMBINED="${OUT_MAT}/GCH_HCG.TSS_CGI_vs_nonCGI.matrix.gz"

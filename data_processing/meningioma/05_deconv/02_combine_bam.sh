@@ -3,9 +3,14 @@
 # Usage: bash combinebam.sh <group> <cell_list_file>
 #   e.g. bash combinebam.sh tumor cell_tumor.txt  -> combined_sorted_tumor.bam
 # Per-cell BAMs live in the new run's alignment output, named <cell>.calmd.sorted_by_name.filtered.bam
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 group="$1"; list="$2"
-ALIGN=/gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/snakemake/04.alignment_snakemake
+ALIGN=${WORK_ROOT}/meningioma/04.alignment_snakemake
 
 bams=""
 missing=0; found=0

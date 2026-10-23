@@ -5,8 +5,8 @@
 #SBATCH --time=10:00:00
 #SBATCH --mem=48G
 #SBATCH --cpus-per-task=8
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/APA/insitu/logs/%x_%j.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/APA/insitu/logs/%x_%j.err
+#SBATCH --output=${WORK_ROOT}/mixture_cellline/APA/insitu/logs/%x_%j.out
+#SBATCH --error=${WORK_ROOT}/mixture_cellline/APA/insitu/logs/%x_%j.err
 # STEP 01 (in-situ) — Subsample GM12878 in-situ Hi-C to IMR90 in-situ depth.
 #
 # Why p = 0.307?  chr1 250kb sum: GM=309,835,537 vs IMR=95,000,825.
@@ -26,15 +26,15 @@ source "$_r/paths.sh"
 set -euo pipefail
 module load java/jdk-17.0.2+8
 
-mkdir -p /gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/APA/insitu/logs
+mkdir -p ${WORK_ROOT}/mixture_cellline/APA/insitu/logs
 
 P=0.307
 SEED=42
 PY=${CONDA_ENVS}/scnomehic/bin/python
 JUICER=${SOFTWARE_ROOT}/juicer_tools.jar
-GM_IN=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig1/data/bulk/hic/ENCFF555ISR.hic
+GM_IN=${WORK_ROOT}/analysis/fig1/data/bulk/hic/ENCFF555ISR.hic
 
-OUT_DIR=/scratch/jmj7858/scnomehic/insitu_hic/gm_subsampled
+OUT_DIR=${TMP_ROOT}/insitu_hic/gm_subsampled
 mkdir -p "$OUT_DIR"
 
 SUBSAMPLED_TXT=$OUT_DIR/GM_insitu.subsampled_p${P}.short.txt.gz
@@ -42,7 +42,7 @@ OUT_HIC=$OUT_DIR/GM_insitu.subsampled_p${P}.hic
 
 echo "[$(date +%H:%M:%S)] STEP 1a -- Binomial subsample at the pixel level"
 if [ ! -s "$SUBSAMPLED_TXT" ] || ! gzip -t "$SUBSAMPLED_TXT" 2>/dev/null; then
-  $PY /gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/APA/insitu/subsample_hic.py \
+  $PY ${WORK_ROOT}/mixture_cellline/APA/insitu/subsample_hic.py \
       --hic "$GM_IN" \
       --out-gz "$SUBSAMPLED_TXT" \
       --p $P --seed $SEED --resolution 5000 --chrom-prefix chr

@@ -28,7 +28,7 @@ while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; don
 source "$_r/paths.sh"
 
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
-cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome || { echo "ERROR: cd failed"; exit 1; }
+cd ${WORK_ROOT}/benchmark/scnome || { echo "ERROR: cd failed"; exit 1; }
 conda activate scnomehic
 set -o pipefail
 mkdir -p logs/04.k562_merge
@@ -61,7 +61,7 @@ for m in 1 2; do
     ${ALIGN}/${cell}_${m}.rmdup.bam
   samtools index ${ALIGN}/${cell}_${m}.rmdup.RG.bam
 
-  python /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/bam_summary_universal.py \
+  python ${WORK_ROOT}/benchmark/bam_summary_universal.py \
     --in_bam ${ALIGN}/${cell}_${m}.rmdup.RG.bam --out_summary ${ALIGN}/${cell}_${m}.summary.txt
 done
 echo "[$(date)] DONE cell=${cell}"

@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 """Read-weighted single-cell pseudobulk HCG methylation over selected metilene DMRs, per cell type.
 
 Selection: from the metilene significant DMRs (q<QMAX, |meandiff|>=DMIN, #CpGs>=CPGMIN), take the
@@ -24,8 +32,8 @@ from concurrent.futures import ProcessPoolExecutor
 import numpy as np
 import pandas as pd
 
-FIG2   = "/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig2"
-SCSNK  = "/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake"
+FIG2   = WORK + "/analysis/fig2"
+SCSNK  = WORK + "/mixture_cellline"
 DMRFILE= os.path.join(FIG2, "analysis/dmr_metilene_hcg/metilene_GM12878_IMR90.dmr.txt")
 PASSED = os.path.join(SCSNK, "QC/cellline_passed.txt")
 LABELS = os.path.join(SCSNK, "subset_clustering/250kb/annotation/cell_type_table.tsv")

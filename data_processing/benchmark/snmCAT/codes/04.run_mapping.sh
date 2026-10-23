@@ -7,8 +7,8 @@
 #SBATCH --cpus-per-task=10
 #SBATCH --array=1-64
 #SBATCH --job-name=snmCAT_brain
-#SBATCH --output=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCAT/codes/logs/04.map/snakemake.%a.out
-#SBATCH --error=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCAT/codes/logs/04.map/snakemake.%a.err
+#SBATCH --output=${WORK_ROOT}/benchmark/snmCAT/codes/logs/04.map/snakemake.%a.out
+#SBATCH --error=${WORK_ROOT}/benchmark/snmCAT/codes/logs/04.map/snakemake.%a.err
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
 # --- repo paths: edit paths.yaml at the repository root, not this file -------
 _r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
@@ -18,7 +18,7 @@ source "$_r/paths.sh"
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate mapping
 export PATH="$CONDA_PREFIX/bin:$PATH"
-BASE="/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCAT"
+BASE="${WORK_ROOT}/benchmark/snmCAT"
 CMD_FILE="${BASE}/mapping_brain/snakemake/snakemake_cmd.txt"
 mkdir -p "${BASE}/codes/logs/04.map" "${BASE}/mapping_brain/.slurm_tmp"
 N=$(grep -cve '^\s*$' "${CMD_FILE}")

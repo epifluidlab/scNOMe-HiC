@@ -77,7 +77,7 @@ from scipy.stats import mannwhitneyu
 # ----------------------------------------------------------------------------
 # Config -- mirrors notebook cell 12
 # ----------------------------------------------------------------------------
-BASE = "/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/APA/insitu"
+BASE = WORK + "/mixture_cellline/APA/insitu"
 
 celltypes = ["GM12878", "IMR90"]
 leg = pd.Index(celltypes)

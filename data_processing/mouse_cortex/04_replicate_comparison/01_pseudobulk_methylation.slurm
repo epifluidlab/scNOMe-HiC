@@ -7,18 +7,23 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --array=1-4
 #SBATCH --job-name=pb_methy.%a
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake/replicate_comparison/logs/pb_methy.%A_%a.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake/replicate_comparison/logs/pb_methy.%A_%a.err
+#SBATCH --output=${WORK_ROOT}/mouse_cortex/replicate_comparison/logs/pb_methy.%A_%a.out
+#SBATCH --error=${WORK_ROOT}/mouse_cortex/replicate_comparison/logs/pb_methy.%A_%a.err
 #
 # Step 1: pseudobulk GCH (accessibility) + HCG (methylation) per replicate, 250kb.
 # Pooled ratio: sum methylated_reads and total_reads across cells, then divide.
 # Array tasks:  1=rep1/GCH  2=rep1/HCG  3=rep2/GCH  4=rep2/HCG
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -eo pipefail
 
 source ~/.bashrc
 conda activate scnomehic
 
-BASE=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake
+BASE=${WORK_ROOT}/mouse_cortex
 RC=${BASE}/replicate_comparison
 LABEL=250kb
 

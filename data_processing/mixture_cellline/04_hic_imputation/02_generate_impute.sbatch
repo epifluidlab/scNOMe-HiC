@@ -5,8 +5,8 @@
 #SBATCH --time=02:00:00
 #SBATCH --mem=12G
 #SBATCH --cpus-per-task=1
-#SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb/logs/%x_%A_%a.out
-#SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb/logs/%x_%A_%a.err
+#SBATCH --output=${WORK_ROOT}/mixture_cellline/loop_majortype_25kb/logs/%x_%A_%a.out
+#SBATCH --error=${WORK_ROOT}/mixture_cellline/loop_majortype_25kb/logs/%x_%A_%a.err
 #SBATCH --array=1-441
 # STEP 02 — Per-cell SLURM array.  For one cell at index $SLURM_ARRAY_TASK_ID:
 #   1. hicluster generatematrix-cell (all chrs at once, outputs to chr{N}/ subdirs)
@@ -27,10 +27,10 @@ set -eo pipefail
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate hic_env
 
-THIS_DIR=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb
+THIS_DIR=${WORK_ROOT}/mixture_cellline/loop_majortype_25kb
 CELL_TABLE=$THIS_DIR/cell_table.tsv
-SRC_HIC_DIR=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/06.hiccluster_snakemake
-ROOT=/scratch/jmj7858/scnomehic/loop_majortype_25kb
+SRC_HIC_DIR=${WORK_ROOT}/mixture_cellline/06.hiccluster_snakemake
+ROOT=${TMP_ROOT}/loop_majortype_25kb
 RAW_OUT=$ROOT/hicluster_raw
 IMP_OUT=$ROOT/hicluster_impute
 CHROM_FILE=${REFERENCE_ROOT}/hg38/autosomes.chrom.sizes

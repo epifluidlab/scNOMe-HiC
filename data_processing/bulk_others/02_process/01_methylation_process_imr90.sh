@@ -21,8 +21,8 @@ conda activate scnomehic
 # Enable strict mode after conda activation (its activate.d scripts use unset vars).
 set -euo pipefail
 
-FIG1CODE=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig1/codes/fig1j
-DIR=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig2/data/bulk/IMR90/methylation
+FIG1CODE=${WORK_ROOT}/analysis/fig1/codes/fig1j
+DIR=${WORK_ROOT}/analysis/fig2/data/bulk/IMR90/methylation
 REF=${REFERENCE_ROOT}/hg38
 CHROMSIZES=$REF/GCA_000001405.15_GRCh38_no_alt_analysis_set.chrom.sizes
 GENOME=$REF/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa

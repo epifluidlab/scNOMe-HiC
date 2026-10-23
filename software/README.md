@@ -14,6 +14,9 @@ is this folder. Install each at the path given in the first column.
 | `Bis-tools/Bis-SNP/Bis-SNP.latest.jar` | the Bis-SNP jar | `BisulfiteGenotyper`; the paper used the build reporting version 1.0.1 |
 | `picard/picard.jar` | Picard | BAM processing |
 | `juicer_tools.jar` | juicer_tools 2.20.00 | `.hic` construction, dumps, HICCUPS (2.20 is required for v9 `.hic`) |
+| `metilene/` | metilene | de-novo DMR calling (Figure 2 only) |
+| `wgbs_tools/wgbstools` | wgbs_tools | BAM to fragment-level PAT (Figure 4 deconvolution) |
+| `UXM_deconv/uxm` | UXM | methylation deconvolution (Figure 4) |
 
 Also needed, but expected on `PATH` rather than here — these come from the conda
 environments in `../env/` and from the pipeline's own `envs/`:
