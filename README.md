@@ -71,6 +71,13 @@ folder and which figure consumes it.
 Scripts and notebooks read these settings through `paths.sh`, `paths.py` or `paths.R`
 at the repository root, whichever matches their language.
 
+> **A note on the notebooks' saved output.** Each notebook ships with the output of
+> the run that produced the published figure, and that output still prints the
+> absolute paths of the machine it ran on. Only the *code* was rewritten to use
+> `paths.yaml`; the saved output was deliberately left alone, because it is the
+> record of that run and editing it would misrepresent what happened. Re-run a
+> notebook and its output will show your paths instead.
+
 ## The processing pipeline
 
 The per-cell Snakemake workflow (demux → trim → align → BAM processing → QC →
