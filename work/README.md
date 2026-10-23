@@ -37,3 +37,11 @@ The cross-dataset steps keep the short names they ran under. What each holds:
 
 `tmp/` is separately configurable as `tmp_root`. On a cluster, point it at fast
 scratch; the steps that use it do not expect its contents to survive.
+
+## The Hi-C embedding
+
+`<dataset>/06.hiccluster_snakemake/hicluster_250kb_embed_dir/``all_merged.pad1_std1_rp0.5_sqrtvc.svd20.hdf5` is what the Figure 2, 3 and 4
+UMAP notebooks read for the Hi-C modality. It is written by each dataset's
+`01_pipeline/02_hicluster.sh`, which must run after that dataset's `02_qc/`
+step has produced the passing-cell list. See
+`../data_processing/README.md` for the full chain.

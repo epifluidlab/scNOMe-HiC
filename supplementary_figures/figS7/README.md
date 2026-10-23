@@ -32,7 +32,9 @@ the §4–§8 embedding chain.
 
 ## Inputs
 
-All from `../../data_processing/mouse_cortex/subset_clustering/250kb_denovo/`:
+All from `work/mouse_cortex/subset_clustering/250kb_denovo/`, which
+`../../main_figures/fig3/fig3_umap.ipynb` writes in §9 (the code lives in
+`../../data_processing/mouse_cortex/`):
 
 - `tables/{hcg,hic,gch}_svd_raw.txt` — pre-Harmony SVDs
 - `tables/joint_umap.txt` — the Harmony-corrected joint layout

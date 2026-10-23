@@ -24,8 +24,10 @@ The three notebooks are unrelated and run in any order.
 
 ## Inputs
 
-All from `../../data_processing/published_singlecell/`, plus the GM12878 pseudobulk
-from `../../data_processing/gm12878_cellline/03_pseudobulk/`:
+All from `work/analysis/s2_new/`, written by
+`../../data_processing/published_singlecell/`, plus the GM12878 pseudobulk under
+`work/gm12878_cellline/`, written by
+`../../data_processing/gm12878_cellline/03_pseudobulk/`:
 
 | Input | Produced by |
 |---|---|

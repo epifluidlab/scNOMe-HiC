@@ -1,7 +1,8 @@
 # Figure 3 — mouse cortex cell types
 
 Mouse cortex scNOMe-HiC, **1,577 cells**, ten cell types called de novo from this
-paper's own data. Inputs come from `../../data_processing/mouse_cortex/`.
+paper's own data. Inputs come from `work/mouse_cortex/`, written by
+`../../data_processing/mouse_cortex/`.
 
 ## Panels
 

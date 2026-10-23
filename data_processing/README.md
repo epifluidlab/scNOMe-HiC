@@ -36,3 +36,38 @@ Each dataset's `00_config/*.template.yaml` carries `${DATA_ROOT}`,
 used to be. `render_config.sh` substitutes the values from `../paths.yaml` and
 writes the result to `${WORK_ROOT}/<dataset>/config/`; the `01_pipeline/` drivers
 call it for you. Edit `../paths.yaml`, never a template.
+
+## Where the 250 kb Hi-C embedding comes from
+
+The three UMAP notebooks (Figures 2, 3 and 4) each read a Hi-C embedding:
+
+```
+work/<dataset>/06.hiccluster_snakemake/hicluster_250kb_embed_dir/
+    all_merged.pad1_std1_rp0.5_sqrtvc.svd20.hdf5
+```
+
+Nothing in this repository builds that file directly. It is produced by the
+workflow's `rules/hiccluster.smk`, which each dataset's
+`01_pipeline/02_hicluster.sh` triggers through the `hicluster_selected` target,
+over the cells listed in the config's `selected_cells_file`. The chain is
+
+| scHiCluster step | writes |
+|---|---|
+| `generatematrix-cell` | `06.hiccluster_snakemake/.../raw/` per-cell sparse matrices |
+| `impute-cell` | per-cell `*_pad1_std1_rp0.5_sqrtvc.hdf5` |
+| `embed-concatcell-chr` | `..._embed_dir/pad1_std1_rp0.5_sqrtvc_chr<N>.svd50.npy` |
+| `embed-mergechr` | `..._embed_dir/all_merged.pad1_std1_rp0.5_sqrtvc.svd20.hdf5` |
+
+`impute-cell`, `embed-concatcell-chr` and `embed-mergechr` are invoked **without**
+`--pad`, `--std`, `--rp`, `--dist` or `--dim`: the `pad1_std1_rp0.5_sqrtvc`,
+`svd50` and `svd20` in the filenames are scHiCluster's own defaults, not flags the
+pipeline passes. Quote them as defaults, not as settings, when writing this up.
+
+Run order per dataset: `01_run_pipeline.sh` -> `02_qc/` (writes
+`selected_cells_file`) -> `02_hicluster.sh` -> the figure notebooks.
+
+> **Version caveat.** The workflow's `envs/schicluster_test.yaml` installs
+> scHiCluster from `git+https://github.com/zhoujt1994/scHiCluster.git` with no
+> pin, so the version you get depends on when the environment was built. The one
+> used here reports `1.3.5.dev17+gda98594`. Pin it if you need an exact
+> reproduction.

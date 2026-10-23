@@ -10,7 +10,7 @@ Pipeline: <https://github.com/epifluidlab/sc_NOMeHiC_pipeline>. Running from scr
 
 | Step | What it is |
 |---|---|
-| `00_config/config.yaml` | Snakemake config. Hicluster at 100 kb and 250 kb; `selected_cells_file: QC/cortex_passed.txt`. |
+| `00_config/config.template.yaml` | Snakemake config template. Hicluster at 100 kb and 250 kb; `selected_cells_file: QC/cortex_passed.txt`. |
 | `01_pipeline/01_run_pipeline.sh` | Align → bamprocess → QC → Bis-SNP → per-bin methylation. |
 | `01_pipeline/02_hicluster.sh` | `hicluster_selected` at 100 kb and 250 kb. Runs **after** `02_qc`, over the QC-passing whitelist. |
 | `02_qc/qc_plots.ipynb` | QC gate and cells × bins matrices. Writes `QC/cortex_passed.txt`. |
@@ -41,3 +41,7 @@ Pipeline: <https://github.com/epifluidlab/sc_NOMeHiC_pipeline>. Running from scr
   `02_call_loops.sh`.
 - Scripts keep the absolute paths they ran with:
   `sc_nomehic/snakemake` and `sc_nomehic/hic/loop_final`.
+
+The 250 kb Hi-C embedding the UMAP notebooks read is built by
+`02_hicluster.sh` through the workflow's hicluster rules — see
+"Where the 250 kb Hi-C embedding comes from" in `../README.md`.

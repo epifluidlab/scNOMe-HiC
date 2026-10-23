@@ -65,7 +65,7 @@ and redo the BAM merge and UXM step (~1 h).
 
 ## Inputs
 
-From `../../data_processing/meningioma/`:
+From `work/meningioma/` — the output of `../../data_processing/meningioma/`:
 
 - `subset_clustering/250kb/CNA.1M.txt` — 1 Mb fragment counts (step `04_cna`)
 - `QC/methylation_matrices/methylation_matrix_{GCH,HCG}_250kb.tsv.gz` (step `02_qc`)

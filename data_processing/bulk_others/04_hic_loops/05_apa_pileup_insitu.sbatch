@@ -17,7 +17,7 @@ source "$_r/paths.sh"
 set -eo pipefail
 
 PYTHON=${CONDA_ENVS}/hic_cooler/bin/python
-SCRIPT="$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")/05_apa_pileup_insitu.py"
+SCRIPT="$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")/apa_pileup_insitu.py"
 
 echo "[$(date +%H:%M:%S)] host=$(hostname)"
 "$PYTHON" "$SCRIPT"

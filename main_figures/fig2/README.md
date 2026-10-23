@@ -56,7 +56,7 @@ From `../../data_processing/mixture_cellline/` and `../../data_processing/bulk_o
 | `sc_pseudobulk_metilene_dmr_top2000.tsv.gz` | `mixture_cellline/03_pseudobulk/02_metilene_dmr` |
 | `per_celltype/*.{Q,T,E}.cool` | `mixture_cellline/04_hic_imputation/` |
 | `{GM12878,IMR90}_specific_hiccupsdiff.bedpe` | `bulk_others/04_hic_loops/04_hiccupsdiff.sbatch` |
-| `apa_insituHCD.npz` (pile-up cache) | `bulk_others/04_hic_loops/05_apa_pileup_insitu.py` |
+| `apa_insituHCD.npz` (pile-up cache) | `bulk_others/04_hic_loops/apa_pileup_insitu.py` |
 
 ## Reported statistics
 
@@ -64,7 +64,7 @@ From `../../data_processing/mixture_cellline/` and `../../data_processing/bulk_o
 |---|---|
 | Methylation | 3,890 DMRs at coverage ≥ 20 in both types; 3,804 direction-consistent (97.8%); r(sc Δ, bulk Δ) = 0.941 |
 | Accessibility | Spearman ρ = 0.767 on the differential, over the top 1,000 bins shown |
-| APA | On-diagonal enrichment: GM12878-specific loops (n = 287) score **1.74** on the GM12878 pseudobulk against 1.32 on IMR90; IMR90-specific loops (n = 666) score **1.56** on IMR90 against 1.36 on GM12878 (min-max APA). Paired Mann–Whitney p = 1.5 × 10⁻¹⁶. Scores and test come from `apa_insituHCD_stats.tsv`, written by `bulk_others/04_hic_loops/05_apa_pileup_insitu.py`. |
+| APA | On-diagonal enrichment: GM12878-specific loops (n = 287) score **1.74** on the GM12878 pseudobulk against 1.32 on IMR90; IMR90-specific loops (n = 666) score **1.56** on IMR90 against 1.36 on GM12878 (min-max APA). Paired Mann–Whitney p = 1.5 × 10⁻¹⁶. Scores and test come from `apa_insituHCD_stats.tsv`, written by `bulk_others/04_hic_loops/apa_pileup_insitu.py`. |
 
 §10 reports inter-modality Leiden agreement with no bulk reference, and §10b
 draws `modality_leiden_agreement_heatmap.pdf` from it:

@@ -63,3 +63,7 @@ pipeline → 02_qc → fig2_umap.ipynb (§9) → 03_pseudobulk / 04_hic_imputati
   keeps its own copy.
 - Scripts keep the absolute paths they ran with. Original working directory:
   `sc_nomehic_cellline/snakemake`.
+
+The 250 kb Hi-C embedding the UMAP notebooks read is built by
+`02_hicluster.sh` through the workflow's hicluster rules — see
+"Where the 250 kb Hi-C embedding comes from" in `../README.md`.

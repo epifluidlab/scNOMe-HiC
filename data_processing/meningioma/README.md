@@ -71,3 +71,7 @@ HCG > 150000          cis1kbnum > 2000
   redoing `02_combine_bam.sh` and `03_run_deconv.sh` (~1 h).
 - Scripts keep the absolute paths they ran with. Original working directory:
   `meningioma_scnomehic/snakemake`.
+
+The 250 kb Hi-C embedding the UMAP notebooks read is built by
+`02_hicluster.sh` through the workflow's hicluster rules — see
+"Where the 250 kb Hi-C embedding comes from" in `../README.md`.
