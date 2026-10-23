@@ -10,6 +10,11 @@ from the same cell.
 ## Layout
 
 ```
+paths.yaml                Where data, references, tools and outputs live -- edit this first
+data/                     Sequencing reads you download from GEO        (you fill)
+reference/                Genomes, dbSNP, restriction sites, bins       (you fill)
+software/                 Bis-tools, bisulfiteHic, Picard, juicer_tools (you install)
+work/                     Everything the pipeline generates             (created as you run)
 env/                      Conda / R environment definitions
 data_processing/          Per-dataset processing: raw reads -> analysis-ready matrices
   mouse_cortex/             mouse cortex scNOMe-HiC (Fig. 3, S6)
@@ -29,8 +34,42 @@ Each folder carries a `README.md` (what the analysis does, the run order) and a
 `FILES.md` (what every file in that folder is).
 
 This is a **code-only** repository — no sequencing data, alignments or intermediate
-matrices are tracked. Scripts keep the absolute paths they ran with; treat those as
-a record of the original run, not as paths that will resolve elsewhere.
+matrices are tracked. `data/`, `reference/`, `software/` and `work/` ship as empty
+folders with READMEs explaining what belongs in each.
+
+## Setup
+
+Three things you supply, one the code creates.
+
+1. **Edit `paths.yaml`.** It is the only file you must change. The defaults point at
+   the placeholder folders in this repository, so if you fill those in there is
+   nothing to edit at all. To keep your own layout out of git, copy it to
+   `paths.local.yaml` and edit that instead — it takes precedence and is ignored.
+
+   ```yaml
+   data_root:      data          # reads downloaded from GEO
+   reference_root: reference     # genomes, dbSNP, restriction sites, genome bins
+   software_root:  software      # Bis-tools, bisulfiteHic, Picard, juicer_tools
+   work_root:      work          # everything generated
+   tmp_root:       work/tmp      # large short-lived intermediates; use fast scratch if you have it
+   conda_sh:       ""            # your conda's etc/profile.d/conda.sh
+   ```
+
+2. **Download the reads** into `data/` — see [`data/README.md`](data/README.md) for the
+   per-dataset folders and the filename pattern the workflow expects.
+
+3. **Download the references** into `reference/` and **install the tools** into
+   `software/` — see [`reference/README.md`](reference/README.md) and
+   [`software/README.md`](software/README.md) for the exact file list and where each
+   one comes from.
+
+Then run the steps in each dataset's `README.md` order. Every step writes into its
+own subtree of `work/` and the next step reads it back from there, so nothing has to
+be moved by hand. See [`work/README.md`](work/README.md) for which step fills which
+folder and which figure consumes it.
+
+Scripts and notebooks read these settings through `paths.sh`, `paths.py` or `paths.R`
+at the repository root, whichever matches their language.
 
 ## The processing pipeline
 

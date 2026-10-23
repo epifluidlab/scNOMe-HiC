@@ -2,10 +2,16 @@
 
 | Path | What it is |
 |---|---|
-| `README.md` | Repository overview, layout conventions, data availability. |
+| `README.md` | Repository overview, setup, layout conventions, data availability. |
+| `paths.yaml` | Where data, references, tools and outputs live. The one file a user edits. Relative values resolve against the repository root; `paths.local.yaml` (ignored) overrides it, and `$SCNOMEHIC_PATHS` overrides both. |
+| `paths.sh`, `paths.py`, `paths.R` | Three-line loaders that read `paths.yaml` and expose `DATA_ROOT` / `DATA`, `REFERENCE`, `SOFTWARE`, `WORK`, `TMP`, `CONDA_SH`. One per language used in this repo; all three read the same file and agree. |
+| `data/` | Placeholder tree for the sequencing reads the user downloads from GEO. Structure and READMEs tracked, contents ignored. |
+| `reference/` | Placeholder tree for genomes, dbSNP, restriction sites and genome bins. Same arrangement. |
+| `software/` | Placeholder for the external tools the user installs. Same arrangement. |
+| `work/` | Placeholder tree for everything the pipeline generates, one subtree per dataset plus `analysis/` and `tmp/`. Same arrangement. |
 | `RUNNING.md` | How to run the pipeline from scratch: prerequisites, machine-specific config keys, and the raw-FASTQ vs GEO entry points. |
 | `FILES.md` | This file. Index of top-level entries. Each subfolder keeps its own `FILES.md`. |
-| `.gitignore` | Minimal — only auto-generated junk (`__pycache__`, `.ipynb_checkpoints`, …). Everything in this repo is copied in deliberately, so nothing else is filtered. |
+| `.gitignore` | Auto-generated junk (`__pycache__`, `.ipynb_checkpoints`, …), the internal session notes, `paths.local.yaml`, and the contents of `data/`, `reference/`, `software/` and `work/` — those four keep their folder structure and READMEs tracked and nothing else. Code is copied in deliberately, so no code is filtered. |
 | `supplemental table.xlsx` | Supplementary Tables 1-5: per-cell QC for each dataset plus the benchmark dataset descriptions. Built from the per-dataset `02_qc/qc_plots.ipynb` outputs. `QC pass` marks the cells each dataset's figures actually use, so for mouse cortex and meningioma it also applies the downstream Hi-C-usability check on top of the config thresholds (cortex 1,580 -> 1,577; meningioma 294 -> 292). |
 | `env/` | Conda environment YAMLs, `requirements.txt`, recorded R `sessionInfo()`. |
 | `data_processing/` | Per-dataset processing code: raw reads → analysis-ready matrices. |

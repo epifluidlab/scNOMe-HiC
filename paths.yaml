@@ -1,0 +1,24 @@
+# Where everything lives on YOUR machine. This is the only file you must edit.
+#
+# Relative values are resolved against the repository root, so the defaults below
+# point at the placeholder folders already in this repo -- drop your files in and
+# nothing needs changing. Absolute paths and a leading ~ both work.
+#
+# To keep your settings out of git, copy this to `paths.local.yaml` and edit that
+# instead; it overrides this file and is ignored. A `SCNOMEHIC_PATHS` environment
+# variable pointing at a YAML file overrides both.
+
+# --- you supply these three (see each folder's README) ---------------------
+data_root:      data          # sequencing reads downloaded from GEO
+reference_root: reference     # genomes, dbSNP, restriction sites, genome bins
+software_root:  software      # Bis-tools, bisulfiteHic, Picard, juicer_tools, ...
+
+# --- everything the pipeline generates goes here ---------------------------
+work_root:      work
+tmp_root:       work/tmp      # large, short-lived intermediates; point at fast scratch if you have it
+
+# --- conda ------------------------------------------------------------------
+# Absolute path to your conda's profile script, e.g.
+#   /home/you/miniconda3/etc/profile.d/conda.sh
+# Leave empty to let scripts fall back to whatever `conda` is already on PATH.
+conda_sh:       ""

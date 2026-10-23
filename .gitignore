@@ -18,3 +18,23 @@ SESSION_NOTE_*.md
 !/data/**/
 !/data/**/README.md
 !/data/**/.gitkeep
+
+# Generated outputs under work/, and the references and tools the user supplies
+# under reference/ and software/. The folder structure and the READMEs are
+# tracked; nothing else is.
+/work/**
+!/work/**/
+!/work/**/README.md
+!/work/**/.gitkeep
+/reference/**
+!/reference/**/
+!/reference/**/README.md
+!/reference/**/.gitkeep
+/software/**
+!/software/**/
+!/software/**/README.md
+!/software/**/.gitkeep
+
+# Local path settings -- copy paths.yaml to this and edit, to keep your
+# machine's layout out of git.
+/paths.local.yaml

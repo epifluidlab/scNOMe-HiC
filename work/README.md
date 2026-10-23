@@ -1,0 +1,25 @@
+# work/
+
+Everything the pipeline and the analysis steps **generate**. **Empty in the
+repository** — only this folder structure and the READMEs are tracked.
+
+You do not create anything here by hand. Each step writes its outputs into its
+own subtree and the next step reads them back from the same place, so running
+the steps in the order each dataset's `README.md` gives is enough.
+
+Point `work_root` in `../paths.yaml` somewhere with room: a full reproduction
+writes several TB. The default is this folder.
+
+| Folder | Written by | Read by |
+|---|---|---|
+| `gm12878_cellline/` | `../data_processing/gm12878_cellline/` | Figure 1, S1, S2, S3, S4, S5 |
+| `mixture_cellline/` | `../data_processing/mixture_cellline/` | Figure 2 |
+| `mouse_cortex/` | `../data_processing/mouse_cortex/` | Figure 3, S6, S7 |
+| `meningioma/` | `../data_processing/meningioma/` | Figure 4, S8 |
+| `barnyard_mixing/` | `../data_processing/barnyard_mixing/` | Figure S4 (species mixing) |
+| `benchmark/` | `../data_processing/benchmark/` | Figure 1, S1 |
+| `analysis/` | `../data_processing/bulk_others/`, `../data_processing/published_singlecell/`, `../data_processing/bulk_scNOMeHiC/` | Figure 1, 2, 3, S1, S2 |
+| `tmp/` | large, short-lived intermediates | — |
+
+`tmp/` is separately configurable as `tmp_root`. On a cluster, point it at fast
+scratch; the steps that use it do not expect its contents to survive.
