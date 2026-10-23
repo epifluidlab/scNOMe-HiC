@@ -2,7 +2,8 @@
 
 | Path | What it is |
 |---|---|
-| `README.md` | Repository overview, setup, layout conventions, data availability. |
+| `README.md` | Repository overview, paper metadata, setup, layout conventions, data availability. |
+| `CITATION.cff` | Machine-readable citation. Journal reference and DOI added on acceptance. |
 | `paths.yaml` | Where data, references, tools and outputs live. The one file a user edits. Relative values resolve against the repository root; `paths.local.yaml` (ignored) overrides it, and `$SCNOMEHIC_PATHS` overrides both. |
 | `paths.sh`, `paths.py`, `paths.R` | Three-line loaders that read `paths.yaml` and expose `DATA_ROOT` / `DATA`, `REFERENCE`, `SOFTWARE`, `WORK`, `TMP`, `CONDA_SH`. One per language used in this repo; all three read the same file and agree. |
 | `data/` | Placeholder tree for the sequencing reads the user downloads from GEO. Structure and READMEs tracked, contents ignored. |
@@ -39,5 +40,12 @@ is referenced rather than duplicated. The cross-method benchmark
 
 Remote: <https://github.com/yoshihiko1218/scNOMe-HiC> (`origin`, branch `main`).
 
-**Outstanding:** the paper metadata in `README.md` (`<!-- FILL -->` markers) and a
-LICENSE.
+**Outstanding before this repository can be made public:**
+
+- A **LICENSE**. None is present, so no rights are granted to anyone who clones it.
+- Three `<!-- FILL -->` markers in `README.md`: the journal and DOI (on acceptance),
+  the SRA accession, and the controlled-access repository for the meningioma raw
+  reads. The GEO accession (GSE346089) is filled in.
+- Code for **Figures 5 and 6** (contact-linked epigenetic concordance;
+  allele-resolved X inactivation), which is not in this repository.
+- Four of the five conda environments in `env/` are not exported.

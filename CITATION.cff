@@ -1,0 +1,56 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the paper below."
+title: "scNOMe-HiC"
+abstract: >-
+  Code accompanying the scNOMe-HiC study: joint single-cell profiling of DNA
+  methylation, chromatin accessibility and 3D genome architecture.
+type: software
+repository-code: "https://github.com/epifluidlab/scNOMe-HiC"
+authors:
+  - family-names: Fu
+    given-names: Hailu
+  - family-names: Ma
+    given-names: "Jiayan Yoshii"
+  - family-names: Youngblood
+    given-names: Mark
+  - family-names: Li
+    given-names: Zhengyue
+  - family-names: Tong
+    given-names: Eric
+  - family-names: Yan
+    given-names: Alice
+  - family-names: Yue
+    given-names: Feng
+    email: yue@northwestern.edu
+  - family-names: Wang
+    given-names: Li
+    email: li.wang1@northwestern.edu
+  - family-names: Liu
+    given-names: Yaping
+    email: lyping1986@gmail.com
+preferred-citation:
+  type: article
+  title: >-
+    Joint single-cell profiling of DNA methylation, chromatin accessibility and
+    3D genome architecture reveals pervasive epigenetic concordance at long-range
+    chromatin contacts
+  authors:
+    - family-names: Fu
+      given-names: Hailu
+    - family-names: Ma
+      given-names: "Jiayan Yoshii"
+    - family-names: Youngblood
+      given-names: Mark
+    - family-names: Li
+      given-names: Zhengyue
+    - family-names: Tong
+      given-names: Eric
+    - family-names: Yan
+      given-names: Alice
+    - family-names: Yue
+      given-names: Feng
+    - family-names: Wang
+      given-names: Li
+    - family-names: Liu
+      given-names: Yaping
+  # journal, year, volume, doi: added on acceptance

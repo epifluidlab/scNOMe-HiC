@@ -1,11 +1,31 @@
-# scNOMeHiC
+# scNOMe-HiC
 
-Code accompanying the scNOMeHiC manuscript — single-cell joint profiling of
-chromatin accessibility (GpC), DNA methylation (CpG) and 3D genome contacts (Hi-C)
-from the same cell.
+Code accompanying:
 
-<!-- FILL: paper title, author list, journal, DOI once available -->
-<!-- FILL: GEO / SRA accession for the raw sequencing data -->
+> **Joint single-cell profiling of DNA methylation, chromatin accessibility and 3D
+> genome architecture reveals pervasive epigenetic concordance at long-range
+> chromatin contacts**
+>
+> Hailu Fu<sup>1,2,\*</sup>, Jiayan Yoshii Ma<sup>1,\*</sup>,
+> Mark Youngblood<sup>3,\*</sup>, Zhengyue Li<sup>1</sup>, Eric Tong<sup>1</sup>,
+> Alice Yan<sup>4</sup>, Feng Yue<sup>1,2,#</sup>, Li Wang<sup>1,2,#</sup>,
+> Yaping Liu<sup>1,2,5,#</sup>
+>
+> <sup>1</sup> Department of Biochemistry and Molecular Genetics, Feinberg School of Medicine, Northwestern University, Chicago, IL, USA
+> <sup>2</sup> Robert H. Lurie Comprehensive Cancer Center of Northwestern University, Chicago, IL, USA
+> <sup>3</sup> Department of Neurological Surgery, Feinberg School of Medicine, Northwestern University, Chicago, IL, USA
+> <sup>4</sup> Hinsdale Central High School, Hinsdale, IL, USA
+> <sup>5</sup> The Ken & Ruth Davee Department of Neurology, Feinberg School of Medicine, Northwestern University, Chicago, IL, USA
+>
+> <sup>\*</sup> These authors contributed equally.
+> <sup>#</sup> Corresponding authors: yue@northwestern.edu (F.Y.),
+> li.wang1@northwestern.edu (L.W.), lyping1986@gmail.com (Y.L.)
+
+<!-- FILL: journal and DOI once accepted -->
+
+scNOMe-HiC measures endogenous CpG methylation, exogenous GpC methyltransferase
+accessibility and 3D chromatin contacts in the same single nucleus, so both
+epigenetic marks can be read at the two ends of an individual chromatin contact.
 
 ## Layout
 
@@ -111,10 +131,39 @@ and the two entry points: raw multiplexed FASTQ (default) or GEO-downloaded read
 
 ## Data availability
 
-<!-- FILL: GEO accession, processed-data location, any controlled-access notes -->
+The scNOMe-HiC datasets generated in this study — human GM12878 and IMR-90 cell
+lines, frozen mouse cortex, and primary human meningiomas — are deposited in the
+Gene Expression Omnibus under accession **GSE346089**.
+
+| What | Where |
+|---|---|
+| Processed data, all four datasets | GEO **GSE346089** |
+| Raw sequencing reads | SRA <!-- FILL: SRA accession --> |
+| Raw reads, primary human meningiomas | <!-- FILL: controlled-access repository and accession --> |
+
+GEO carries **per-cell** FASTQs, so they are already demultiplexed — use
+`start_from: "demultiplexed"` and see [Entry point B](RUNNING.md#4-entry-point-b--reads-from-geo-already-demultiplexed)
+for the filename pattern the workflow expects.
+
+Published datasets used for benchmarking and comparison are listed with their own
+accessions in `data_processing/benchmark/` and
+`data_processing/published_singlecell/`, and in Supplementary Table 2.
 
 ## Environment
 
 See `env/` for the conda environment files and recorded R session info.
 
-<!-- FILL: LICENSE, citation, contact -->
+## Citing this work
+
+See [`CITATION.cff`](CITATION.cff). Please cite the paper above; once it is
+accepted the journal reference and DOI will be added here and to that file.
+
+## Licence
+
+<!-- FILL: licence. Nothing is granted until this is chosen -- see CONTRIBUTING
+     note in the repository history, or ask the corresponding authors. -->
+
+## Contact
+
+Questions about the code: open an issue on this repository. Questions about the
+study: the corresponding authors listed above.
