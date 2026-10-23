@@ -16,13 +16,18 @@
 #SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation/logs/psb_methyl_merge_%j.out
 #SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation/logs/psb_methyl_merge_%j.err
 
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -eo pipefail
-source /projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh
+source ${CONDA_SH}
 conda activate scnomehic
 
 OUTROOT=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation
-REF=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set
-SCRIPTS=/gpfs/projects/b1198/epifluidlab/yoshii/software/sc_NOMeHiC_pipeline/scripts
+REF=${REFERENCE_ROOT}/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set
+SCRIPTS=${SOFTWARE_ROOT}/sc_NOMeHiC_pipeline/scripts
 CHROMS=(chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 \
         chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX)
 BINS=(1000 50000 100000 250000)

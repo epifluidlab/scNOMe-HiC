@@ -19,9 +19,14 @@
 # it, so BASH_SOURCE does NOT point at the real file. Resolve the sibling
 # scripts from the submit directory instead, falling back to BASH_SOURCE when
 # run directly with bash.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 HERE="${SLURM_SUBMIT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
-source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
+source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 module load gcc/11.2.0 || true
 module load htslib || true
 conda activate scnomehic
@@ -32,8 +37,8 @@ WORK=/gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/snakemake
 OUTDIR=$WORK/subset_clustering/250kb/$SET/deconv
 mkdir -p "$OUTDIR"; cd "$OUTDIR"          # all outputs land here
 
-WGBS=/gpfs/projects/b1198/epifluidlab/yoshii/software/wgbs_tools/wgbstools
-UXM=/gpfs/projects/b1198/epifluidlab/yoshii/software/UXM_deconv/uxm
+WGBS=${SOFTWARE_ROOT}/wgbs_tools/wgbstools
+UXM=${SOFTWARE_ROOT}/UXM_deconv/uxm
 # Newoligo brain atlas (has Microglia) — the one used for the original barplot.
 ATLAS=/projects/b1198/epifluidlab/jocelyn/project/ms/atlas/Atlas.U25.l4.hg38.monofixed_newoligo_micro40.tsv
 

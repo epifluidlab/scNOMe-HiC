@@ -25,8 +25,13 @@
 # fraction of 20 bp bins are NaN and deepTools' default paints NaN BLACK).
 # We do NOT use --missingDataAsZero, which would deflate the methylation values.
 # ============================================================================
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-export PATH="/projects/b1198/epifluidlab/yoshii/software/conda/envs/scnomehic/bin:$PATH"
+export PATH="${CONDA_ENVS}/scnomehic/bin:$PATH"
 
 S3=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s3
 PSB=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation

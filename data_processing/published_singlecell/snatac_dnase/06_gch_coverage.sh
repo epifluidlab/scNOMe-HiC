@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 # Per-peak GCH methylation coverage: total GpC read coverage (+ #sites) over each
 # merged DNase peak, from the pseudobulk GCH 6plus2 bed (col8 = coverage).
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 BASE=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s2_new/atac_dnase_gm12878
 DATA="$BASE/data"
 GCH6=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation/gm_pseudobulk_merged.GCH.6plus2.bed.gz
-CHROM=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/autosomes.chrom.sizes
+CHROM=${REFERENCE_ROOT}/hg38/autosomes.chrom.sizes
 TMP="${TMPDIR:-/tmp}/gchcov_${SLURM_JOB_ID:-$$}"; mkdir -p "$TMP"
 SORTMEM="${SORTMEM:-8G}"
 cd "$DATA"

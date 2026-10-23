@@ -10,8 +10,13 @@
 # STEP 01 -- download+verify 100 cells, then ONE `yap start-from-cell-fastq`,
 # which emits one Group (and one `snakemake -j 10` command) per cell.
 # Step 02 runs those commands as a parallel array -- YAP's intended model.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set +u
-source /projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh
+source ${CONDA_SH}
 conda activate mapping
 export PATH="$CONDA_PREFIX/bin:$PATH"
 W=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snm3c_100

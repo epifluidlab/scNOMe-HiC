@@ -9,6 +9,11 @@
 # ----------------------------------------------------------------------------
 
 # ---- project layout --------------------------------------------------------
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 export PROJ=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s2_new
 export CODE=$PROJ/code
 export DATA=$PROJ/data/scWGBS
@@ -22,7 +27,7 @@ export R2=$DATA/${SAMPLE}_R2.fastq.gz     # read 2: [24 bp constant][15 bp barco
 
 # ---- reference genome (Bismark bowtie2-prepared dir = folder w/ Bisulfite_Genome)
 # GM12878 is a human cell line -> hg38.
-export GENOME_DIR=/projects/b1198/epifluidlab/yoshii/reference/hg38_bismark
+export GENOME_DIR=${REFERENCE_ROOT}/hg38_bismark
 export GENOME_FA=$GENOME_DIR/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa
 
 # ---- barcode design (from the methods) -------------------------------------
@@ -40,7 +45,7 @@ export MIN_MAP_EFF=10             # min Bismark mapping efficiency, percent
 export MIN_READS=10000            # min raw reads per cell
 
 # ---- conda environment -----------------------------------------------------
-export CONDA=/projects/b1198/epifluidlab/yoshii/software/conda
+export CONDA=${SOFTWARE_ROOT}/conda
 export ENV=scwgbs                 # python tools (created by 00_setup_env.sh)
 export ENV_R=scwgbs_r             # R/methylKit only (step 08)
 export IDEMP=$CONDA/envs/$ENV/bin/idemp

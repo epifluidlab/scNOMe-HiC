@@ -22,3 +22,6 @@ tmp_root:       work/tmp      # large, short-lived intermediates; point at fast 
 #   /home/you/miniconda3/etc/profile.d/conda.sh
 # Leave empty to let scripts fall back to whatever `conda` is already on PATH.
 conda_sh:       ""
+# Where your conda environments live. Left empty, it is derived from conda_sh
+# (<conda>/envs); set it only if your environments are somewhere else.
+conda_envs:     ""

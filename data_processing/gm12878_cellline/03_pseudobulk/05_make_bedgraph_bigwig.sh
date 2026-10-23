@@ -17,12 +17,17 @@
 # bedGraphToBigWig requires: plain-text, sorted by -k1,1 -k2,2n, NO overlapping
 # intervals. All 6plus2 rows are single-base, so the only possible overlap is an
 # exact-duplicate coordinate -> we collapse those by averaging (awk pass).
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 
 OUTROOT=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation
-REF=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set
+REF=${REFERENCE_ROOT}/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set
 CHROMSIZES="${REF}.chrom.sizes"
-BG2BW=/projects/b1198/epifluidlab/yoshii/software/conda/envs/scnomehic/bin/bedGraphToBigWig
+BG2BW=${CONDA_ENVS}/scnomehic/bin/bedGraphToBigWig
 TMP="${OUTROOT}/tmp_bg2bw"
 mkdir -p "${TMP}" "${OUTROOT}/logs"
 

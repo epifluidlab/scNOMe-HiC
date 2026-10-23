@@ -25,9 +25,14 @@
 #SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/hic/loop_final/logs/impute_%A_%a.log
 
 # /etc/bashrc reads unbound vars, so enable -u only after sourcing it
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -eo pipefail
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
-source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
+source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate hic_env
 set -u
 
@@ -36,7 +41,7 @@ L="${HIC}/loop_final"
 W="/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake/06.hiccluster_snakemake_run3_1577cells"
 RAW="${HIC}/hicluster_25kb/hicluster_25kb_raw_dir"
 IMP="${HIC}/hicluster_25kb/hicluster_25kb_impute_dir"
-CHROM_FILE="/gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10/mm10.noX.autosome.sizes"
+CHROM_FILE="${REFERENCE_ROOT}/mm10/mm10.noX.autosome.sizes"
 MODE="pad2_std1_rp0.5_sqrtvc"
 RES=25000
 LIST="${L}/missing_cells_25kb.tsv"          # <stripped_name> TAB <full_name>

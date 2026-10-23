@@ -23,15 +23,20 @@
 #SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation/logs/psb_methyl_%A_%a.out
 #SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation/logs/psb_methyl_%A_%a.err
 
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -eo pipefail
-source /projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh
+source ${CONDA_SH}
 conda activate scnomehic   # samtools/perl/bedtools/tabix on PATH; BisSNP jar runs on its own java8
 
 # --- references / tools (from sc_NOMeHiC_pipeline configs/config.yaml) ---
 BAM=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/04.alignment_snakemake/merged.sorted.bam
-REF=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set
-VCF=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/Homo_sapiens_assembly38.dbsnp138.vcf
-BIS=/gpfs/projects/b1198/epifluidlab/yoshii/software/Bis-tools
+REF=${REFERENCE_ROOT}/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set
+VCF=${REFERENCE_ROOT}/hg38/Homo_sapiens_assembly38.dbsnp138.vcf
+BIS=${SOFTWARE_ROOT}/Bis-tools
 JAR=${BIS}/Bis-SNP/Bis-SNP.latest.jar
 OUTROOT=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/pseudobulk_methylation
 

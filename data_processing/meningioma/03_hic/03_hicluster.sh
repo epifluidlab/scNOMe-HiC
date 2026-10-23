@@ -6,11 +6,16 @@
 #
 # Prereqs: Stage 1 matrices done + notebook HiC usability check has written
 # QC/meningioma_passed_hicusable.txt.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 cd /gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/snakemake
 
-PIPELINE=/gpfs/projects/b1198/epifluidlab/yoshii/software/sc_NOMeHiC_pipeline
-SNK=/gpfs/projects/b1198/epifluidlab/yoshii/software/conda/envs/scnomehic/bin/snakemake
+PIPELINE=${SOFTWARE_ROOT}/sc_NOMeHiC_pipeline
+SNK=${CONDA_ENVS}/scnomehic/bin/snakemake
 
 [ -f QC/meningioma_passed_hicusable.txt ] || {
   echo "ERROR: QC/meningioma_passed_hicusable.txt missing — run the notebook HiC usability check first."; exit 1; }

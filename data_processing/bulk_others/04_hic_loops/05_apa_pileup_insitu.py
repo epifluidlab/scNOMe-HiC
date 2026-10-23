@@ -48,6 +48,15 @@ Outputs (into data/diff/GM12878_IMR90_insitu_loops/figures/), where <B> is the b
 """
 from __future__ import annotations
 
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
+
 import os
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
@@ -128,7 +137,7 @@ if apa_flank_bp != 200_000:
     NPZ_NAME = NPZ_NAME.replace(".npz", f"{_sfx}.npz")
     STATS_NAME = STATS_NAME.replace(".tsv", f"{_sfx}.tsv")
 
-chrom_size_path = "/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/autosomes.chrom.sizes"
+chrom_size_path = REFERENCE + "/hg38/autosomes.chrom.sizes"
 
 
 def load_loopsets():

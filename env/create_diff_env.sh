@@ -12,14 +12,20 @@
 # r-base size record mismatch + mysql libmysqlclient.so shared-path clobber).
 set -euo pipefail
 
-source /projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
+source "${CONDA_SH}"
 conda activate base
 
-ENVS=/projects/b1198/epifluidlab/yoshii/software/conda/envs
+ENVS="${CONDA_ENVS}"
 ENV=scnomehic_diff
 
 # --- scoped curl config so post-link curl fails fast on the dead mirror ---
-export CURL_HOME=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig2/.curl_home
+export CURL_HOME="${TMP_ROOT}/.curl_home"
+mkdir -p "${CURL_HOME}"
 mkdir -p "$CURL_HOME"
 cat > "$CURL_HOME/.curlrc" <<'RC'
 connect-timeout = 25

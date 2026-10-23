@@ -9,8 +9,13 @@
 # values are byte-identical to the combined matrix produced by
 # 03_plot_cgi.sh (SLURM 7586934).
 # ============================================================================
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-export PATH="/projects/b1198/epifluidlab/yoshii/software/conda/envs/scnomehic/bin:$PATH"
+export PATH="${CONDA_ENVS}/scnomehic/bin:$PATH"
 
 S3=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s3
 OUT_MAT="${S3}/analysis/tss_cgi/matrices"

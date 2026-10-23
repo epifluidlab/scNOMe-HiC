@@ -23,6 +23,11 @@
 # sc data, which set-difference and the sc ANOVA respectively are not.
 #
 # Previous run (job 4630253, 2026-06-15, ~6 h) produced 516 / 968 differential loops.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -eo pipefail
 
 source ~/.bashrc
@@ -31,7 +36,7 @@ module load cuda/11.3.1-gcc-10.4.0
 module load gcc/10.4.0-gcc-4.8.5
 
 BASE=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/APA/insitu
-JUICER=/gpfs/projects/b1198/epifluidlab/weimin/code/analysis/3D_genome_prediction/KS_test/juicer_tools.2.20.00.jar  # 2.20 needed for v9 hic
+JUICER=${SOFTWARE_ROOT}/juicer_tools.jar  # 2.20 needed for v9 hic
 
 HIC_GM=/scratch/jmj7858/scnomehic/insitu_hic/gm_subsampled/GM_insitu.subsampled_p0.307.hic
 HIC_IMR=/scratch/jmj7858/scnomehic/insitu_hic/ENCFF188SSH_IMR90_insitu.hic

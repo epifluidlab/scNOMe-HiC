@@ -50,6 +50,12 @@ SOFTWARE_ROOT="$(_sp_abs "$(_sp_get software_root)")"
 WORK_ROOT="$(_sp_abs "$(_sp_get work_root)")"
 TMP_ROOT="$(_sp_abs "$(_sp_get tmp_root)")"
 CONDA_SH="$(_sp_abs "$(_sp_get conda_sh)")"
-export DATA_ROOT REFERENCE_ROOT SOFTWARE_ROOT WORK_ROOT TMP_ROOT CONDA_SH
+# <conda>/etc/profile.d/conda.sh -> <conda>/envs, for the scripts that call an
+# environment's binaries directly instead of activating it.
+CONDA_ENVS="$(_sp_abs "$(_sp_get conda_envs)")"
+if [ -z "$CONDA_ENVS" ] && [ -n "$CONDA_SH" ]; then
+    CONDA_ENVS="$(dirname "$(dirname "$(dirname "$CONDA_SH")")")/envs"
+fi
+export DATA_ROOT REFERENCE_ROOT SOFTWARE_ROOT WORK_ROOT TMP_ROOT CONDA_SH CONDA_ENVS
 
 unset _sp_self _sp_file

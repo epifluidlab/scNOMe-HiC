@@ -22,7 +22,12 @@
 #       processed *cov.txt build GRCm38). Bismark v0.24.2.
 
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
-source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
+source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/smallwood
 
 conda activate scnomehic
@@ -31,8 +36,8 @@ set -o pipefail
 input=03.trimmed_fastq
 out_hg38=04.align_hg38
 out_mm10=05.align_mm10
-ref_hg38=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38_bismark/
-ref_mm10=/gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10_bismark/
+ref_hg38=${REFERENCE_ROOT}/hg38_bismark/
+ref_mm10=${REFERENCE_ROOT}/mm10_bismark/
 
 mkdir -p ${out_hg38} ${out_mm10}
 

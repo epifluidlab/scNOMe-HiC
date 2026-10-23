@@ -1,7 +1,15 @@
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+import os as _os, sys as _sys
+_r = _os.path.dirname(_os.path.abspath(__file__))
+while _r != "/" and not _os.path.exists(_os.path.join(_r, "paths.py")):
+    _r = _os.path.dirname(_r)
+_sys.path.insert(0, _r)
+from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
+
 import gzip, subprocess
 
-HG = "/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38_bismark/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa"
-SAM = "/gpfs/projects/b1198/epifluidlab/yoshii/software/samtools-1.16/bin/samtools"
+HG = REFERENCE + "/hg38_bismark/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa"
+SAM = SOFTWARE + "/samtools-1.16/bin/samtools"
 METHY = "/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome/05.methy"
 CELL = "K562_01"
 CHROM = "chr21"

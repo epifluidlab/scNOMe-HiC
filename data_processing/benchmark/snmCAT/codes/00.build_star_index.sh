@@ -16,7 +16,12 @@
 # NOTE: source bashrc / activate conda BEFORE `set -u`; ~/.bashrc references an
 # unbound var (BASHRCSOURCED) that would abort the job under set -u.
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
-source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
+source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate mapping
 export PATH="$CONDA_PREFIX/bin:$PATH"
 
@@ -24,7 +29,7 @@ set -euo pipefail
 
 echo "STAR: $(which STAR)"; STAR --version
 
-REF=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38
+REF=${REFERENCE_ROOT}/hg38
 FASTA=${REF}/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa
 GTF=${REF}/gencode.v36.annotation.gtf
 OUT=${REF}/star_2.7.10a_gencode.v36_sjdb100

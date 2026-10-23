@@ -55,3 +55,7 @@ SOFTWARE  <- .scnomehic_abs("software_root",  "software")
 WORK      <- .scnomehic_abs("work_root",      "work")
 TMP       <- .scnomehic_abs("tmp_root",       "work/tmp")
 CONDA_SH  <- .scnomehic_abs("conda_sh",       "")
+# <conda>/etc/profile.d/conda.sh -> <conda>/envs
+CONDA_ENVS <- .scnomehic_abs("conda_envs",    "")
+if (!nzchar(CONDA_ENVS) && nzchar(CONDA_SH))
+  CONDA_ENVS <- file.path(dirname(dirname(dirname(CONDA_SH))), "envs")

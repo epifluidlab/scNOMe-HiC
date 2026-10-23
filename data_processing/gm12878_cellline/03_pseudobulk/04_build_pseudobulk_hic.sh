@@ -25,18 +25,23 @@
 #SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/hic_comparison/logs/build_pseudobulk_dedup.%j.out
 #SBATCH --error=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new/hic_comparison/logs/build_pseudobulk_dedup.%j.err
 
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -eo pipefail
 
-source /projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh
+source ${CONDA_SH}
 conda activate scnomehic
 module load java/jdk-17.0.2+8 2>/dev/null || module load java 2>/dev/null || true
 
 D=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new
 ALN="${D}/04.alignment_snakemake"
 OUT="${D}/hic_comparison"
-SAM2JUICER=/gpfs/projects/b1198/epifluidlab/yoshii/software/bisulfiteHic/src/python/sam2juicer_new.py
-FRAG=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa_DpnII.txt
-JUICER=/gpfs/projects/b1198/epifluidlab/yoshii/software/juicer/juicer_tools.jar
+SAM2JUICER=${SOFTWARE_ROOT}/bisulfiteHic/src/python/sam2juicer_new.py
+FRAG=${REFERENCE_ROOT}/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa_DpnII.txt
+JUICER=${SOFTWARE_ROOT}/juicer/juicer_tools.jar
 
 SHORT_GZ="${OUT}/gm_pseudobulk.dedup.short.sorted.txt.gz"
 HICOUT="${OUT}/gm_pseudobulk.dedup.mapQ30.hic"

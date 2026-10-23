@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 # Merge the 3 DNase bioreps (FDR0.01): union peaks + averaged signal bigWig.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 BASE=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s2_new/atac_dnase_gm12878
 DATA="$BASE/data"
-CHROM=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/autosomes.chrom.sizes
+CHROM=${REFERENCE_ROOT}/hg38/autosomes.chrom.sizes
 THREADS="${THREADS:-8}"
 cd "$DATA"
 

@@ -15,6 +15,11 @@
 #
 # Edit PROJECT to point at a different cohort's working directory if needed.
 
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -uo pipefail
 
 PROJECT=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new
@@ -23,7 +28,7 @@ ALIGN_DIR=${PROJECT}/04.alignment_snakemake
 OUT_BAM=${ALIGN_DIR}/merged.bam
 OUT_SORTED=${ALIGN_DIR}/merged.sorted.bam
 LIST=${ALIGN_DIR}/merge_input_list.txt
-SAMTOOLS=/gpfs/projects/b1198/epifluidlab/yoshii/software/conda/envs/scnomehic/bin/samtools
+SAMTOOLS=${CONDA_ENVS}/scnomehic/bin/samtools
 
 mkdir -p ${PROJECT}/logs ${ALIGN_DIR}
 

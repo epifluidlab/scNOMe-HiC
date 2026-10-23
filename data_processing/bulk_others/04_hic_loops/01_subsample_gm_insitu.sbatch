@@ -18,6 +18,11 @@
 #   2. For each pixel (binX, binY, count): new_count = Binomial(count, p)
 #   3. Output to short-format text (one row per subsampled contact)
 #   4. juicer pre (no -d) to rebuild the subsampled .hic
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 module load java/jdk-17.0.2+8
 
@@ -25,8 +30,8 @@ mkdir -p /gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/A
 
 P=0.307
 SEED=42
-PY=/projects/b1198/epifluidlab/yoshii/software/conda/envs/scnomehic/bin/python
-JUICER=/gpfs/projects/b1198/epifluidlab/weimin/code/analysis/3D_genome_prediction/KS_test/juicer_tools.2.20.00.jar
+PY=${CONDA_ENVS}/scnomehic/bin/python
+JUICER=${SOFTWARE_ROOT}/juicer_tools.jar
 GM_IN=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/fig1/data/bulk/hic/ENCFF555ISR.hic
 
 OUT_DIR=/scratch/jmj7858/scnomehic/insitu_hic/gm_subsampled

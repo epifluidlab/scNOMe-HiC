@@ -14,17 +14,27 @@
 
 set -euo pipefail
 
-dataset="${1:?usage: render_config.sh <dataset> [config-name]}"
-name="${2:-config}"
+# Two forms:
+#   render_config.sh <dataset> [config-name]   a dataset's 00_config/<name>.template.yaml
+#   render_config.sh <template-path> <out-dir> any template, rendered into <out-dir>
+arg1="${1:?usage: render_config.sh <dataset> [config-name]  |  <template-path> <out-dir>}"
 
 here="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
 source "${here}/../paths.sh"
 
-template="${here}/${dataset}/00_config/${name}.template.yaml"
-[ -f "$template" ] || { echo "render_config.sh: no template at $template" >&2; exit 1; }
+if [ -f "$arg1" ]; then
+    template="$arg1"
+    outdir="${2:?usage: render_config.sh <template-path> <out-dir>}"
+    out="${outdir}/$(basename "${template%.template.yaml}").yaml"
+else
+    dataset="$arg1"
+    name="${2:-config}"
+    template="${here}/${dataset}/00_config/${name}.template.yaml"
+    outdir="${WORK_ROOT}/${dataset}/config"
+    out="${outdir}/${name}.yaml"
+fi
 
-outdir="${WORK_ROOT}/${dataset}/config"
-out="${outdir}/${name}.yaml"
+[ -f "$template" ] || { echo "render_config.sh: no template at $template" >&2; exit 1; }
 mkdir -p "$outdir"
 
 envsubst '${DATA_ROOT} ${REFERENCE_ROOT} ${SOFTWARE_ROOT} ${WORK_ROOT} ${TMP_ROOT}' \

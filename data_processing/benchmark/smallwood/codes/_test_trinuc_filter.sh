@@ -3,13 +3,18 @@
 # BisSNP-like filters (MAPQ>=30 + exclude duplicates). If endo jumps toward the
 # BisSNP value (77.606), filtering is the driver (not a context/strand bug).
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
-source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
+source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate scnomehic
 set -o pipefail
 cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/smallwood
-SAM=/gpfs/projects/b1198/epifluidlab/yoshii/software/samtools-1.16/bin/samtools
+SAM=${SOFTWARE_ROOT}/samtools-1.16/bin/samtools
 QC=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome/codes/nome_qc_sites_trinuc.py
-REF=/projects/b1198/epifluidlab/yoshii/reference/mm10/mm10.fa
+REF=${REFERENCE_ROOT}/mm10/mm10.fa
 cell=SRR1248481
 mkdir -p qc_stats/trinuc_filter_test
 

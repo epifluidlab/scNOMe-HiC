@@ -3,6 +3,11 @@
 # Each replicate is one SLURM job on genomics. Large intermediates go to b1042.
 #
 # Usage: bash 02_submit_hic.sh
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -eo pipefail
 
 BASE=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake
@@ -12,8 +17,8 @@ chmod +x "${WORKER}"
 
 BAM_DIR=${BASE}/04.alignment_snakemake
 RE_SITE=${RC}/hic/mm10_DpnII.txt
-JUICER=/projects/b1198/epifluidlab/yoshii/software/juicer/juicer_tools.jar
-SAM2JUICER=/gpfs/projects/b1198/epifluidlab/yoshii/software/bisulfiteHic/src/python/sam2juicer_new.py
+JUICER=${SOFTWARE_ROOT}/juicer/juicer_tools.jar
+SAM2JUICER=${SOFTWARE_ROOT}/bisulfiteHic/src/python/sam2juicer_new.py
 
 TMP_ROOT=/gpfs/projects/b1042/epifluidlab/yoshii/sc_nomehic_hic_tmp/replicate_comparison
 

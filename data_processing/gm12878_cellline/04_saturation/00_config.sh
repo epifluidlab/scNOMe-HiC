@@ -5,6 +5,11 @@
 # Sourced by every script. All paths verified to exist 2026-06-28.
 
 # ---- code + scratch layout ----
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 export CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export SCRATCH_DIR=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/s7
 export WORK_DIR=${SCRATCH_DIR}/work        # per-task scratch BAMs (deleted after each task)
@@ -18,14 +23,14 @@ export METHYL_DIR=${GM}/07.bistools_snakemake/methylation       # existing full-
 export CELLS_FILE=${GM}/QC/cellline_passed.txt                  # 180 QC-passing cells
 
 # ---- reference / tools (from sc_NOMeHiC_pipeline config.yaml) ----
-export REFERENCE=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set
-export VARIANTS=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/Homo_sapiens_assembly38.dbsnp138.vcf
-export BISTOOLS=/gpfs/projects/b1198/epifluidlab/yoshii/software/Bis-tools
+export REFERENCE=${REFERENCE_ROOT}/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set
+export VARIANTS=${REFERENCE_ROOT}/hg38/Homo_sapiens_assembly38.dbsnp138.vcf
+export BISTOOLS=${SOFTWARE_ROOT}/Bis-tools
 export BISSNP_JAR=${BISTOOLS}/Bis-SNP/Bis-SNP.latest.jar
 export BISSNP_USAGE=${BISTOOLS}/Bis-SNP/bissnp_nomehic_usage.pl
-export BISULFITEHIC=/gpfs/projects/b1198/epifluidlab/yoshii/software/bisulfiteHic
+export BISULFITEHIC=${SOFTWARE_ROOT}/bisulfiteHic
 export MH_SUMMARY=${BISULFITEHIC}/src/python/mh_reads_summary.v2.py
-export CONDA_BIN=/gpfs/projects/b1198/epifluidlab/yoshii/software/conda/envs/scnomehic/bin
+export CONDA_BIN=${CONDA_ENVS}/scnomehic/bin
 
 # ---- saturation parameters ----
 export SEED=42                                  # fixed -> samtools -s subsamples are NESTED across fractions

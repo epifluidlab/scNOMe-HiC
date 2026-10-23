@@ -11,14 +11,19 @@
 #SBATCH --error=logs/03.bisqc/bisqc.%a.err
 
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
-source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
+source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/smallwood/
 
 conda activate scnomehic
 
 outdir=05.align_mm10
-vcf=/gpfs/projects/b1198/epifluidlab/shared/data/dbsnp/mm10.dbsnp.vcf
-reference=/projects/b1198/epifluidlab/yoshii/reference/mm10/mm10
+vcf=${REFERENCE_ROOT}/mm10/mm10.dbsnp.vcf
+reference=${REFERENCE_ROOT}/mm10/mm10
 
 prefix=`cat acc_list.txt | awk -v num=${SLURM_ARRAY_TASK_ID} 'NR == num'`
 echo ${prefix}
@@ -40,6 +45,6 @@ samtools addreplacerg \
 
 samtools index "${outdir}/${prefix}.rmdup.RG.bam"
 
-perl /projects/b1198/epifluidlab/yoshii/software/Bis-tools/Bis-QC/Bis-QC.pl --QC_mode 1 --disable_enzyme_eff_check --disable_coverage_check --pattern WCH --nt 8 --mem 64 --genome ${reference}.fa --dbsnp ${vcf} --bistools_path /projects/b1198/epifluidlab/yoshii/software/Bis-tools ${outdir}/${prefix}.rmdup.RG.bam
+perl ${SOFTWARE_ROOT}/Bis-tools/Bis-QC/Bis-QC.pl --QC_mode 1 --disable_enzyme_eff_check --disable_coverage_check --pattern WCH --nt 8 --mem 64 --genome ${reference}.fa --dbsnp ${vcf} --bistools_path ${SOFTWARE_ROOT}/Bis-tools ${outdir}/${prefix}.rmdup.RG.bam
 
-perl /projects/b1198/epifluidlab/yoshii/software/Bis-tools/Bis-SNP/bissnp_easy_usage.pl -use_bad_mates --bistools_path /projects/b1198/epifluidlab/yoshii/software/Bis-tools --lowCov --mmq 30 --nt 10 --mem 120 /projects/b1198/epifluidlab/yoshii/software/Bis-tools/Bis-SNP/BisSNP-0.90.jar ${outdir}/${prefix}.rmdup.RG.bam ${reference}.fa ${vcf}
+perl ${SOFTWARE_ROOT}/Bis-tools/Bis-SNP/bissnp_easy_usage.pl -use_bad_mates --bistools_path ${SOFTWARE_ROOT}/Bis-tools --lowCov --mmq 30 --nt 10 --mem 120 ${SOFTWARE_ROOT}/Bis-tools/Bis-SNP/BisSNP-0.90.jar ${outdir}/${prefix}.rmdup.RG.bam ${reference}.fa ${vcf}

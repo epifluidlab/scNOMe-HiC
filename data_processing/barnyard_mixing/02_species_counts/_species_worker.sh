@@ -14,8 +14,13 @@
 #                 deduplicated, primary reads.
 #   *_all_reads : every mapped record per contig (samtools idxstats) — includes
 #                 duplicates and low-MapQ; kept as a reference/denominator.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-export PATH=/gpfs/projects/b1198/epifluidlab/yoshii/software/conda/envs/scnomehic/bin:$PATH
+export PATH=${CONDA_ENVS}/scnomehic/bin:$PATH
 
 bam="$1"
 cell="$(basename "$bam" .calmd.bam)"

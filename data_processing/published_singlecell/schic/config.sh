@@ -12,6 +12,11 @@
 #   We keep ONLY the 489 GM12878-labeled cells, pool raw counts, liftOver hg19->hg38,
 #   re-bin at 2.5 Mb, and SCC against the scNOMe-HiC pseudobulk (hg38).
 # ----------------------------------------------------------------------------
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 export ROOT=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s2_new/schic_gm12878
 export CODE=$ROOT/code
 export DATA=$ROOT/data
@@ -44,8 +49,8 @@ export IS_LOG=False
 export PCTS="95 99 100"                # percentile clip caps (boxplot x-axis)
 
 # ---- tools -----------------------------------------------------------------
-export JUICER=/gpfs/projects/b1198/epifluidlab/yoshii/software/juicer/juicer_tools.jar
-export CONDA=/projects/b1198/epifluidlab/yoshii/software/conda
+export JUICER=${SOFTWARE_ROOT}/juicer/juicer_tools.jar
+export CONDA=${SOFTWARE_ROOT}/conda
 export ENV=scnomehic                   # hicrep + cooler 0.10.3 + liftOver + java
 export PY=$CONDA/envs/$ENV/bin/python
 export LIFTOVER=$CONDA/envs/$ENV/bin/liftOver

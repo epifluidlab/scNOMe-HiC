@@ -20,8 +20,13 @@
 #   4) metilene_output.pl -> q<0.05 filtered DMR bed + stats pdf
 # Intermediates on /scratch (large, regenerable); final DMRs on gpfs analysis/.
 
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -eo pipefail
-source /projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh
+source ${CONDA_SH}
 conda activate scnomehic   # bedtools, perl, R+ggplot2; metilene on PATH (yaping/software)
 set -u
 

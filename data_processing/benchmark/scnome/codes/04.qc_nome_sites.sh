@@ -20,13 +20,18 @@
 #   K562 : sbatch --array=1-11 --export=ALL,LISTFILE=acc_list_k562_cellids.txt codes/04.qc_nome_sites.sh
 
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
-source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
+source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate scnomehic
 cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome || { echo "ERROR: cd failed"; exit 1; }
 mkdir -p logs/05.nome_qc qc_stats
 
 LISTFILE=${LISTFILE:-acc_list.txt}
-REF=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38_bismark/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa
+REF=${REFERENCE_ROOT}/hg38_bismark/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa
 
 prefix=$(awk -v n=${SLURM_ARRAY_TASK_ID} 'NR==n' ${LISTFILE})
 echo "[$(date)] cell=${prefix} (list=${LISTFILE})"

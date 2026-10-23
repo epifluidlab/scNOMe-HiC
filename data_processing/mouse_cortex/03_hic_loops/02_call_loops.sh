@@ -24,9 +24,14 @@
 #SBATCH --output=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/hic/loop_final/logs/loop1577_%A_%a.log
 
 # /etc/bashrc references unbound vars, so enable -u only AFTER sourcing it
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -eo pipefail
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
-source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
+source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate hic_env
 set -u
 
@@ -35,7 +40,7 @@ L="${HIC}/loop_final"
 CELL_TABLE="${L}/cell_table_all1577_25kb.tsv"
 IMP_DIR="${HIC}/hicluster_25kb/hicluster_25kb_impute_dir"
 OUT_ROOT="${HIC}/loop_majortype_25kb_1577"
-chrom_file="/gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10/mm10.noX.autosome.sizes"
+chrom_file="${REFERENCE_ROOT}/mm10/mm10.noX.autosome.sizes"
 mode="pad2_std1_rp0.5_sqrtvc"
 res=25000
 

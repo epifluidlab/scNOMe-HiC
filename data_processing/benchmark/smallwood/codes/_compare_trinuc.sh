@@ -3,13 +3,18 @@
 # the existing BisSNP-derived values. Uses the SAME shared script as scNOMe
 # (scnome/codes/nome_qc_sites_trinuc.py) with --mates "" (single no-mate cell).
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
-source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
+source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate scnomehic
 set -o pipefail
 
 cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/smallwood
 QC=/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome/codes/nome_qc_sites_trinuc.py
-REF=/projects/b1198/epifluidlab/yoshii/reference/mm10/mm10.fa
+REF=${REFERENCE_ROOT}/mm10/mm10.fa
 OUT=qc_stats/trinuc_bismark
 mkdir -p ${OUT}
 

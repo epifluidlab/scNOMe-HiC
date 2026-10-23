@@ -1,7 +1,12 @@
 #!/bin/bash
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
-BISMARK_REF="/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38_bismark"
-STAR_REF="/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/star_2.7.10a_gencode.v36_sjdb100"
+BISMARK_REF="${REFERENCE_ROOT}/hg38_bismark"
+STAR_REF="${REFERENCE_ROOT}/hg38/star_2.7.10a_gencode.v36_sjdb100"
 MAPPING_DIR="/gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCAT/mapping_brain"
 n=0
 for sf in "${MAPPING_DIR}"/Group*/Snakefile; do

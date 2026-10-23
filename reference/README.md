@@ -41,7 +41,7 @@ These are the filenames the rendered configs look up. Keep the names; only the
 | `hg38_mm10.fa_DpnII.txt` | DpnII sites over the combined FASTA |
 | `hg38_mm10.DpnII.span_region.bedgraph` | **built for you** by `data_processing/barnyard_mixing/01_pipeline/00_setup_workdir.sh` from the hg38 and mm10 bedgraphs above |
 
-## hg38_bismark/ and mm10_bismark/ — converted indexes
+### hg38_bismark/ and mm10_bismark/ — converted indexes
 
 The C->T and G->A converted genomes that `bhmem` aligns against. Build each with
 Bismark's `genome_preparation` over the corresponding FASTA, then index with BWA:
@@ -50,3 +50,9 @@ Bismark's `genome_preparation` over the corresponding FASTA, then index with BWA
 bismark_genome_preparation --bowtie2 reference/hg38_bismark/
 # then BWA-index the two converted FASTAs Bismark writes
 ```
+
+### hg38_bowtie1/ — barcode whitelist (Droplet Hi-C benchmark arm only)
+
+`737K-cratac-v1_rc` — the 10x scATAC barcode whitelist, reverse-complemented and
+built as a **bowtie v1** index. Only `data_processing/benchmark/droplethic/` uses
+it, and only to assign reads to barcodes.

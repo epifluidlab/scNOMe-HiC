@@ -11,7 +11,12 @@
 #SBATCH --error=logs/02.bisqc/bisqc.%a.err
 
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
-source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
+source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/scnome
 
 conda activate scnomehic
@@ -30,10 +35,10 @@ fi
 input=03.trimmed_fastq
 outdir=04.alignment
 methydir=05.methy
-vcf=/projects/b1198/epifluidlab/yoshii/reference/hg38/Homo_sapiens_assembly38.dbsnp138.vcf
-reference=/projects/b1198/epifluidlab/yoshii/reference/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set
+vcf=${REFERENCE_ROOT}/hg38/Homo_sapiens_assembly38.dbsnp138.vcf
+reference=${REFERENCE_ROOT}/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set
 
-bismark_genome=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38_bismark/
+bismark_genome=${REFERENCE_ROOT}/hg38_bismark/
 
 # ---- Align each mate independently with Bismark (non-directional, hg38) ----
 bismark --fastq --prefix ${prefix} --output_dir ${outdir} --non_directional --phred33-quals --score_min L,0,-0.2 --bowtie2 --genome ${bismark_genome} ${input}/${prefix}_1_trimmed.fq.gz

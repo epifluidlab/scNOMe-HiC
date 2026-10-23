@@ -16,10 +16,15 @@
 # NOTE: NOT using `set -u` because the system /etc/bashrc references the
 # BASHRCSOURCED variable expecting it to possibly be unset; -u would trigger
 # an "unbound variable" error when `source ~/.bashrc` runs below.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -eo pipefail
 
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
-source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
+source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate hic_env
 
 THIS_DIR=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb
@@ -28,7 +33,7 @@ SRC_HIC_DIR=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemak
 ROOT=/scratch/jmj7858/scnomehic/loop_majortype_25kb
 RAW_OUT=$ROOT/hicluster_raw
 IMP_OUT=$ROOT/hicluster_impute
-CHROM_FILE=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/autosomes.chrom.sizes
+CHROM_FILE=${REFERENCE_ROOT}/hg38/autosomes.chrom.sizes
 RES=25000
 MODE=pad2_std1_rp0.5_sqrtvc
 

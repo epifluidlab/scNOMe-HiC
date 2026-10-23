@@ -9,6 +9,11 @@
 # per-library deduped BAM (step 10). Demultiplexing is SKIPPED (start_from: trimmed).
 
 # ---- repo (scripts/tracking live here) ----
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 export REPO="/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch"
 
 # ---- scratch (all heavy outputs live here, NOT in the repo) ----
@@ -20,14 +25,14 @@ export HICDIR="${WORK}/hic_merged"                             # PBAT flow only 
 export METHMERGE="${WORK}/methylation_merged"                  # PBAT flow only -- unused by this chain
 
 # ---- pipeline + tools ----
-export PIPELINE="/gpfs/projects/b1198/epifluidlab/yoshii/software/sc_NOMeHiC_pipeline"
-export SCNOMEHIC_ENV="/projects/b1198/epifluidlab/yoshii/software/conda/envs/scnomehic"
-export TRIMGALORE_DIR="/gpfs/projects/b1198/epifluidlab/yoshii/software/TrimGalore-0.6.7"
-export BISHIC="/gpfs/projects/b1198/epifluidlab/yoshii/software/bisulfiteHic"
-export JUICER_JAR="/gpfs/projects/b1198/epifluidlab/yoshii/software/juicer/juicer_tools.jar"
+export PIPELINE="${SOFTWARE_ROOT}/sc_NOMeHiC_pipeline"
+export SCNOMEHIC_ENV="${CONDA_ENVS}/scnomehic"
+export TRIMGALORE_DIR="${SOFTWARE_ROOT}/TrimGalore-0.6.7"
+export BISHIC="${SOFTWARE_ROOT}/bisulfiteHic"
+export JUICER_JAR="${SOFTWARE_ROOT}/juicer/juicer_tools.jar"
 
 # ---- reference ----
-export REF="/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set"
+export REF="${REFERENCE_ROOT}/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set"
 export DPNII="${REF}.fa_DpnII.txt"
 
 # ---- replicate -> raw fastq basename map ----

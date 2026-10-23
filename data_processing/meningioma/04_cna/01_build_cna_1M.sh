@@ -2,13 +2,18 @@
 # Generate per-cell 1Mb fragment-count table (copy-number proxy) from the new
 # consolidated run's BEDs, for the QC-passed cells (covers both dim-reduction sets).
 # Mirrors data_batch_*/09.cna.sh (count_fragment.py).
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 cd /gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/snakemake
 
-PY=/gpfs/projects/b1198/epifluidlab/yoshii/software/conda/envs/scnomehic/bin/python
+PY=${CONDA_ENVS}/scnomehic/bin/python
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CF="${HERE}/count_fragment.py"
-CHROM=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/autosomes.chrom.sizes
+CHROM=${REFERENCE_ROOT}/hg38/autosomes.chrom.sizes
 OUTDIR=subset_clustering/250kb
 mkdir -p "$OUTDIR"
 

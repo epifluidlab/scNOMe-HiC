@@ -15,10 +15,15 @@
 # 22..43 = IMR90   chr1..chr22
 # NOTE: NOT using `set -u` because the system /etc/bashrc references BASHRCSOURCED
 # unbound; -u would trip on `source ~/.bashrc`.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -eo pipefail
 
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
-source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
+source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate hic_env
 
 THIS_DIR=/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake/loop_majortype_25kb

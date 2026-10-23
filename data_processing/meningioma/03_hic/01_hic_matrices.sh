@@ -5,11 +5,16 @@
 # work is shared by BOTH later runs (all3 and batch23).
 #
 # Run from snakemake/ AFTER methylation QC has written QC/meningioma_passed.txt.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 cd /gpfs/projects/b1198/epifluidlab/yoshii/meningioma_scnomehic/snakemake
 
-PIPELINE=/gpfs/projects/b1198/epifluidlab/yoshii/software/sc_NOMeHiC_pipeline
-SNK=/gpfs/projects/b1198/epifluidlab/yoshii/software/conda/envs/scnomehic/bin/snakemake
+PIPELINE=${SOFTWARE_ROOT}/sc_NOMeHiC_pipeline
+SNK=${CONDA_ENVS}/scnomehic/bin/snakemake
 PASSED=QC/meningioma_passed.txt
 
 [ -f "$PASSED" ] || { echo "ERROR: $PASSED missing (run methylation QC first)"; exit 1; }

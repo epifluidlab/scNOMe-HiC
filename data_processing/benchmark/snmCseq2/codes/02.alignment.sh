@@ -11,7 +11,12 @@
 #SBATCH --error=logs/02.alignment/alignment.%a.err
 
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
-source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
+source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 cd /gpfs/projects/b1042/epifluidlab/yoshii/scnomehic_paper/benchmark/snmCseq2
 
 conda activate scnomehic
@@ -25,7 +30,7 @@ out=05.align
 # ----------------------------
 # R1: PBAT mapping
 # ----------------------------
-bismark -bowtie2 --genome /gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10_bismark/ -pbat ${input}/${prefix}_1.clean.fq.gz -o ${out}/ 
-bismark -bowtie2 -non_directional --genome /gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10_bismark/ ${input}/${prefix}_2.clean.fq.gz -o ${out}/ 
+bismark -bowtie2 --genome ${REFERENCE_ROOT}/mm10_bismark/ -pbat ${input}/${prefix}_1.clean.fq.gz -o ${out}/ 
+bismark -bowtie2 -non_directional --genome ${REFERENCE_ROOT}/mm10_bismark/ ${input}/${prefix}_2.clean.fq.gz -o ${out}/ 
 
-# bismark -bowtie2 --genome /gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38_bismark -pbat -1 ${input}/${prefix}_1.clean.fq.gz -2 ${input}/${prefix}_2.clean.fq.gz -o ${out}/ 
+# bismark -bowtie2 --genome ${REFERENCE_ROOT}/hg38_bismark -pbat -1 ${input}/${prefix}_1.clean.fq.gz -2 ${input}/${prefix}_2.clean.fq.gz -o ${out}/ 

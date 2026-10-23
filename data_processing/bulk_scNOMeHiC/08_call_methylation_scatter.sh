@@ -18,13 +18,18 @@
 # task runs the bissnp non-directional wrapper restricted to one chromosome and
 # writes into its own subdir (per-chr --prefix), so nothing collides.
 # Concatenate + bin afterwards with 09_merge_beds_and_bin.sh.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -euo pipefail
 source /gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/bulk_gm_from_scratch/00_paths.sh
 export PATH="${SCNOMEHIC_ENV}/bin:${PATH}"
 
-BISTOOLS="/gpfs/projects/b1198/epifluidlab/yoshii/software/Bis-tools"
+BISTOOLS="${SOFTWARE_ROOT}/Bis-tools"
 BISSNP_JAR="${BISTOOLS}/Bis-SNP/Bis-SNP.latest.jar"
-VCF="/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/Homo_sapiens_assembly38.dbsnp138.vcf"
+VCF="${REFERENCE_ROOT}/hg38/Homo_sapiens_assembly38.dbsnp138.vcf"
 SAMPLE="bulk_GM12878_merged"
 MERGED="${METHCALL}/${SAMPLE}.calmd.bam"
 BYCHR="${METHCALL}/bychrom"

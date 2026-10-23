@@ -55,5 +55,10 @@ SOFTWARE  = _abs(_s.get("software_root", "software"))
 WORK      = _abs(_s.get("work_root", "work"))
 TMP       = _abs(_s.get("tmp_root", "work/tmp"))
 CONDA_SH  = _abs(_s.get("conda_sh", ""))
+# <conda>/etc/profile.d/conda.sh -> <conda>/envs
+CONDA_ENVS = _abs(_s.get("conda_envs", ""))
+if not CONDA_ENVS and CONDA_SH:
+    CONDA_ENVS = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(CONDA_SH))), "envs")
 
-__all__ = ["REPO", "DATA", "REFERENCE", "SOFTWARE", "WORK", "TMP", "CONDA_SH"]
+__all__ = ["REPO", "DATA", "REFERENCE", "SOFTWARE", "WORK", "TMP", "CONDA_SH", "CONDA_ENVS"]

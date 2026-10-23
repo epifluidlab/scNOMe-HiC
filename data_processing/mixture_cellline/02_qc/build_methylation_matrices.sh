@@ -29,8 +29,13 @@
 # The original run also built 100 kb, for the companion subset_clustering/100kb
 # analysis that is not part of this repository.
 # ─────────────────────────────────────────────────────────────────────────────
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -eo pipefail
-source /projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh
+source ${CONDA_SH}
 conda activate scnomehic
 set -u
 

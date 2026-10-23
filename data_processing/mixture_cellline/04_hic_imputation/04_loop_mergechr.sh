@@ -2,15 +2,20 @@
 # STEP 04 — Merge per-chr outputs to a per-celltype loop.bedpe.
 # Runs `hicluster loop-mergechr` per celltype. < 5 min total.
 # NOTE: drop -u because /etc/bashrc trips on BASHRCSOURCED with -u.
+# --- repo paths: edit paths.yaml at the repository root, not this file -------
+_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+source "$_r/paths.sh"
+
 set -eo pipefail
 
 # conda on PATH; override with SCNOMEHIC_CONDA_SH for a different install.
-source "${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}"
+source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 conda activate hic_env
 
 ROOT=/scratch/jmj7858/scnomehic/loop_majortype_25kb
 PER_CT=$ROOT/per_celltype
-CHROM_FILE=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/autosomes.chrom.sizes
+CHROM_FILE=${REFERENCE_ROOT}/hg38/autosomes.chrom.sizes
 RES=25000
 MODE=pad2_std1_rp0.5_sqrtvc
 
