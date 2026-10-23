@@ -60,8 +60,8 @@ ones Figure 1 and S1 use.
   because it would treat "not measured" as "unmethylated".
 - No per-cell Hi-C contact-matrix step: nothing here reads
   `06.hiccluster_snakemake/*.hic_matrix.txt.gz`.
-- The other single-cell methods in the Figure 1 / S1 comparison are processed in a
-  separate repository, <https://github.com/yoshihiko1218/snomehic_benchmark>
-  (commit `236719d`), which is referenced rather than duplicated here.
+- The other single-cell methods in the Figure 1 / S1 comparison are processed in
+  `../benchmark/`, copied here from
+  <https://github.com/yoshihiko1218/snomehic_benchmark> at commit `236719d`.
 - Scripts keep the absolute paths they ran with. Original working directories:
   `sc_nomehic_cellline/gm_sc_new`, and `scnomehic_paper/s1/QC` for `06_benchmark_qc`.

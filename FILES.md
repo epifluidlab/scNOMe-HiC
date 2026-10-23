@@ -41,11 +41,11 @@ is referenced rather than duplicated. The cross-method benchmark
 
 Remote: <https://github.com/epifluidlab/scNOMe-HiC> (`origin`, branch `main`).
 
-> The benchmark provenance links below point at
-> `yoshihiko1218/snomehic_benchmark`, a **personal** repository. If this
-> repository is lab-owned but that one is not, a reader following the
-> provenance trail lands on a personal account — and on a repository that may
-> be private. Transfer it too, or mirror the relevant code here.
+> The benchmark code is **in this repository** (`data_processing/benchmark/`,
+> 170 files). The `yoshihiko1218/snomehic_benchmark` links throughout are
+> provenance — where it was copied from, at which commit — not dependencies, so
+> nothing breaks if that repository is unreachable. Making it reachable would
+> let a reader verify the provenance, which is the only thing at stake.
 
 **Outstanding before this repository can be made public:**
 
