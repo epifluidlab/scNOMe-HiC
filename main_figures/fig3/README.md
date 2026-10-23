@@ -53,20 +53,83 @@ from those tables deterministically; §4b, §6c and §8.7a use the in-memory emb
 
 ## The APA panel
 
-34,150 of 49,196 loops are confidently assigned. The diagonal is the strict maximum
-of both its row and its column for **10/10** cell types.
+Of 49,196 loops in the union call, **5,826 are confidently assigned** to a cell
+type, and **2,051** of those survive the minimum-separation cut and are piled up
+(20,510 windows). The diagonal is the strict maximum of both its row and its
+column for **8/10** cell types.
 
 - Loop specificity: `FC_THRESH = 2` — a loop is assigned to a cell type when fc(Q)
   and fc(T) both exceed 2 against the mean of the other nine.
-- Colour scale: `PowerNorm(gamma=2)`, fixed `vmin = 0.2`, `vmax = 0.75`, one shared
-  colourbar. The limits are deliberately not percentile-derived — the 1st percentile
-  is the empty corner (~0.02), which drags nearly every pixel up the colour axis.
+- Minimum separation: `MIN_SEP = 2 * HALF` (20 bins, 500 kb). A window spans
+  +/-HALF on both axes, so a shorter loop's window crosses the main diagonal,
+  where `E` is a constant 1.0 by construction rather than a measured O/E. Since
+  the APA score divides by the bottom-left corner — the corner nearest the
+  diagonal — that contamination biases every score. See "Two bugs" below.
 - Cell-type order is IT-L2/3, IT-L4, IT-L5/6, CT-L6, Inhib, ASC, ODC, OPC, MGC,
   PC/EC. §5 permutes the cached `apa_25kb.npz` if `LEG` has been reordered since it
   was built; without that guard a reordering would silently mislabel every panel.
 - Per-panel APA scores are reported as a table in §7 rather than drawn over the grid.
 
-IT-L5/6 has no marker gene in either mCG or GCH. Hi-C took no part in the
-clustering, the atlas assignment or the marker selection, so its clean diagonal
-(23.39 vs 18.71 for its best competitor) is independent evidence that it is a real
-cell type. The same holds for the merged `Inhib` group.
+### Per-cell-type scores
+
+| cell type | APA score | windows |
+|---|---|---|
+| IT-L2/3 | 4.27 | 215 |
+| IT-L4 | 4.82 | 214 |
+| IT-L5/6 | 3.54 | 59 |
+| CT-L6 | 4.58 | 45 |
+| Inhib | 4.34 | 408 |
+| ASC | 7.04 | 33 |
+| ODC | 4.09 | 17 |
+| OPC | 7.98 | 465 |
+| MGC | 4.58 | 193 |
+| PC/EC | 9.52 | 402 |
+
+**ODC (17 loops) and IT-L5/6 (59 loops) are too thinly populated to carry a
+per-panel claim**, and both score below a rival cell type (ODC 4.09 against ASC
+5.39; IT-L5/6 3.54 against PC/EC 3.94). Read the panel grid as a whole, not
+those two cells.
+
+An earlier version of this file argued that IT-L5/6's "clean diagonal (23.39 vs
+18.71)" was independent evidence that it is a real cell type, since Hi-C took no
+part in the clustering or the annotation. **That argument does not survive the
+fixes below** — the 23.39 came from a corrupted pile-up, and on corrected data
+IT-L5/6 does not win its own row. IT-L5/6 still has no marker gene in either mCG
+or GCH, so it now rests on the atlas correlation alone.
+
+### Two bugs, fixed 2026-10-23
+
+**1. The O/E lower triangle was never filled.** `E` was written only at
+`(i, i+k)` for `k >= 0`. A loop window pixel `(a, b)` lands in the unwritten half
+whenever `a - b >` the loop's span in bins, so 65% of loops contributed zeros to
+the lower-left of their window. Those zeros also pinned the per-window minimum at
+zero, flattening the min-max normalisation. The lower-left half of the published
+panel averaged 0.40x the upper-right; the bottom-left corner pixel was 7.9x
+darker than the top-right. Because the APA score is centre / bottom-left-corner,
+every score was inflated several-fold. Contact matrices are symmetric, so §5 now
+mirrors: `E = E + E.T - np.diag(np.diag(E))`.
+
+**2. The pile-up cache was keyed on existence alone.** Re-running §2 and §4 with
+a different loop set and then reloading `apa_25kb.npz` silently reused the old
+pile-up. That is what happened to the Aug-2026 panel: 340,660 windows from a loop
+set that `loop_assignments.tsv` no longer described (it holds 58,240 unfiltered).
+§5 now records a per-group loop fingerprint in the npz and recomputes, with a
+printed explanation, when it does not match.
+
+Measured on the same loop set, so only the fill differs:
+
+| variant | panel symmetry | corners agree | on-diagonal | contrast |
+|---|---|---|---|---|
+| neither fix | 0.56 | 3.93 | 15.39 | 2.35 |
+| mirror only | 1.11 | 0.65 | 2.65 | 1.78 |
+| **mirror + MIN_SEP (published)** | **1.00** | **1.09** | **5.48** | **2.34** |
+
+Mirroring alone overshoots because the short loops it readmits cross the diagonal;
+the separation cut is what makes both diagnostics come out clean. The contrast
+between matched and mismatched cell types — what the panel actually claims — is
+2.34, essentially unchanged from the uncorrected 2.35, but now for the right
+reason. The absolute scores move by ~3x.
+
+`../../data_processing/bulk_others/04_hic_loops/apa_pileup_insitu.py`, which does
+the same pile-up for Figure 2, was checked and is unaffected: its own distance
+filter keeps its panels symmetric (measured 0.99 at flank 8, 0.97 at flank 10).

@@ -25,6 +25,16 @@ Differences from cell 54 (deliberate)
    bedpes have had no such filter, and the O/E matrix E is upper-triangular only, so a
    loop with anchor separation <= flank_bins would have part of its window sitting in the
    unfilled lower triangle (zeros). Loops outside [flank_bins, dist) bins are dropped.
+
+   This filter is load-bearing. E is written only at (i, i+k) for k >= 0, so a window
+   pixel (a, b) lands in the unfilled lower triangle whenever a - b > the loop's span in
+   bins -- strictly, safety needs span >= 2*flank_bins, not just > flank_bins. In practice
+   the loops here span far enough that it does not bite: measured on the published panels,
+   the lower-left half averages 0.99x the upper-right at flank 8 and 0.97x at flank 10,
+   i.e. symmetric. Figure 3's pile-up had no distance filter at all, 65% of its loops
+   clipped, and its lower-left came out at 0.40x -- it fills the lower triangle by
+   mirroring instead (fig3_apa.ipynb). If you ever relax or remove the filter here, mirror
+   E the same way rather than relying on the loop distribution.
 4. Records per-loop centre O/E so the result can be tested, not just eyeballed.
 5. Renders both the per-window min-max normalised image (matching the existing figure's
    style) and the raw mean O/E image (standard APA). Pile-up is the expensive part;
