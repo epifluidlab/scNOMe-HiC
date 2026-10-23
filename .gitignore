@@ -38,3 +38,6 @@ SESSION_NOTE_*.md
 # Local path settings -- copy paths.yaml to this and edit, to keep your
 # machine's layout out of git.
 /paths.local.yaml
+
+# Pre-edit notebook snapshots. They belong in ../scNOMeHiC_code_notes/, not here.
+*.ipynb.bak_*
