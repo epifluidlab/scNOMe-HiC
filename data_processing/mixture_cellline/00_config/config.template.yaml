@@ -7,7 +7,7 @@
 # ─── 1. PROJECT-SPECIFIC ──────────────────────────────────────────────────
 
 # Absolute path to this project's working directory.
-workdir: "/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/snakemake"
+workdir: "${WORK_ROOT}/mixture_cellline"
 
 # Pipeline starting mode:
 #   "raw"     — start from raw paired fastqs in `data/` (runs demultiplex + fastqc + trim)
@@ -51,19 +51,19 @@ trimmed_data: "/scratch/jmj7858/scnomehic/cellline_fastq"
 
 # ─── 2. SHARED PATHS ──────────────────────────────────────────────────────
 
-reference: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set"
-variants: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/Homo_sapiens_assembly38.dbsnp138.vcf"
-restriction_sites: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa_DpnII.txt"
+reference: "${REFERENCE_ROOT}/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set"
+variants: "${REFERENCE_ROOT}/hg38/Homo_sapiens_assembly38.dbsnp138.vcf"
+restriction_sites: "${REFERENCE_ROOT}/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa_DpnII.txt"
 
-picard: "/gpfs/projects/b1198/epifluidlab/yoshii/software/picard/picard.jar"
-bisulfitehic: "/gpfs/projects/b1198/epifluidlab/yoshii/software/bisulfiteHic"
-bissnp_jar: "/gpfs/projects/b1198/epifluidlab/yoshii/software/Bis-tools/Bis-SNP/Bis-SNP.latest.jar"
-bistools: "/gpfs/projects/b1198/epifluidlab/yoshii/software/Bis-tools"
-scripts: "/gpfs/projects/b1198/epifluidlab/yoshii/software/sc_NOMeHiC_pipeline/scripts"
+picard: "${SOFTWARE_ROOT}/picard/picard.jar"
+bisulfitehic: "${SOFTWARE_ROOT}/bisulfiteHic"
+bissnp_jar: "${SOFTWARE_ROOT}/Bis-tools/Bis-SNP/Bis-SNP.latest.jar"
+bistools: "${SOFTWARE_ROOT}/Bis-tools"
+scripts: "${SOFTWARE_ROOT}/sc_NOMeHiC_pipeline/scripts"
 
 # GCHnorm intervals (used by rules/GCHnorm.smk; only needed if that workflow is enabled)
-hg38_5kb_no_dark_regions: "/gpfs/projects/b1198/epifluidlab/shared/data/genomes/hg38/hg38/hg38.autosomes.5kb_interval.no_dark_regions.bed"
-#hg38_250kb_no_dark_regions: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/genome_bins_250kb.bed"
+hg38_5kb_no_dark_regions: "${REFERENCE_ROOT}/hg38/hg38.autosomes.5kb_interval.no_dark_regions.bed"
+#hg38_250kb_no_dark_regions: "${REFERENCE_ROOT}/hg38/genome_bins_250kb.bed"
 
 selected_cells_file: "QC/cellline_passed.txt"
 
@@ -82,8 +82,8 @@ methylation_bin_sizes:
 
 # Custom region BEDs (label → bed path). Header rows in the BED are auto-skipped.
 methylation_region_beds:
-  gene_tss:  /gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/genome_bins_gene_tss.bed.gz
-  gene_body: /gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/genome_bins_gene_body.bed.gz
+  gene_tss:  ${REFERENCE_ROOT}/hg38/genome_bins_gene_tss.bed.gz
+  gene_body: ${REFERENCE_ROOT}/hg38/genome_bins_gene_body.bed.gz
 
 # Adapter trimming parameters (used by demultiplex_fastqc_trim → trim_galore)
 clip_r1: 15

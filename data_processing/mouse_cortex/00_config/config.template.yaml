@@ -7,7 +7,7 @@
 # ─── 1. PROJECT-SPECIFIC ──────────────────────────────────────────────────
 
 # Absolute path to this project's working directory.
-workdir: "/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake"
+workdir: "${WORK_ROOT}/mouse_cortex"
 
 # Pipeline starting mode:
 #   "raw"     — start from raw paired fastqs in `data/` (runs demultiplex + fastqc + trim)
@@ -32,7 +32,7 @@ data: "00.raw_data/"
 # Trimmed-fastq directory. Used as the output dir for demultiplex_fastqc_trim
 # (raw mode), as the input dir for `mapping` (both modes), and as the scan
 # dir for auto-discovery (trimmed mode, no fastq_prefixes/fastq_prefixes_file).
-trimmed_data: "/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake/merged_trimmed"
+trimmed_data: "${WORK_ROOT}/mouse_cortex/merged_trimmed"
 
 # Which cell prefixes to process under start_from == "trimmed". Pick at most ONE
 # (ignored when start_from == "raw"):
@@ -51,21 +51,21 @@ trimmed_data: "/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic/snakemake/merg
 
 # ─── 2. SHARED PATHS ──────────────────────────────────────────────────────
 
-reference: "/gpfs/projects/b1198/epifluidlab/shared/data/genomes/mm10/mm10"
-variants: "/gpfs/projects/b1198/epifluidlab/shared/data/dbsnp/mm10.dbsnp.vcf"
-restriction_sites: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10/4DNFI3HVC1SE.txt"
+reference: "${REFERENCE_ROOT}/mm10/mm10"
+variants: "${REFERENCE_ROOT}/mm10/mm10.dbsnp.vcf"
+restriction_sites: "${REFERENCE_ROOT}/mm10/4DNFI3HVC1SE.txt"
 # Bhmem -enzymeList path (region bedgraph) — different file from restriction_sites above.
-enzyme_list: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10/dpnII.span_region.bedgraph"
+enzyme_list: "${REFERENCE_ROOT}/mm10/dpnII.span_region.bedgraph"
 
-picard: "/gpfs/projects/b1198/epifluidlab/yoshii/software/picard/picard.jar"
-bisulfitehic: "/gpfs/projects/b1198/epifluidlab/yoshii/software/bisulfiteHic"
-bissnp_jar: "/gpfs/projects/b1198/epifluidlab/yoshii/software/Bis-tools/Bis-SNP/Bis-SNP.latest.jar"
-bistools: "/gpfs/projects/b1198/epifluidlab/yoshii/software/Bis-tools"
-scripts: "/gpfs/projects/b1198/epifluidlab/yoshii/software/sc_NOMeHiC_pipeline/scripts"
+picard: "${SOFTWARE_ROOT}/picard/picard.jar"
+bisulfitehic: "${SOFTWARE_ROOT}/bisulfiteHic"
+bissnp_jar: "${SOFTWARE_ROOT}/Bis-tools/Bis-SNP/Bis-SNP.latest.jar"
+bistools: "${SOFTWARE_ROOT}/Bis-tools"
+scripts: "${SOFTWARE_ROOT}/sc_NOMeHiC_pipeline/scripts"
 
 # GCHnorm intervals (used by rules/GCHnorm.smk; only needed if that workflow is enabled)
-hg38_5kb_no_dark_regions: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10/mm10.autosome.5kb.bed.gz"
-#hg38_250kb_no_dark_regions: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/genome_bins_250kb.bed"
+hg38_5kb_no_dark_regions: "${REFERENCE_ROOT}/mm10/mm10.autosome.5kb.bed.gz"
+#hg38_250kb_no_dark_regions: "${REFERENCE_ROOT}/hg38/genome_bins_250kb.bed"
 
 # ─── 3. TUNING ────────────────────────────────────────────────────────────
 
@@ -82,9 +82,9 @@ methylation_bin_sizes:
 
 # Custom region BEDs (label → bed path). Header rows in the BED are auto-skipped.
 methylation_region_beds:
-  gene_tss:  /gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10/mm10.autosome.gene_tss.bed.gz
-  gene_body: /gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10/mm10.autosome.gene_body.bed.gz
-  gene: /gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10/mm10.autosome.gene.bed.gz
+  gene_tss:  ${REFERENCE_ROOT}/mm10/mm10.autosome.gene_tss.bed.gz
+  gene_body: ${REFERENCE_ROOT}/mm10/mm10.autosome.gene_body.bed.gz
+  gene: ${REFERENCE_ROOT}/mm10/mm10.autosome.gene.bed.gz
 
 # Adapter trimming parameters (used by demultiplex_fastqc_trim → trim_galore)
 clip_r1: 15

@@ -24,7 +24,7 @@ Figure panels are in `../../main_figures/fig4/`. Pipeline:
 
 | Step | What it is |
 |---|---|
-| `00_config/config.yaml` | Snakemake config: hg38 paths, QC thresholds, methylation bins. `config_hic_all3.yaml` is layered on top for the hicluster step. |
+| `00_config/config.yaml` | Snakemake config: hg38 paths, QC thresholds, methylation bins. `config_hic_all3.template.yaml` is layered on top for the hicluster step. |
 | `01_pipeline/01_run_pipeline.sh` | `mapping → bamprocess → qc → bisqc → bistools → methylation`, 348 cells. |
 | `02_qc/qc_plots.ipynb` | Per-cell metrics, threshold histograms, per-batch overlays. Writes `QC/meningioma_passed.txt` (294). 39 figures. |
 | `02_qc/remove_controls.py` | Drops the 7 control / titration wells (blank, 10c, 100c, 1000c) from the passing list. |
@@ -58,7 +58,7 @@ HCG > 150000          cis1kbnum > 2000
 
 ## Notes
 
-- `config.yaml` points at `trimmed_data: merged_trimmed`, a directory assembled in
+- `config.template.yaml` points at `trimmed_data: merged_trimmed`, a directory assembled in
   the original run by symlinking three separately-trimmed batch folders. That is
   storage bookkeeping, not method, so the script is not shipped. Starting from raw
   or demultiplexed reads (GEO data is demultiplexed) the pipeline does its own

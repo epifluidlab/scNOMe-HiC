@@ -1,22 +1,22 @@
 # working directory
-workdir: "/gpfs/projects/b1198/epifluidlab/yoshii/sc_nomehic_cellline/gm_sc_new"
+workdir: "${WORK_ROOT}/gm12878_cellline"
 
 # reference genome
-reference: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set"
-variants: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/Homo_sapiens_assembly38.dbsnp138.vcf"
-restriction_sites: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa_DpnII.txt"
+reference: "${REFERENCE_ROOT}/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set"
+variants: "${REFERENCE_ROOT}/hg38/Homo_sapiens_assembly38.dbsnp138.vcf"
+restriction_sites: "${REFERENCE_ROOT}/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa_DpnII.txt"
 # Bhmem `-enzymeList` arg (a BED of DpnII fragment regions). When unset, the
 # mapping rule falls back to `{reference}.DpnII.span_region.bedgraph` (the
 # legacy hg38 convention). Set explicitly for genomes that don't follow it.
 # enzyme_list: "/path/to/{genome}.DpnII.span_region.bedgraph"
 
 # software
-picard: "/gpfs/projects/b1198/epifluidlab/yoshii/software/picard/picard.jar"
-bisulfitehic: "/gpfs/projects/b1198/epifluidlab/yoshii/software/bisulfiteHic"
-bissnp_jar: "/gpfs/projects/b1198/epifluidlab/yoshii/software/Bis-tools/Bis-SNP/Bis-SNP.latest.jar"
-bistools: "/gpfs/projects/b1198/epifluidlab/yoshii/software/Bis-tools"
+picard: "${SOFTWARE_ROOT}/picard/picard.jar"
+bisulfitehic: "${SOFTWARE_ROOT}/bisulfiteHic"
+bissnp_jar: "${SOFTWARE_ROOT}/Bis-tools/Bis-SNP/Bis-SNP.latest.jar"
+bistools: "${SOFTWARE_ROOT}/Bis-tools"
 # NOTE: bistools/Bis-SNP/bissnp_nomehic_usage.pl is the scNOMe-HiC wrapper used by rule bistools.
-scripts: "/gpfs/projects/b1198/epifluidlab/yoshii/software/sc_NOMeHiC_pipeline/scripts"
+scripts: "${SOFTWARE_ROOT}/sc_NOMeHiC_pipeline/scripts"
 
 # Optional: shell prefix prepended to every rule's shell. The Snakefile sets
 # a sane default (scnomehic conda env first in PATH, hic_env appended) so
@@ -75,8 +75,8 @@ three_prime_clip_r1: 5
 three_prime_clip_r2: 5
 
 # GCHnorm genome intervals
-hg38_5kb_no_dark_regions: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/genome_bins_5kb.bed"
-hg38_250kb_no_dark_regions: "/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/genome_bins_250kb.bed"
+hg38_5kb_no_dark_regions: "${REFERENCE_ROOT}/hg38/genome_bins_5kb.bed"
+hg38_250kb_no_dark_regions: "${REFERENCE_ROOT}/hg38/genome_bins_250kb.bed"
 
 # Methylation per-bin output. Produces one TSV per (cell, context, bin def)
 # under 08.methylation_snakemake/. Two kinds of bin definitions can be mixed
@@ -99,8 +99,8 @@ methylation_bin_sizes:
 #      a fourth col (if present) is used as the bin name in the output. Header
 #      rows where col 2 isn't an integer are auto-skipped.
 # methylation_region_beds:
-#   gene_tss:  /gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/genome_bins_gene_tss.bed
-#   gene_body: /gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/genome_bins_gene_body.bed
+#   gene_tss:  ${REFERENCE_ROOT}/hg38/genome_bins_gene_tss.bed
+#   gene_body: ${REFERENCE_ROOT}/hg38/genome_bins_gene_body.bed
 
 # qc analysis thresholds
 fragnum_threshold: 100000

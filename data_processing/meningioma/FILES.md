@@ -10,7 +10,7 @@
 | `README.md` | Run order, the 348 → 294 → 292 cell narrowing, copy-number rationale. | written for this repo |
 | `FILES.md` | This file. | written for this repo |
 | `00_config/config.yaml` | Self-contained snakemake config: `start_from: trimmed`, `trimmed_data: merged_trimmed`, hg38 references, the shared QC thresholds, methylation bins/regions. | `$S/config.yaml` |
-| `00_config/config_hic_all3.yaml` | Layered on top of `config.yaml` for the hicluster step: the all-three-batch cell list and 250 kb embedding output dir. | `$S/config_hic_all3.yaml` |
+| `00_config/config_hic_all3.yaml` | Layered on top of `config.template.yaml` for the hicluster step: the all-three-batch cell list and 250 kb embedding output dir. | `$S/config_hic_all3.yaml` |
 | `01_pipeline/01_run_pipeline.sh` | Snakemake driver for the per-cell chain over all 348 cells. | `$S/run_pipeline.sh` |
 | `02_qc/qc_plots.ipynb` | QC gate and methylation matrices; writes `QC/meningioma_passed.txt`. §Doublet inspection is where `cisnum_max = 3M` was chosen, so it is kept. Python, 13 code cells, 39 figures, no errors. | `$S/qc_plots.ipynb` |
 | `02_qc/remove_controls.py` | Removes the 7 named control / titration wells (blank, 10c, 100c, 1000c) from the passing lists. | `$S/code/remove_controls.py` |

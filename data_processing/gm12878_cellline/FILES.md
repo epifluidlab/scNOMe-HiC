@@ -12,7 +12,7 @@
 
 | File | What it is | Origin |
 |---|---|---|
-| `config.main_run.yaml` | The Snakemake config for this dataset: workdir, references, tool paths, `start_from: raw`, adapter clipping, methylation bin sizes (1/50/100/250 kb), QC thresholds. Record of the run, with one deliberate edit: `fragnum_threshold` raised 80,000 → 100,000 to match the other three datasets. Verified inert — the lowest `fragnum` among the 180 passing cells is 1,565,866, and no cell lies between the two cutoffs, so the passing set is unchanged. | `$PIPE/configs/config.yaml` |
+| `config.main_run.template.yaml` | The Snakemake config for this dataset: workdir, references, tool paths, `start_from: raw`, adapter clipping, methylation bin sizes (1/50/100/250 kb), QC thresholds. Record of the run, with one deliberate edit: `fragnum_threshold` raised 80,000 → 100,000 to match the other three datasets. Verified inert — the lowest `fragnum` among the 180 passing cells is 1,565,866, and no cell lies between the two cutoffs, so the passing set is unchanged. | `$PIPE/configs/config.yaml` |
 
 ## 01_pipeline
 

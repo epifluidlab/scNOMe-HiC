@@ -25,18 +25,20 @@
 
 set -eo pipefail
 
-# ---- system-specific; override by exporting these before running ----
-PIPELINE=${SCNOMEHIC_PIPELINE:-/gpfs/projects/b1198/epifluidlab/yoshii/software/sc_NOMeHiC_pipeline}
-CONDA_SH=${SCNOMEHIC_CONDA_SH:-/projects/b1198/epifluidlab/yoshii/software/conda/etc/profile.d/conda.sh}
-CONDA_ENV=${SCNOMEHIC_ENV:-scnomehic}
+# ---- paths: edit ../../../paths.yaml, not this file -------------------------
+HERE="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
+source "${HERE}/../../paths.sh"
+PIPELINE="${SCNOMEHIC_PIPELINE:-${SOFTWARE_ROOT}/sc_NOMeHiC_pipeline}"
+CONDA_ENV="${SCNOMEHIC_ENV:-scnomehic}"
+# Render the config template into the work tree with your paths substituted in.
+CONFIG="$(bash "${HERE}/../../render_config.sh" mixture_cellline config)"
+WORKDIR="${WORK_ROOT}/mixture_cellline"
+mkdir -p "${WORKDIR}"
+cd "${WORKDIR}"
+[ -f "${PIPELINE}/Snakefile" ] || { echo "ERROR: pipeline not found at ${PIPELINE} (set software_root in paths.yaml, or export SCNOMEHIC_PIPELINE)" >&2; exit 1; }
 
-HERE=$(dirname "$(readlink -f "$0")")
-CONFIG="${HERE}/../00_config/config.yaml"
-
-[ -f "${PIPELINE}/Snakefile" ] || { echo "ERROR: pipeline not found at ${PIPELINE} (set SCNOMEHIC_PIPELINE)" >&2; exit 1; }
-[ -f "${CONFIG}" ]            || { echo "ERROR: config not found: ${CONFIG}" >&2; exit 1; }
-
-source "${CONDA_SH}"
+if [ -n "${CONDA_SH}" ]; then source "${CONDA_SH}"; fi
+command -v conda >/dev/null || { echo "ERROR: conda not on PATH (set conda_sh in paths.yaml)" >&2; exit 1; }
 conda activate "${CONDA_ENV}"
 module load java/jdk-17.0.2+8 2>/dev/null || module load java 2>/dev/null || true
 

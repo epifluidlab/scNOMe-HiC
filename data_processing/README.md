@@ -28,3 +28,11 @@ contact matrices) is shared across datasets and is **not duplicated here**:
 
 Each dataset folder carries only the config that parameterizes it plus the bash
 scripts that invoke it.
+
+## Configs are templates
+
+Each dataset's `00_config/*.template.yaml` carries `${DATA_ROOT}`,
+`${REFERENCE_ROOT}`, `${SOFTWARE_ROOT}` and `${WORK_ROOT}` where absolute paths
+used to be. `render_config.sh` substitutes the values from `../paths.yaml` and
+writes the result to `${WORK_ROOT}/<dataset>/config/`; the `01_pipeline/` drivers
+call it for you. Edit `../paths.yaml`, never a template.

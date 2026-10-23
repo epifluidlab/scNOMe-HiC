@@ -9,13 +9,20 @@
 # ============================================================================
 set -euo pipefail
 
-WORKDIR=/gpfs/projects/b1198/epifluidlab/yoshii/scnomehic_paper/s3/snakemake
-COMBREF=/gpfs/projects/b1198/epifluidlab/shared/data/genomes/hg38_mm10/hg38_mm10
-HG38_BG=/gpfs/projects/b1198/epifluidlab/yoshii/reference/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set.DpnII.span_region.bedgraph
-MM10_BG=/gpfs/projects/b1198/epifluidlab/yoshii/reference/mm10/dpnII.span_region.bedgraph
-# NOTE: bam/GM_F123 symlinks point at xfj2191's private home (unreadable); the
-# real, group-readable trimmed fastqs live under raw/.../GM_F123/fastq_trim/.
-SRC_FASTQ=/gpfs/projects/b1198/epifluidlab/yaping/projects/scNOMe_celllines_20240314/raw/LiuYaping01_1.22.2024/GM_F123/fastq_trim
+# ---- paths: edit ../../../paths.yaml, not this file -------------------------
+HERE="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
+source "${HERE}/../../paths.sh"
+
+WORKDIR="${WORK_ROOT}/barnyard_mixing"
+COMBREF="${REFERENCE_ROOT}/hg38_mm10/hg38_mm10"
+HG38_BG="${REFERENCE_ROOT}/hg38/GCA_000001405.15_GRCh38_no_alt_analysis_set.DpnII.span_region.bedgraph"
+MM10_BG="${REFERENCE_ROOT}/mm10/dpnII.span_region.bedgraph"
+# The 96 demultiplexed, trimmed GM_F123 cells. From GEO these arrive untrimmed,
+# so run them through the normal trimming step first and point this at the
+# result; the names the loop expects are {prefix}.{index}.R{1,2}_val_{1,2}.fq.gz.
+SRC_FASTQ="${SRC_FASTQ:-${DATA_ROOT}/barnyard_mixing/03.trimmed_fastq_snakemake}"
+
+mkdir -p "$WORKDIR"
 
 cd "$WORKDIR"
 mkdir -p reference merged_trimmed logs code
@@ -26,20 +33,21 @@ mkdir -p reference merged_trimmed logs code
 # with `mm10_`. Filter both to contigs that actually exist in the combined
 # .fai so Bhmem never sees an unknown contig.
 FAI="${COMBREF}.fa.fai"
-OUT=reference/hg38_mm10.DpnII.span_region.bedgraph
+OUT="${REFERENCE_ROOT}/hg38_mm10/hg38_mm10.DpnII.span_region.bedgraph"
+mkdir -p "$(dirname "$OUT")"
 
 # Set of valid combined-genome contig names.
-cut -f1 "$FAI" | sort -u > reference/.combined_contigs.txt
+cut -f1 "$FAI" | sort -u > "${WORKDIR}/.combined_contigs.txt"
 
 # Human side: keep hg38 lines whose chrom is in the combined genome.
 awk 'NR==FNR{ok[$1]=1; next} ($1 in ok)' \
-    reference/.combined_contigs.txt "$HG38_BG" > "$OUT"
+    "${WORKDIR}/.combined_contigs.txt" "$HG38_BG" > "$OUT"
 
 # Mouse side: prefix chrom with mm10_, keep only those in the combined genome.
 awk 'NR==FNR{ok[$1]=1; next}{c="mm10_"$1; if(c in ok) print c"\t"$2"\t"$3}' \
-    reference/.combined_contigs.txt "$MM10_BG" >> "$OUT"
+    "${WORKDIR}/.combined_contigs.txt" "$MM10_BG" >> "$OUT"
 
-rm -f reference/.combined_contigs.txt
+rm -f "${WORKDIR}/.combined_contigs.txt"
 echo "Enzyme list built: $OUT"
 echo "  total intervals: $(wc -l < "$OUT")"
 echo "  human intervals: $(grep -cvE '^mm10_' "$OUT" || true)"

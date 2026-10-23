@@ -39,39 +39,43 @@ figure notebooks.
 | trim_galore, FastQC, samtools, bedtools | standard preprocessing |
 | metilene | de-novo DMR calling (Figure 2 only) |
 
-**Reference files** (hg38 in this paper):
-
-```
-GCA_000001405.15_GRCh38_no_alt_analysis_set.{fa,fai,chrom.sizes}
-GCA_000001405.15_GRCh38_no_alt_analysis_set.fa_DpnII.txt     # restriction sites
-Homo_sapiens_assembly38.dbsnp138.vcf                          # for Bis-SNP
-genome_bins_{5kb,250kb}.bed                                   # GCH normalization
-```
+**Reference files** — hg38 for the human datasets, mm10 for the mouse cortex, and a
+combined hg38_mm10 for the species-mixing dataset. `reference/README.md` lists every
+file each config asks for and where it comes from.
 
 ---
 
 ## 2. Edit the config
 
-Each dataset folder carries the config it ran with, under `00_config/`. **Every path
-in it is absolute and machine-specific** — the config is a record of the original
-run, so treat it as a template and change these keys:
+**You do not edit the configs.** Each dataset's `00_config/` holds a
+`*.template.yaml` carrying `${DATA_ROOT}`, `${REFERENCE_ROOT}`, `${SOFTWARE_ROOT}`
+and `${WORK_ROOT}` where absolute paths used to be. The driver renders it with
+your `paths.yaml` values into `${WORK_ROOT}/<dataset>/config/<name>.yaml` and hands
+that to Snakemake, so the only file you change is `../paths.yaml` at the
+repository root — see the Setup section of `README.md`.
 
-| Key | Change to |
+To render one by hand, for instance to read it before a run:
+
+```bash
+bash data_processing/render_config.sh gm12878_cellline config.main_run
+# prints the path of the rendered config
+```
+
+Only those four variable names are substituted; anything else that looks like a
+shell variable in a template (a `$PATH` inside a comment, say) is left alone, and
+the renderer fails loudly if any `${...}` survives.
+
+What a template still carries, and what you may legitimately want to change:
+
+| Key | What it is |
 |---|---|
-| `workdir` | where you want outputs written |
-| `reference`, `variants`, `restriction_sites` | your reference files |
-| `picard`, `bisulfitehic`, `bissnp_jar`, `bistools`, `scripts` | your tool installs |
-| `hg38_5kb_no_dark_regions`, `hg38_250kb_no_dark_regions` | your genome-bin BEDs |
-| `data`, `fileindex`, `trimmed_data` | your input locations (see below) |
+| `start_from` | which entry point the run uses — see below |
+| `data`, `fileindex`, `demul_data`, `trimmed_data` | input locations, relative to `workdir` |
+| `methylation_bin_sizes` and the QC thresholds | the scientific settings — **leave them alone to reproduce the paper** |
 
-The driver scripts in `01_pipeline/` additionally hardcode a SLURM account and
-partition (`b1042`, `genomics`/`genomicslong`) and absolute log paths. Adjust those,
-or the pipeline's `profiles/slurm`, for your cluster.
-
-QC thresholds and adapter-clipping parameters are the scientific settings — leave
-them alone to reproduce the paper.
-
----
+The drivers in `01_pipeline/` still hardcode a SLURM account and partition
+(`b1042`, `genomics`/`genomicslong`). Adjust those, or the pipeline's
+`profiles/slurm`, for your cluster.
 
 ## 3. Entry point A — raw data (default)
 
