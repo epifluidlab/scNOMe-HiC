@@ -39,7 +39,13 @@ is referenced rather than duplicated. The cross-method benchmark
 (`yoshihiko1218/snomehic_benchmark` @ `236719d`) is carried, code only, in
 `data_processing/benchmark/`.
 
-Remote: <https://github.com/yoshihiko1218/scNOMe-HiC> (`origin`, branch `main`).
+Remote: <https://github.com/epifluidlab/scNOMe-HiC> (`origin`, branch `main`).
+
+> The benchmark provenance links below point at
+> `yoshihiko1218/snomehic_benchmark`, a **personal** repository. If this
+> repository is lab-owned but that one is not, a reader following the
+> provenance trail lands on a personal account — and on a repository that may
+> be private. Transfer it too, or mirror the relevant code here.
 
 **Outstanding before this repository can be made public:**
 
