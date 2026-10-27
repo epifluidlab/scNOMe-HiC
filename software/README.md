@@ -9,6 +9,7 @@ is this folder. Install each at the path given in the first column.
 | Expected at | Tool | Used for |
 |---|---|---|
 | `sc_NOMeHiC_pipeline/` | [epifluidlab/sc_NOMeHiC_pipeline](https://github.com/epifluidlab/sc_NOMeHiC_pipeline) @ `a0456b9` | the per-cell workflow itself |
+| `meth_concord/` | [epifluidlab/meth_concord](https://github.com/epifluidlab/meth_concord) @ `9c6284f` | Figures 5 and 6: the end posteriors and the concordance analyses. Installed with `pip install -e` into its own `meth_concord` environment; see `../main_figures/fig5_fig6/README.md` |
 | `bisulfiteHic/` | bisulfiteHic v0.38 (`bhmem`, `demultiplex_ecker_scWGBS.pl`, `sam2juicer_new.py`) | demultiplexing and bisulfite- + Hi-C-aware alignment |
 | `Bis-tools/` | Bis-tools, including `Bis-SNP/` | methylation calling and VCF post-processing |
 | `Bis-tools/Bis-SNP/Bis-SNP.latest.jar` | the Bis-SNP jar | `BisulfiteGenotyper`; the paper used the build reporting version 1.0.1 |
@@ -24,7 +25,8 @@ environments in `../env/` and from the pipeline's own `envs/`:
 `trim_galore` (0.6.7) and `cutadapt` (5.2) · `bismark` (0.24.2) · `bwa` (0.7.18) ·
 `samtools` (1.21) · `bedtools` · `tabix` · `metilene` (Figure 2 only) ·
 `deepTools` (Figure S3) · `wgbstools` and `uxm` (Figure 4 deconvolution) ·
-`hicluster` / scHiCluster · `cooler` · `hicrep`
+`hicluster` / scHiCluster · `cooler` · `hicrep` · `seqkit` and `faToTwoBit`
+(Figures 5 and 6, from the `meth_concord` environment)
 
 Set `conda_sh` in `../paths.yaml` to your conda's `etc/profile.d/conda.sh` so the
 driver scripts can activate those environments.

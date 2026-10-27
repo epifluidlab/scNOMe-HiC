@@ -14,6 +14,9 @@ the code that turns analysis-ready tables into panels.
 | `figS7/` | QC / batch diagnostics on the integrated UMAP, mouse cortex | `../../sc_nomehic/snakemake/subset_clustering/250kb_denovo/`, via `main_figures/fig3/` |
 | `figS8/` | Meningioma: joint vs HCG annotation, and the concordance metrics Fig. 4 does not show | via `main_figures/fig4/fig4_umap.ipynb` — no notebook of its own |
 
+Supplementary Figs. 9–12 have no folders here:
+`../main_figures/fig5_fig6/fig5_cortex.ipynb` draws them with Figure 5.
+
 Each folder's `README.md` lists the panels, the inputs, and the run order;
 `FILES.md` says what every file in it is.
 

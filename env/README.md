@@ -26,6 +26,11 @@ conda env create -f env/scnomehic.yml        # then: conda activate scnomehic
 | `hic_cooler` | Python | cooler / scHiCluster 1.3.2, for the APA notebooks. |
 | `hic_env` | Python | scHiCluster 1.3.5.dev17 for the 25 kb loop chain. Shell scripts only — no notebook uses it. |
 
+Figures 5 and 6 use a sixth environment, `meth_concord` (Python), which is not
+exported here. It holds the meth_concord package and its compiled extension, and
+is made as in "1. Install" of `../main_figures/fig5_fig6/README.md`, which also
+registers its kernel.
+
 ## Which notebook needs which
 
 Every notebook opens with an environment check that prints a warning if it is
@@ -36,6 +41,8 @@ under a different name still works.
 |---|---|---|---|
 | `hic_cooler` | Python | `hic_cooler` | `main_figures/fig2/fig2_apa.ipynb` |
 | `hic_cooler` | Python | `hic_cooler` | `main_figures/fig3/fig3_apa.ipynb` |
+| `meth_concord` | Python | `meth_concord` | `main_figures/fig5_fig6/fig5_cortex.ipynb` |
+| `meth_concord` | Python | `meth_concord` | `main_figures/fig5_fig6/fig6_xci.ipynb` |
 | `scnome` | R | `nomehic_r` | `main_figures/fig1/fig1_methylation_accessibility.ipynb` |
 | `scnome` | R | `nomehic_r` | `main_figures/fig3/fig3_umap.ipynb` |
 | `scnome` | R | `nomehic_r` | `main_figures/fig4/fig4_umap.ipynb` |

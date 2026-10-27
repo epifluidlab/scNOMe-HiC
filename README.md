@@ -46,8 +46,8 @@ data_processing/          Per-dataset processing: raw reads -> analysis-ready ma
   bulk_others/              published bulk datasets used as ground truth (Fig. 2)
   benchmark/                six published single-cell methods (Fig. 1, S1)
   published_singlecell/     published single-cell assays for the S2 comparison
-main_figures/             fig1/ … fig4/
-supplementary_figures/    figS1/ … figS8/
+main_figures/             fig1/ … fig4/, fig5_fig6/
+supplementary_figures/    figS1/ … figS8/ (S9–S12: main_figures/fig5_fig6/)
 ```
 
 Each folder carries a `README.md` (what the analysis does, the run order) and a
@@ -96,7 +96,9 @@ at the repository root, whichever matches their language.
 > absolute paths of the machine it ran on. Only the *code* was rewritten to use
 > `paths.yaml`; the saved output was deliberately left alone, because it is the
 > record of that run and editing it would misrepresent what happened. Re-run a
-> notebook and its output will show your paths instead.
+> notebook and its output will show your paths instead. The two notebooks in
+> `main_figures/fig5_fig6/` are the exception: they ship unexecuted (see that
+> folder's README).
 
 ## The processing pipeline
 
@@ -122,6 +124,17 @@ from its own repository:
 The scNOMe-HiC side of the comparison is in
 `data_processing/gm12878_cellline/06_benchmark_qc/`, and the notebook that draws
 the violins is `main_figures/fig1/fig1_benchmark_violins.ipynb`.
+
+## Figures 5 and 6
+
+The concordance analysis behind Figures 5 and 6 and Supplementary Figures 9–12
+runs on a separate package, which is **not duplicated here**:
+
+<https://github.com/epifluidlab/meth_concord> — commit `9c6284f`
+
+The notebooks in `main_figures/fig5_fig6/` run it on the per-cell BAM files the
+pipeline writes, draw the figures, and check key numbers against the manuscript.
+That folder's README says how to install the package into `software/`.
 
 ## Running it
 

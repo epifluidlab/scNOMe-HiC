@@ -12,14 +12,21 @@ writes several TB. The default is this folder.
 
 | Folder | Written by | Read by |
 |---|---|---|
-| `gm12878_cellline/` | `../data_processing/gm12878_cellline/` | Figure 1, S1, S2, S3, S4, S5 |
-| `mixture_cellline/` | `../data_processing/mixture_cellline/` | Figure 2 |
-| `mouse_cortex/` | `../data_processing/mouse_cortex/` | Figure 3, S6, S7 |
+| `gm12878_cellline/` | `../data_processing/gm12878_cellline/` | Figure 1, 6, S1, S2, S3, S4, S5 |
+| `mixture_cellline/` | `../data_processing/mixture_cellline/` | Figure 2, 6 |
+| `mouse_cortex/` | `../data_processing/mouse_cortex/` | Figure 3, 5, S6, S7, S10–S12 |
 | `meningioma/` | `../data_processing/meningioma/` | Figure 4, S8 |
 | `barnyard_mixing/` | `../data_processing/barnyard_mixing/` | Figure S4 (species mixing) |
 | `benchmark/` | `../data_processing/benchmark/` | Figure 1, S1 |
 | `analysis/` | `../data_processing/bulk_others/`, `../data_processing/published_singlecell/`, `../data_processing/bulk_scNOMeHiC/` | Figure 1, 2, 3, S1, S2 |
+| `concordance/` | `../main_figures/fig5_fig6/`: the public data it downloads, and both notebooks' results | Figure 5, 6, S9–S12 |
 | `tmp/` | large, short-lived intermediates | — |
+
+`concordance/` is written from a figure folder rather than from
+`../data_processing/`: the Figure 5 and 6 notebooks start from each cell's BAM
+file in `<dataset>/04.alignment_snakemake/` of `mouse_cortex/`,
+`gm12878_cellline/` and `mixture_cellline/`, and keep their public data and
+results there.
 
 ## Inside `analysis/`
 
