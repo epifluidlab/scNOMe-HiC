@@ -3,12 +3,12 @@
 Two Jupyter notebooks rebuild Figure 5, Figure 6 and Supplementary Figures 9–12 of
 the manuscript from the per-cell BAM files that `../../data_processing/` writes.
 The analysis runs on [meth_concord](https://github.com/epifluidlab/meth_concord)
-(commit `9c6284f`), a separate package installed into `software/`. Each notebook
+(commit `dade069`), a separate package installed into `software/`. Each notebook
 ends by checking key numbers against the manuscript.
 
 | Notebook | Cells | Reference | Reproduces |
 |---|---|---|---|
-| [`fig5_cortex.ipynb`](fig5_cortex.ipynb) | 1,577 mouse cortex nuclei | mm10 | Fig. 5a–g; Supplementary Figs. 9, 10, 11, 12 |
+| [`fig5_cortex.ipynb`](fig5_cortex.ipynb) | 1,577 mouse cortex nuclei | mm10 | Fig. 5a–h; Supplementary Figs. 9, 10, 11, 12 |
 | [`fig6_xci.ipynb`](fig6_xci.ipynb) | 469 GM12878 and 160 IMR-90 nuclei | GRCh38 | Fig. 6a–i |
 
 The commands in the notebooks are those of the published runs. Given those runs' outputs, the figure and check steps reproduce the manuscript's figures and every checked number exactly.
@@ -53,7 +53,7 @@ conda create -n meth_concord -c conda-forge -c bioconda python=3.9 \
     htslib samtools bedtools seqkit ucsc-fatotwobit poppler pybind11 cxx-compiler
 conda activate meth_concord
 git clone https://github.com/epifluidlab/meth_concord software/meth_concord
-git -C software/meth_concord checkout 9c6284f
+git -C software/meth_concord checkout dade069
 pip install -e "./software/meth_concord[bigwig]"
 pip install jupyterlab nbclient
 python -m ipykernel install --user --name meth_concord --display-name "Python (meth_concord)"
@@ -140,7 +140,7 @@ The script is safe to re-run: it keeps files already present and checks md5 sums
 
 The scripts fetch the rest on first use:
 
-- `annotation_class_concordance.py` fetches the full-stack chromHMM model (Vu & Ernst), the GENCODE genes (vM25 for mm10, v44 for hg38), the UCSC CpG islands and, for hg38, the common PMDs. They are cached in `annotations/cache/`.
+- `annotation_class_concordance.py` fetches the full-stack chromHMM model (Vu & Ernst), the GENCODE genes (vM25 for mm10, v44 for hg38), the UCSC CpG islands and, for hg38, the common PMDs. They are cached in `annotations/cache/`, where `figure5_cortex.py` also reads the GENCODE genes and the chromHMM segmentation for Fig. 5h.
 - `phased_snps.py` fetches the GM12878 (NA12878) SNVs from the 1000 Genomes high-coverage phased panel. It downloads about 32 GB, chromosome by chromosome, and deletes each file once it is used.
 - `phased_snps.py` also fetches the IMR-90 SNVs from its haplotype-resolved assemblies (SyRI calls against T2T-CHM13, on figshare) and UCSC's `hs1ToHg38` chain.
 
@@ -182,10 +182,11 @@ The mouse notebook needs only the mm10 data and the human notebook only the hg38
 | 3 | `end_posterior_distance_correlation.py`, under three non-linked controls | `distance/control1_same_cell_near_copies_refused/` | Fig. 5c,d; Suppl. Figs. 11, 12a,b |
 | | | `distance/control2_same_cell_near_copies_kept/` | Fig. 5a,b; Suppl. Fig. 11 |
 | | | `distance/control3_same_place_other_cells/` | Suppl. Fig. 11 |
-| 4 | `annotation_class_concordance.py` (A/B, replication timing, PMD/HMD, chromHMM) | `classes/near_copies_refused/` | Fig. 5e–g |
+| 4 | `annotation_class_concordance.py` (A/B, replication timing, PMD/HMD, chromHMM) | `classes/near_copies_refused/` | Fig. 5e–h |
 | | | `classes/near_copies_kept/` | Suppl. Fig. 12c,d |
 | 5 | `figure5_cortex.py`, `figure_s_null_controls.py`, `figure_s9_concordance_model.py` | `figures/Figure5.pdf`, `FigureS9.pdf`, `FigureS11.pdf`, `FigureS12.pdf` | |
-| 6 | checks | 16 numbers against the manuscript | |
+| | | `figures/Figure5h_variable_bins.tsv`: every bin of Fig. 5h (276, ranked as drawn) with its genes | Fig. 5h |
+| 6 | checks | 19 numbers against the manuscript | |
 
 ### `fig6_xci.ipynb` (results in `<work_root>/concordance/results/gm12878_imr90/`)
 
@@ -220,6 +221,7 @@ Every sampling step uses a fixed seed (each script's default), so a rerun should
 - **No saved output.** Unlike the other notebooks in this repository, these two ship unexecuted. The published runs were made from the command line, one script at a time; the notebooks were written afterwards to repeat those runs, and were checked against their outputs.
 - **Memory.** Control 3 of Figure 5 draws each contact's stand-in from other cells. It does so one stratum (cell type × batch) at a time, and holds at most `--pool-max-cells` cells' ends at once. At the default of 300 cells it needs roughly 9–12 GB; lower it if memory is short.
 - **chromHMM grouping (Figure 5).** `CHROMHMM_BIVALENT = "polycomb"` keeps the bivalent-promoter states inside the Polycomb group, giving the six groups of Fig. 5f and Supplementary Fig. 12d. `"own"` gives them a group of their own; the class runs then go to `classes_bivalent_own/`.
+- **Fig. 5h.** The bins are those whose ΔC × w (each contact's w from its A/B class pair, as in Fig. 5e) differs between the ten cell types beyond sampling, in the class run's `locus_variability.tsv.gz`. Their annotations are tested as Fig. 5g's hot bins are, against genome rotations. h takes its chromHMM rows from the full-stack states themselves, to split promoters into TSS, flanking, poised and bivalent states; there, unlike in Fig. 5f, bivalent promoters count as promoters rather than polycomb.
 - **chrX in the human posteriors.** The pipeline leaves chrX and chrY out by default, so the human posteriors are made in two passes. Pass 1 fits the beta-binomial mixture on the autosomes (`pipeline_autosomes/`). Pass 2 reruns steps 2 and 4 on every chromosome with `--exclude-chrom none`, using that fit, so X is scored under the autosomes' model (`pipeline/`). The mouse analyses use the autosomes only.
 - **Which X is inactive.** In GM12878 the inactive X is hap1, the paternal copy: chrX is phased by transmission from NA12878's parents, NA12891 and NA12892. In IMR-90 each cell's inactive X is called from its own CpG-island methylation (`allelic_cells.tsv`).
 - **dbSNP.** meth_concord's `--dbsnp-vcf` filter acts only when context sites are extracted from the `.2bit` reference. With `--context-bed`, as here and in the published runs, context sites are not filtered against dbSNP. The notebooks leave the option out.

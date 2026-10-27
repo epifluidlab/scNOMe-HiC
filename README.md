@@ -130,7 +130,7 @@ the violins is `main_figures/fig1/fig1_benchmark_violins.ipynb`.
 The concordance analysis behind Figures 5 and 6 and Supplementary Figures 9–12
 runs on a separate package, which is **not duplicated here**:
 
-<https://github.com/epifluidlab/meth_concord> — commit `9c6284f`
+<https://github.com/epifluidlab/meth_concord> — commit `dade069`
 
 The notebooks in `main_figures/fig5_fig6/` run it on the per-cell BAM files the
 pipeline writes, draw the figures, and check key numbers against the manuscript.

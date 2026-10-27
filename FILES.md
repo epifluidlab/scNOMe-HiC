@@ -32,12 +32,12 @@ Migrated section by section from the original working directories. Files are
 | `data_processing/meningioma/` | `../meningioma_scnomehic/` |
 | `data_processing/barnyard_mixing/`, `bulk_others/`, `published_singlecell/` | `../scnomehic_paper/{s3,fig2,s2_new}/` |
 | `main_figures/figN/` | `../scnomehic_paper/figN/` |
-| `main_figures/fig5_fig6/` | `reproduce/` of `epifluidlab/meth_concord` @ `9c6284f`, adapted to `paths.yaml` — see that folder's `FILES.md` |
+| `main_figures/fig5_fig6/` | `reproduce/` of `epifluidlab/meth_concord` @ `dade069`, adapted to `paths.yaml` — see that folder's `FILES.md` |
 | `supplementary_figures/figSN/` | `../scnomehic_paper/sN/` — but the numbering was reshuffled; see that folder's `README.md` |
 
 The per-cell Snakemake workflow (`epifluidlab/sc_NOMeHiC_pipeline` @ `a0456b9`)
 is referenced rather than duplicated, and so is the concordance package that
-Figures 5 and 6 run (`epifluidlab/meth_concord` @ `9c6284f`). The cross-method
+Figures 5 and 6 run (`epifluidlab/meth_concord` @ `dade069`). The cross-method
 benchmark (`yoshihiko1218/snomehic_benchmark` @ `236719d`) is carried, code only,
 in `data_processing/benchmark/`.
 
