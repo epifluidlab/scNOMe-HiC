@@ -26,7 +26,9 @@ Two things from there are worth repeating because they bite:
   it, so the pipeline cannot be run from raw reads from outside the lab until it
   is public or mirrored. The figure notebooks are unaffected — they start from
   the processed matrices.
-- **The aligner needs JDK 8.** The native jbwa build fails on newer JDKs.
+- **The aligner is mostly prebuilt, but not entirely.** Its fat jar is committed;
+  the native jbwa layer (`libbwajni.so` and `jbwa.jar`) is not, and must be built
+  with `make` on the machine that will run it. Needs JDK 8, GNU Make and gcc.
 
 ---
 

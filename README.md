@@ -106,14 +106,33 @@ Three things you supply, one the code creates.
    cd software
    git clone https://github.com/epifluidlab/bisulfiteHic
    cd bisulfiteHic
-   export JAVA_HOME=/path/to/jdk8        # Oracle JDK 8; the build fails on newer JDKs
-   source ./install.sh                   # builds jbwa natively, then mvn assembly:single
+   export JAVA_HOME=/path/to/jdk8        # Oracle JDK 8
+   source ./install.sh
    ```
 
-   `install.sh` produces `target/bisulfitehic-0.38-jar-with-dependencies.jar` and
-   exports `$BISHIC`. Building needs **JDK 8, GNU Make, gcc and Maven**; the repo's
-   `scripts/quest_install.sh` is a worked example for a SLURM cluster (run it on a
-   login node — the clone and the Maven fetch need internet).
+   **Most of it is prebuilt.** `target/bisulfitehic-0.38-jar-with-dependencies.jar`
+   (17 MB) and the `lib/*.jar` dependencies are committed to the repository, so the
+   Java side needs no compiling.
+
+   What is **not** committed is the native layer. `bhmem` reaches BWA through JNI,
+   and that part is C:
+
+   | needed at run time | in the repository? |
+   |---|---|
+   | `target/bisulfitehic-0.38-jar-with-dependencies.jar` | yes |
+   | `lib/*.jar` | yes |
+   | `jbwa/jbwa-1.0.0/src/main/native/libbwajni.so` | **no** — only `bwajni.c` |
+   | `jbwa/jbwa-1.0.0/jbwa.jar` | **no** |
+
+   `make` inside `jbwa/jbwa-1.0.0/` produces both, which is `install.sh`'s first
+   step and the one you cannot skip — a shared library built elsewhere will not
+   load on your machine. The second step, `mvn compile assembly:single`, only
+   rebuilds the jar that is already committed; skip it if you have no Maven and
+   trust the shipped jar, or run it to be certain the jar matches the source.
+
+   So the hard requirements are **JDK 8, GNU Make and gcc**. Maven is optional.
+   The repo's `scripts/quest_install.sh` is a worked example for a SLURM cluster
+   (run it on a login node — the clone needs internet).
 
    Keep the whole source tree, not just the jar: the workflow calls
    `src/python/sam2juicer_new.py` and `src/perl/demultiplex_ecker_scWGBS.pl` from
