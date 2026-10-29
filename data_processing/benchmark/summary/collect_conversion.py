@@ -16,7 +16,7 @@ and write a tidy per-cell table summary/conversion_percell.csv with columns:
   dataset, cell, noncpg_chrM, noncpg_auto, auto_chrom
 
 Per-cell, NEVER per-mate. Cell sets match the other QC panels:
-  scnome 23 | smallwood 51 | snmCseq2 96 (mm10) | snmCseq3 98 | scnomehic 187 | snmCAT 99
+  scnome 23 | smallwood 51 | snmCseq2 96 (mm10) | snmCseq3 100 | scnomehic 180 | snmCAT 99
 
 Sources (per-cell unless noted):
   scnome    : scnome_qc_summary.csv  (chrM_noncpg, chr21_noncpg)            [Bismark]
@@ -24,7 +24,7 @@ Sources (per-cell unless noted):
   snmCseq2  : chrM from snmcseq2_qc_summary.csv (mm10 cells); chr19 from the
               PER-MATE trinuc/snmCseq2.chr19.txt averaged per cell           [Bismark]
   snmCseq3  : trinuc/snmCseq3.{chrM,chr21}.txt                              [bhmem]
-  scnomehic : external gm.{chrM,chr21}.txt.gz, restricted to gm_passed.txt   [BisSNP]
+  scnomehic : external gm.{chrM,chr21}.txt.gz, restricted to gm12878_passed_180.txt [BisSNP]
   snmCAT    : trinuc/snmCAT.{chrM,chr21}.txt (computed from YAP allc),
               restricted to the 99 cells in gch_hcg_counts/all_methods.summary.txt [YAP allc]
 NOTE: snmCAT is the one position-level (allc Sigma mc / Sigma cov) source; all others are
@@ -76,11 +76,14 @@ for cell in sorted(mm10):
 # --- snmCseq3 (98): both from trinuc ---
 cm = pd.read_csv(f"{TRI}/snmCseq3.chrM.txt", sep="\t").set_index("sample")["noncpg"].to_dict()
 au = pd.read_csv(f"{TRI}/snmCseq3.chr21.txt", sep="\t").set_index("sample")["noncpg"].to_dict()
-for cell in au:   # chr21 file defines the 98-cell set
+for cell in au:   # chr21 file defines the 100-cell set
     add("snmCseq3", cell, num(cm.get(cell)), num(au.get(cell)), "chr19")  # mm10 -> chr19 biology
 
-# --- scnomehic (187 passing) ---
-passed = set(pd.read_csv(f"{EXT}/gm_passed.txt", header=None)[0].astype(str))
+# --- scnomehic (180 passing) ---
+# gm_passed.txt (187) predates the chrM non-conversion gate. Use the 180-cell
+# list every other panel uses -- build_qc_tables.py reads the same file. The
+# 180 are a strict subset of the 187.
+passed = set(pd.read_csv(f"{BASE}/summary/gm12878_passed_180.txt", header=None)[0].astype(str))
 cm = pd.read_csv(f"{EXT}/chrM_gch_hcg/gm.chrM.txt.gz", sep="\t").set_index("sample")["noncpg"].to_dict()
 au = pd.read_csv(f"{EXT}/chrM_gch_hcg/gm.chr21.txt.gz", sep="\t").set_index("sample")["noncpg"].to_dict()
 for cell in passed:
