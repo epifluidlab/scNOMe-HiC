@@ -28,6 +28,11 @@ OUT="${BASE}/01.fastq"
 LIST="${BASE}/codes/download_list_k562.tsv"
 mkdir -p "${OUT}" "${BASE}/logs/00.download_k562"
 
+# ENA refuses connections when many array tasks hit it at once, and wget does
+# NOT retry a refused connection without --retry-connrefused. Stagger the start
+# and retry patiently rather than failing the task.
+sleep $(( (RANDOM % 90) + (SLURM_ARRAY_TASK_ID % 20) * 3 ))
+
 line=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "${LIST}")
 acc=$(echo "${line}" | cut -f1)
 urls=$(echo "${line}" | cut -f2)
@@ -46,7 +51,7 @@ while [ ${i} -le 2 ]; do
     fi
 
     echo "  [get ] https://${url}"
-    wget -c -t 5 --waitretry=10 --read-timeout=60 -O "${final}" "https://${url}"
+    wget -c --tries=30 --waitretry=60 --random-wait --retry-connrefused --read-timeout=120 --timeout=60 -O "${final}" "https://${url}"
 
     got=$(md5sum "${final}" | cut -d' ' -f1)
     if [ "${got}" != "${want}" ]; then
