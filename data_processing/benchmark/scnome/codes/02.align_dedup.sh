@@ -21,7 +21,12 @@ cd ${WORK_ROOT}/benchmark/scnome
 
 conda activate scnomehic
 
-prefix=`cat acc_list.txt | awk -v num=${SLURM_ARRAY_TASK_ID} 'NR == num'`
+# The accession list is overridable so the same script serves the 12 GM cells
+# (default acc_list.txt) and the 22 K562 runs behind the 11 merged K562 cells
+# (ACC_LIST=codes/acc_list_k562_runs.txt, sbatch --array=1-22). Trim/align
+# parameters already branch on the SRR number, so nothing else changes.
+ACC_LIST="${ACC_LIST:-acc_list.txt}"
+prefix=`cat ${ACC_LIST} | awk -v num=${SLURM_ARRAY_TASK_ID} 'NR == num'`
 echo ${prefix}
 
 # Exclude control / spike-in samples (SRR3729654-SRR3729660) from analysis.
