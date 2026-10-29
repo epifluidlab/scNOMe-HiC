@@ -13,35 +13,20 @@ demultiplexed — use `start_from: "demultiplexed"`, described in
 
 ## 1. Prerequisites
 
-**The workflow**
+Installing the tools and creating the environments is covered once, in the
+[Setup section of `README.md`](README.md#setup): the workflow
+(`epifluidlab/sc_NOMeHiC_pipeline` @ `a0456b9`), the aligner
+(`epifluidlab/bisulfiteHic`, built from source), Bis-SNP, and the five conda
+environments in `env/`. `software/README.md` lists the remaining tools, and
+`reference/README.md` every reference file each config asks for.
 
-```bash
-git clone https://github.com/epifluidlab/sc_NOMeHiC_pipeline
-cd sc_NOMeHiC_pipeline
-# a0456b9 is the commit the paper's results were produced with.
-# Use a later commit if you need Entry point B (start_from: "demultiplexed"),
-# which was added in 0b94c56 and changes no processing step.
-git checkout a0456b9
-```
+Two things from there are worth repeating because they bite:
 
-**Environments** — the pipeline ships conda definitions in its `envs/`. The main env
-is `scnomehic`. This repository's `env/` holds the extra environments used by the
-figure notebooks.
-
-**External tools** referenced by the configs, installed separately:
-
-| Tool | Used for |
-|---|---|
-| `bisulfiteHic` (Bhmem) | demultiplexing and bisulfite-aware alignment |
-| Bis-tools / Bis-SNP | methylation calling |
-| Picard | BAM processing |
-| juicer_tools | `.hic` construction and dumps |
-| trim_galore, FastQC, samtools, bedtools | standard preprocessing |
-| metilene | de-novo DMR calling (Figure 2 only) |
-
-**Reference files** — hg38 for the human datasets, mm10 for the mouse cortex, and a
-combined hg38_mm10 for the species-mixing dataset. `reference/README.md` lists every
-file each config asks for and where it comes from.
+- **`epifluidlab/bisulfiteHic` is private.** Every dataset here is aligned with
+  it, so the pipeline cannot be run from raw reads from outside the lab until it
+  is public or mirrored. The figure notebooks are unaffected — they start from
+  the processed matrices.
+- **The aligner needs JDK 8.** The native jbwa build fails on newer JDKs.
 
 ---
 

@@ -19,6 +19,28 @@ is this folder. Install each at the path given in the first column.
 | `wgbs_tools/wgbstools` | wgbs_tools | BAM to fragment-level PAT (Figure 4 deconvolution) |
 | `UXM_deconv/uxm` | UXM | methylation deconvolution (Figure 4) |
 
+## The two built from source
+
+`sc_NOMeHiC_pipeline` and `bisulfiteHic` are cloned and built rather than
+downloaded; [the Setup section of `../README.md`](../README.md#setup) gives the
+commands. Two things specific to this folder:
+
+- **Keep `bisulfiteHic`'s whole source tree.** `paths.yaml`'s `bisulfitehic` key
+  points at the directory, not the jar, because the workflow calls
+  `src/python/sam2juicer_new.py` and `src/perl/demultiplex_ecker_scWGBS.pl` from
+  inside it. A jar on its own is not enough.
+- **`epifluidlab/bisulfiteHic` is private.** Cloning it anonymously returns 404.
+
+## On the Bis-SNP version
+
+`paths.yaml` expects `Bis-tools/Bis-SNP/Bis-SNP.latest.jar`. Upstream is
+<https://github.com/dnaase/Bis-tools>.
+
+The build used here is named `BisSNP-1.2.bisqc_walkers.jar` but reports version
+**1.0.1** when asked. That matters: it calls roughly 2.3x more cytosines than the
+older BisSNP-0.90, and the per-cell HCG and GCH counts in Supplementary Table 2
+are from this build. Calling with 0.90 will not reproduce them.
+
 Also needed, but expected on `PATH` rather than here — these come from the conda
 environments in `../env/` and from the pipeline's own `envs/`:
 

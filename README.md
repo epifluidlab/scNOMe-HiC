@@ -78,12 +78,79 @@ Three things you supply, one the code creates.
 2. **Download the reads** into `data/` — see [`data/README.md`](data/README.md) for the
    per-dataset folders and the filename pattern the workflow expects.
 
-3. **Download the references** into `reference/` and **install the tools** into
-   `software/` — see [`reference/README.md`](reference/README.md) and
-   [`software/README.md`](software/README.md) for the exact file list and where each
-   one comes from.
+3. **Download the references** into `reference/` — see
+   [`reference/README.md`](reference/README.md) for the exact file list.
 
-Then run the steps in each dataset's `README.md` order. Every step writes into its
+4. **Install the tools** into `software/`. The two that have to be built from
+   source are below; [`software/README.md`](software/README.md) lists the rest
+   (Picard, juicer_tools, metilene, wgbs_tools, UXM) and what each is for.
+
+   **The workflow** — the per-cell Snakemake pipeline:
+
+   ```bash
+   cd software
+   git clone https://github.com/epifluidlab/sc_NOMeHiC_pipeline
+   cd sc_NOMeHiC_pipeline
+   git checkout a0456b9          # the commit the paper's results were produced with
+   mamba env create --name scnomehic --file envs/environment.yaml
+   ```
+
+   Use a later commit if you need [Entry point B](RUNNING.md#4-entry-point-b--reads-from-geo-already-demultiplexed)
+   (`start_from: "demultiplexed"`, for reads downloaded from GEO), which was added
+   in `0b94c56` and changes no processing step.
+
+   **The aligner** — `bhmem`, plus the demultiplexing and contact-extraction
+   scripts the workflow calls:
+
+   ```bash
+   cd software
+   git clone https://github.com/epifluidlab/bisulfiteHic
+   cd bisulfiteHic
+   export JAVA_HOME=/path/to/jdk8        # Oracle JDK 8; the build fails on newer JDKs
+   source ./install.sh                   # builds jbwa natively, then mvn assembly:single
+   ```
+
+   `install.sh` produces `target/bisulfitehic-0.38-jar-with-dependencies.jar` and
+   exports `$BISHIC`. Building needs **JDK 8, GNU Make, gcc and Maven**; the repo's
+   `scripts/quest_install.sh` is a worked example for a SLURM cluster (run it on a
+   login node — the clone and the Maven fetch need internet).
+
+   Keep the whole source tree, not just the jar: the workflow calls
+   `src/python/sam2juicer_new.py` and `src/perl/demultiplex_ecker_scWGBS.pl` from
+   inside it, which is why `paths.yaml`'s `bisulfitehic` key points at the
+   directory rather than the jar.
+
+   > **`epifluidlab/bisulfiteHic` is currently private.** Cloning it anonymously
+   > returns 404, so this step cannot be completed from outside the lab as things
+   > stand. Every dataset here is aligned with it, so it has to be made public, or
+   > mirrored, before anyone else can reproduce the pipeline from raw reads. The
+   > figure notebooks do not need it — they start from the processed matrices.
+
+   **Methylation calling** — Bis-SNP, from Bis-tools:
+
+   ```bash
+   cd software
+   git clone https://github.com/dnaase/Bis-tools
+   ```
+
+   `paths.yaml` expects the jar at `Bis-tools/Bis-SNP/Bis-SNP.latest.jar`. The
+   results here were produced with a build that reports version **1.0.1**; see
+   `software/README.md` for why that matters.
+
+5. **Create the figure environments** from this repository's `env/`:
+
+   ```bash
+   conda env create -f env/scnomehic.yml       # most notebooks and scripts
+   conda env create -f env/scnome.yml          # the R UMAP notebooks
+   conda env create -f env/scnomehic_diff.yml  # Figure 2's methylation / accessibility
+   conda env create -f env/hic_cooler.yml      # the APA notebooks
+   conda env create -f env/hic_env.yml         # the 25 kb loop chain
+   ```
+
+   [`env/README.md`](env/README.md) maps every notebook to the environment it
+   needs, and each notebook prints a warning if it is started in the wrong one.
+
+With that in place, run the steps in each dataset's `README.md` order. Every step writes into its
 own subtree of `work/` and the next step reads it back from there, so nothing has to
 be moved by hand. See [`work/README.md`](work/README.md) for which step fills which
 folder and which figure consumes it.
