@@ -2,6 +2,13 @@ import os
 import argparse
 import pandas as pd
 
+# Non-CpG trinucleotide used as the bisulfite non-conversion proxy. The paper
+# uses TCT; set NONCPG_CONTEXT=ACT in the environment to reproduce the earlier
+# tables. Both are WCH contexts -- Bis-QC is run with --pattern WCH throughout.
+import os as _ctx_os
+NONCPG_CTX = _ctx_os.environ.get("NONCPG_CONTEXT", "TCT")
+
+
 def extract_values(base_folder, suffix, output):
     rows = []
 
@@ -23,7 +30,7 @@ def extract_values(base_folder, suffix, output):
                         vals = methy_df.loc[methy_df['trinuc'] == f"{trinuc}:", 'percent']
                         return float(vals.values[0].strip('%')) if len(vals) > 0 else None
 
-                    noncpg = get_percent('ACT')
+                    noncpg = get_percent(NONCPG_CTX)
                     endo   = get_percent('ACG')
                     exo    = get_percent('GCT')
 

@@ -29,6 +29,13 @@ from collections import OrderedDict
 
 import pandas as pd
 
+# Non-CpG trinucleotide used as the bisulfite non-conversion proxy. The paper
+# uses TCT; set NONCPG_CONTEXT=ACT in the environment to reproduce the earlier
+# tables. Both are WCH contexts -- Bis-QC is run with --pattern WCH throughout.
+import os as _ctx_os
+NONCPG_CTX = _ctx_os.environ.get("NONCPG_CONTEXT", "TCT")
+
+
 
 # ═══════════════════════════════════════════════════════════════════
 # 1. Bismark SE alignment reports
@@ -216,7 +223,7 @@ def collect_site_and_trinuc_stats(project_dir, prefix):
 
     # trinuc rates — average R1 and R2
     for chrom in ("chrM", "chr21"):
-        for ctx, label in [("ACT", "noncpg"), ("ACG", "endo")]:
+        for ctx, label in [(NONCPG_CTX, "noncpg"), ("ACG", "endo")]:
             vals = []
             for read_num in ("1", "2"):
                 path = align_dir / f"{prefix}_{read_num}.rmdup.RG.trinuc_methy.{chrom}.txt"

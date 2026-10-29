@@ -23,9 +23,16 @@ Outputs (matching summary/trinuc/<ds>.<region>.txt; cols sample/noncpg/endo/exo)
 """
 import glob, os, subprocess, sys
 
+# Non-CpG trinucleotide used as the bisulfite non-conversion proxy. The paper
+# uses TCT; set NONCPG_CONTEXT=ACT in the environment to reproduce the earlier
+# tables. Both are WCH contexts -- Bis-QC is run with --pattern WCH throughout.
+import os as _ctx_os
+NONCPG_CTX = _ctx_os.environ.get("NONCPG_CONTEXT", "TCT")
+
+
 BASE = WORK + "/benchmark"
 ALLC_GLOB = os.path.join(BASE, "snmCAT/mapping_brain/Group*/allc/*.allc.tsv.gz")
-TRINUC = {"noncpg": "ACT", "endo": "ACG", "exo": "GCT"}
+TRINUC = {"noncpg": NONCPG_CTX, "endo": "ACG", "exo": "GCT"}
 
 
 def rates_for_region(allc, region):

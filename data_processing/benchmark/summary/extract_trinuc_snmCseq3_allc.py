@@ -21,9 +21,16 @@ Writes (overwrites) summary/trinuc/snmCseq3.chrM.txt and snmCseq3.chr21.txt (aut
 import glob, os, subprocess
 import pysam
 
+# Non-CpG trinucleotide used as the bisulfite non-conversion proxy. The paper
+# uses TCT; set NONCPG_CONTEXT=ACT in the environment to reproduce the earlier
+# tables. Both are WCH contexts -- Bis-QC is run with --pattern WCH throughout.
+import os as _ctx_os
+NONCPG_CTX = _ctx_os.environ.get("NONCPG_CONTEXT", "TCT")
+
+
 B = WORK + "/benchmark"
 MM10 = REFERENCE + "/mm10/mm10.fa"
-TRI = {"noncpg": "ACT", "endo": "ACG", "exo": "GCT"}
+TRI = {"noncpg": NONCPG_CTX, "endo": "ACG", "exo": "GCT"}
 COMP = str.maketrans("ACGTNacgtn", "TGCANtgcan")
 
 
@@ -57,7 +64,11 @@ def rates(allc, chrom, seq):
 
 def main():
     ref = pysam.FastaFile(MM10)
-    allcs = sorted(glob.glob(f"{B}/snmCseq3/alignment/Group*/allc/*.allc.tsv.gz"))
+    # The snm3C-seq arm is benchmark/snm3c_100 (PRJNA658701 / GSE156683, the 100
+    # cells in snm3cseq/cells100.tsv). benchmark/snmCseq3 is a SEPARATE, older
+    # bhmem-comparison directory holding a different accession set (SRR215493xx);
+    # globbing it silently produced a table for the wrong 100 cells.
+    allcs = sorted(glob.glob(f"{B}/snm3c_100/alignment/Group*/allc/*.allc.tsv.gz"))
     print(f"snmCseq3 allc files: {len(allcs)}")
     # region -> output file (autosome chr19 saved as *.chr21.txt for collect_conversion.py)
     regions = {"chrM": f"{B}/summary/trinuc/snmCseq3.chrM.txt",
