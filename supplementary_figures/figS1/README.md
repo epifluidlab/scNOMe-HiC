@@ -7,12 +7,12 @@ methods. Figure 1 shows three panels from the same comparison; S1 shows the rest
 
 | File | Made by (cell in `fig1_benchmark_violins.ipynb`) |
 |---|---|
-| `mapq30count_beforeDedup_violin.pdf` | 30 |
-| `mapq30rate_beforeDedup_violin.pdf` | 29 |
-| `conversion_chrM_violin.pdf` | 39 |
-| `hic_cis_n_violin_no_nagano.pdf` | 36 |
-| `hic_cis_gt1kb_n_violin_no_nagano.pdf` | 36 |
-| `hic_trans_ratio_violin.pdf` | 32 |
+| `mapq30count_beforeDedup_violin.pdf` | 36 |
+| `mapq30rate_beforeDedup_violin.pdf` | 35 |
+| `conversion_chrM_violin.pdf` | 47 |
+| `hic_cis_n_violin_no_nagano.pdf` | 42 |
+| `hic_cis_gt1kb_n_violin_no_nagano.pdf` | 42 |
+| `hic_trans_ratio_violin.pdf` | 38 |
 
 | File | Made by |
 |---|---|
@@ -23,8 +23,8 @@ methods. Figure 1 shows three panels from the same comparison; S1 shows the rest
 ## The violin panels have no notebook here
 
 The six violins come from `../../main_figures/fig1/fig1_benchmark_violins.ipynb`, from
-the same cells that produce the Figure 1 benchmark panels. Cells 1–28 load the
-methods' QC tables and cells 29–39 draw every violin in one pass, so there is no
+the same cells that produce the Figure 1 benchmark panels. Cells 1–34 load the
+methods' QC tables and cells 35–47 draw every violin in one pass, so there is no
 seam to split on; this folder documents the mapping instead of carrying a near-copy.
 
 The contact-vs-distance panel is unrelated to that notebook and ships here as
@@ -32,12 +32,12 @@ The contact-vs-distance panel is unrelated to that notebook and ships here as
 
 | Cell | Draws |
 |---|---|
-| 29 | uniquely-mapped MAPQ ≥ 30 **rate**, before and after dedup |
-| 30 | uniquely-mapped MAPQ ≥ 30 **count**, before and after dedup |
-| 32 | the four Hi-C metrics — S1 takes the trans ratio |
-| 36 | the same four, re-drawn under `_no_nagano` names — S1 takes cis and cis > 1 kb |
-| 38 | HCG and GCH detected loci (Figure 1) |
-| 39 | bisulfite non-conversion, chrM and chr21/chr19 |
+| 35 | uniquely-mapped MAPQ ≥ 30 **rate**, before and after dedup |
+| 36 | uniquely-mapped MAPQ ≥ 30 **count**, before and after dedup |
+| 38 | the four Hi-C metrics — S1 takes the trans ratio |
+| 42 | the same four, re-drawn under `_no_nagano` names — S1 takes cis and cis > 1 kb |
+| 45 | HCG and GCH detected loci (Figure 1) |
+| 47 | bisulfite non-conversion, chrM and chr21/chr19 |
 
 ## Contact frequency vs. distance
 
