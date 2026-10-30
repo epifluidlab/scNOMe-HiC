@@ -228,6 +228,21 @@ See **[RUNNING.md](RUNNING.md)** for prerequisites, the config keys you must cha
 and the two entry points: raw multiplexed FASTQ (default) or GEO-downloaded reads
 (already demultiplexed).
 
+### Submitting to SLURM
+
+Scripts find the repository by walking up from their own location until they see
+`paths.sh`. SLURM copies a batch script to `/var/spool/slurmd/<job>/slurm_script`
+before running it, so under `sbatch` that walk starts outside the repository and
+fails. Pass the repository root explicitly:
+
+```bash
+sbatch --export=ALL,SCNOMEHIC_REPO=/path/to/scNOMe-HiC codes/01.some_step.sh
+```
+
+Without it a script aborts immediately with
+`ERROR: paths.sh not found. Set SCNOMEHIC_REPO to the repository root.`
+Running a script directly (`bash codes/01.some_step.sh`) needs no such variable.
+
 ## Data availability
 
 The scNOMe-HiC datasets generated in this study — human GM12878 and IMR-90 cell
