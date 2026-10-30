@@ -53,13 +53,17 @@ while [ ${i} -le 2 ]; do
         echo "  [skip] ${acc}_${i}.fq.gz present and valid ($(stat -c%s "${final}") bytes)"
         i=$((i+1)); continue
     fi
+    # Delete a known-bad file rather than dropping -c. Removing it guarantees the
+    # fetch starts clean, and keeping -c lets wget's own retries resume a long
+    # transfer instead of restarting it: SRR3729672_2 is 795 MB and timed out at
+    # 569 MB, which without -c threw away the whole transfer.
     if [ -e "${final}" ]; then
-        echo "  [redo] ${final} present but not a valid gzip -- refetching from scratch"
+        echo "  [redo] ${final} present but not a valid gzip -- removing and refetching"
+        rm -f "${final}"
     fi
 
     echo "  [get ] https://${url}"
-    # No -c: a corrupt prefix must not be resumed onto.
-    wget --tries=30 --waitretry=60 --random-wait --retry-connrefused --read-timeout=120 --timeout=60 -O "${final}" "https://${url}"
+    wget -c --tries=30 --waitretry=60 --random-wait --retry-connrefused --read-timeout=120 --timeout=60 -O "${final}" "https://${url}"
 
     got=$(md5sum "${final}" | cut -d' ' -f1)
     if [ "${got}" != "${want}" ]; then

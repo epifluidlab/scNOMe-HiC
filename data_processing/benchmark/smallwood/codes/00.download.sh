@@ -61,8 +61,10 @@ while [ ${i} -le 2 ]; do
     fi
 
     echo "  [get ] https://${url}"
-    # No -c: a corrupt prefix must not be resumed onto.
-    wget --tries=30 --waitretry=60 --random-wait --retry-connrefused --read-timeout=120 --timeout=60 -O "${gz}" "https://${url}"
+    # The stale .gz (if any) is removed first, so -c starts clean here and still
+    # lets wget resume its own retries rather than restarting a large transfer.
+    rm -f "${gz}"
+    wget -c --tries=30 --waitretry=60 --random-wait --retry-connrefused --read-timeout=120 --timeout=60 -O "${gz}" "https://${url}"
 
     got=$(md5sum "${gz}" | cut -d' ' -f1)
     if [ "${got}" != "${want}" ]; then
