@@ -28,7 +28,7 @@ while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; don
 source "$_r/paths.sh"
 
 source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
-cd ${WORK_ROOT}/benchmark/smallwood
+cd ${WORK_ROOT}/benchmark/smallwood || { echo "ERROR: cd to working dir failed"; exit 1; }
 
 conda activate scnomehic
 set -o pipefail
