@@ -23,7 +23,8 @@ Sources (per-cell unless noted):
   smallwood : smallwood_qc_summary.csv (chrM_noncpg, chr19_noncpg)          [Bismark]
   snmCseq2  : chrM from snmcseq2_qc_summary.csv (mm10 cells); chr19 from the
               PER-MATE trinuc/snmCseq2.chr19.txt averaged per cell           [Bismark]
-  snmCseq3  : trinuc/snmCseq3.{chrM,chr21}.txt                              [bhmem]
+  snmCseq3  : trinuc/snmCseq3.{chrM,chr21}.txt (computed from YAP allc by
+              extract_trinuc_snmCseq3_allc.py)                              [YAP allc]
   scnomehic : external gm.{chrM,chr21}.txt.gz, restricted to gm12878_passed_180.txt [BisSNP]
   snmCAT    : trinuc/snmCAT.{chrM,chr21}.txt (computed from YAP allc),
               restricted to the 99 cells in gch_hcg_counts/all_methods.summary.txt [YAP allc]

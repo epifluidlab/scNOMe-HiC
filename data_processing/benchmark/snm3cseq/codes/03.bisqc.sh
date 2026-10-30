@@ -13,15 +13,19 @@
 # Read-level trinucleotide QC for the snm3C-seq arm: chrM and chr19 methylation
 # by trinucleotide context, the input to summary/trinuc/snmCseq3.{chrM,chr21}.txt.
 #
-# WHY THIS SCRIPT EXISTS
-# The published snmCseq3 conversion values have no committed producer. Neither
-# snm3cseq/codes/ nor snm3c_100/codes/ contained a Bis-QC step, and no trinuc file
-# for any SRR1249/SRR1250 cell survives anywhere in the benchmark tree. The
-# [bhmem] annotation in summary/collect_conversion.py cannot be checked against
-# anything on disk: snm3c_100's BAMs are Bismark v0.20.0 via YAP, and the only
-# bhmem BAMs belong to a different accession set (SRR215493xx). So this is a
-# re-derivation, not a reproduction, and its ACT values are NOT expected to match
-# the published table.
+# STATUS: NOT THE PRODUCTION PATH FOR THIS ARM -- see below before using it.
+#
+# snm3C-seq was processed with YAP, so its per-cell methylation comes from the
+# YAP allc files and the committed extractor for this arm is
+# summary/extract_trinuc_snmCseq3_allc.py, which reads them. The
+# `[bhmem]` annotation on the snmCseq3 line of summary/collect_conversion.py is
+# wrong -- snm3c_100's BAMs are Bismark v0.20.0 via YAP (--pbat, mm10), and the
+# only bhmem BAMs in the tree belong to a different accession set (SRR215493xx).
+# That annotation should be corrected rather than relied on.
+#
+# This script is kept as a read-level cross-check of the allc numbers, using the
+# same Bis-QC invocation as the other arms. It is NOT what produced the published
+# table and should not be substituted for the allc path without saying so.
 #
 # Same tool and flags as every other arm (`Bis-QC.pl --QC_mode 1 --pattern WCH`),
 # so the resulting contexts are comparable across arms. Bis-QC picks the autosome
