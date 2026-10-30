@@ -46,14 +46,23 @@ while [ ${i} -le 2 ]; do
     gz="${OUT}/${acc}_${i}.fastq.gz"
     plain="${OUT}/${acc}_${i}.fastq"
 
-    # resume: a non-empty plain fastq means this mate is already done
-    if [ -s "${plain}" ]; then
-        echo "  [skip] ${acc}_${i}.fastq already present ($(stat -c%s "${plain}") bytes)"
+    # Resume only on a mate that completed md5 verification AND gunzip, recorded
+    # by a .ok sentinel. `[ -s ]` alone was a bug: a task killed mid-download or
+    # mid-gunzip leaves a non-empty partial that then looks "already present" to
+    # every later pass and never gets verified. The .gz is removed by gunzip, so
+    # the sentinel is what carries the proof forward.
+    if [ -s "${plain}" ] && [ -f "${plain}.ok" ]; then
+        echo "  [skip] ${acc}_${i}.fastq verified earlier ($(stat -c%s "${plain}") bytes)"
         i=$((i+1)); continue
+    fi
+    if [ -e "${plain}" ]; then
+        echo "  [redo] ${plain} present but unverified -- refetching from scratch"
+        rm -f "${plain}"
     fi
 
     echo "  [get ] https://${url}"
-    wget -c --tries=30 --waitretry=60 --random-wait --retry-connrefused --read-timeout=120 --timeout=60 -O "${gz}" "https://${url}"
+    # No -c: a corrupt prefix must not be resumed onto.
+    wget --tries=30 --waitretry=60 --random-wait --retry-connrefused --read-timeout=120 --timeout=60 -O "${gz}" "https://${url}"
 
     got=$(md5sum "${gz}" | cut -d' ' -f1)
     if [ "${got}" != "${want}" ]; then
@@ -62,8 +71,10 @@ while [ ${i} -le 2 ]; do
     fi
     echo "  [md5 ] ok ${got}"
 
+    gzip -t "${gz}" || { echo "  ERROR ${gz} md5 ok but gzip -t failed" >&2; exit 1; }
     gunzip -f "${gz}"
-    echo "  [gunzip] ${plain} ($(stat -c%s "${plain}") bytes)"
+    touch "${plain}.ok"
+    echo "  [gunzip] ${plain} ($(stat -c%s "${plain}") bytes), verified"
     i=$((i+1))
 done
 

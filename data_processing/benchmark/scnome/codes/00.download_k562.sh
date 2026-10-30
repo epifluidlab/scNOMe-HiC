@@ -45,13 +45,21 @@ while [ ${i} -le 2 ]; do
     want=$(echo "${md5s}" | cut -d';' -f${i})
     final="${OUT}/${acc}_${i}.fq.gz"
 
-    if [ -s "${final}" ]; then
-        echo "  [skip] ${acc}_${i}.fq.gz already present ($(stat -c%s "${final}") bytes)"
+    # Resume only on a file that is actually INTACT. `[ -s ]` alone was a bug:
+    # a task killed mid-download leaves a non-empty partial, which then looked
+    # "already present" to every later pass and never had its md5 checked.
+    # Three of the 44 K562 files reached the aligner corrupt that way.
+    if [ -s "${final}" ] && gzip -t "${final}" 2>/dev/null; then
+        echo "  [skip] ${acc}_${i}.fq.gz present and valid ($(stat -c%s "${final}") bytes)"
         i=$((i+1)); continue
+    fi
+    if [ -e "${final}" ]; then
+        echo "  [redo] ${final} present but not a valid gzip -- refetching from scratch"
     fi
 
     echo "  [get ] https://${url}"
-    wget -c --tries=30 --waitretry=60 --random-wait --retry-connrefused --read-timeout=120 --timeout=60 -O "${final}" "https://${url}"
+    # No -c: a corrupt prefix must not be resumed onto.
+    wget --tries=30 --waitretry=60 --random-wait --retry-connrefused --read-timeout=120 --timeout=60 -O "${final}" "https://${url}"
 
     got=$(md5sum "${final}" | cut -d' ' -f1)
     if [ "${got}" != "${want}" ]; then
