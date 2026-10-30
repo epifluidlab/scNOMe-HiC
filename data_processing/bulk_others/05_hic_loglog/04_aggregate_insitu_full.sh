@@ -11,8 +11,15 @@
 # petag.FreqDistribution_1000.txt format HOMER produces — fraction of PE pairs per 1kb distance bin.
 # HiCsummary cols: 1=name 2=chr1 3=pos1 4=str1 5=chr2 6=pos2 7=str2
 # --- repo paths: edit paths.yaml at the repository root, not this file -------
-_r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
-while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+# SLURM copies a batch script to /var/spool/slurmd/<job>/slurm_script, so walking
+# up from BASH_SOURCE cannot reach the repository. $SCNOMEHIC_REPO is tried first;
+# submit with: sbatch --export=ALL,SCNOMEHIC_REPO=/path/to/repo
+_r="${SCNOMEHIC_REPO:-}"
+if [ -z "$_r" ] || [ ! -f "$_r/paths.sh" ]; then
+    _r="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
+    while [ "$_r" != "/" ] && [ ! -f "$_r/paths.sh" ]; do _r="$(dirname "$_r")"; done
+fi
+[ -f "$_r/paths.sh" ] || { echo "ERROR: paths.sh not found. Set SCNOMEHIC_REPO to the repository root." >&2; exit 1; }
 source "$_r/paths.sh"
 
 set -eo pipefail
