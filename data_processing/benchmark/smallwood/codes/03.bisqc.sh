@@ -27,6 +27,11 @@ source "${SCNOMEHIC_CONDA_SH:-${CONDA_SH}}"
 cd ${WORK_ROOT}/benchmark/smallwood/ || { echo "ERROR: cd to working dir failed"; exit 1; }
 
 conda activate scnomehic
+# Bis-SNP is a GATK 1.x tool: its walkers are discovered by reflection and are
+# invisible to a modern JVM. Without this the run dies at the first Bis-QC step
+# with "Could not find walker with name: QuickMethylationLevel", before writing
+# any trinucleotide table. scnome/codes/04.qc_bissnp_trinuc.sh loads the same JDK.
+module load java/jdk1.8.0_191
 
 outdir=05.align_mm10
 vcf=${REFERENCE_ROOT}/mm10/mm10.dbsnp.vcf
