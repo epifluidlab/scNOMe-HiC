@@ -56,8 +56,16 @@ unmap2=${out_hg38}/${prefix}_2_val_2.fq.gz_unmapped_reads_2.fq.gz
 se_input=${out_hg38}/${prefix}.SE.input.fq.gz
 mm10_bam=${out_mm10}/${prefix}.SE.input_bismark_bt2.bam
 
+# Resume checks validate CONTENT, not just presence. `[ -s ]` only means
+# non-empty: an empty .fq.gz is 20 bytes and a header-only BAM is ~1.4 kB, and
+# both passed. A broken earlier run left exactly those, so a later correct run
+# skipped the mm10 alignment entirely and every downstream trinuc table came out
+# all-NaN with zero counts.
+nonempty_gz() { [ -s "$1" ] && gzip -t "$1" 2>/dev/null && [ "$(zcat "$1" 2>/dev/null | head -c1 | wc -c)" -gt 0 ]; }
+has_reads()   { [ -s "$1" ] && [ "$(samtools view -c "$1" 2>/dev/null || echo 0)" -gt 0 ]; }
+
 # ---- Step 1: human (hg38) paired-end alignment, keep unmapped ----
-if [ -s "${unmap1}" ] && [ -s "${unmap2}" ]; then
+if nonempty_gz "${unmap1}" && nonempty_gz "${unmap2}"; then
     echo "  [skip] human-unmapped reads already present"
 else
     echo "  [run ] Step 1: hg38 PE alignment (--non_directional --unmapped)"
@@ -69,7 +77,7 @@ else
 fi
 
 # ---- Step 2: concatenate human-unmapped R1+R2 into single-end input ----
-if [ -s "${se_input}" ]; then
+if nonempty_gz "${se_input}"; then
     echo "  [skip] SE input already present: ${se_input}"
 else
     echo "  [run ] Step 2: concatenate unmapped R1+R2 -> ${se_input}"
@@ -77,7 +85,7 @@ else
 fi
 
 # ---- Step 3: mouse (mm10) single-end alignment ----
-if [ -s "${mm10_bam}" ]; then
+if has_reads "${mm10_bam}"; then
     echo "  [skip] mm10 SE BAM already present: ${mm10_bam}"
 else
     echo "  [run ] Step 3: mm10 SE alignment (--non_directional)"
