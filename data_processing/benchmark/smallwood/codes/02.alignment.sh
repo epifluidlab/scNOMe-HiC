@@ -62,7 +62,10 @@ mm10_bam=${out_mm10}/${prefix}.SE.input_bismark_bt2.bam
 # skipped the mm10 alignment entirely and every downstream trinuc table came out
 # all-NaN with zero counts.
 nonempty_gz() { [ -s "$1" ] && gzip -t "$1" 2>/dev/null && [ "$(zcat "$1" 2>/dev/null | head -c1 | wc -c)" -gt 0 ]; }
-has_reads()   { [ -s "$1" ] && [ "$(samtools view -c "$1" 2>/dev/null || echo 0)" -gt 0 ]; }
+# quickcheck verifies the BGZF EOF block, so a BAM truncated by a cancelled or
+# killed task is rejected rather than counted as done.
+has_reads()   { [ -s "$1" ] && samtools quickcheck "$1" 2>/dev/null \
+                && [ "$(samtools view -c "$1" 2>/dev/null || echo 0)" -gt 0 ]; }
 
 # ---- Step 1: human (hg38) paired-end alignment, keep unmapped ----
 if nonempty_gz "${unmap1}" && nonempty_gz "${unmap2}"; then
