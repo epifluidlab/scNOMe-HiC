@@ -8,7 +8,7 @@ _sys.path.insert(0, _r)
 from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
 
 """
-Plot per-cell bisulfite-conversion proxy (non-CpG methylation %, = trinuc ACT%)
+Plot per-cell bisulfite-conversion proxy (non-CpG methylation %, = trinuc TCT%)
 across methylation methods, as two violin figures matching the qc.ipynb style:
   figures/conversion_chrM_violin.{pdf,png}        (chrM context)
   figures/conversion_chr21chr19_violin.{pdf,png}  (autosome: chr21 human / chr19 mouse)
@@ -62,7 +62,7 @@ def make(col, title, fname):
     sns.violinplot(data=d, x="dataset", y=col, order=order, palette=palette,
                    cut=0, inner="box", linewidth=1, ax=ax)
     ax.set_title(title)
-    ax.set_ylabel("Non-CpG methylation (%)  [ACT, conversion proxy]")
+    ax.set_ylabel("Non-CpG methylation (%)  [TCT, conversion proxy]")
     ax.set_xlabel("")
     ax.set_xticklabels([f"{labels[o]}\nn={counts.get(o, 0)}" for o in order],
                        rotation=0, fontsize=11)
@@ -74,6 +74,6 @@ def make(col, title, fname):
           + ", ".join(f"{o}={counts.get(o,0)}" for o in order) + ")")
 
 
-make("noncpg_chrM", "Bisulfite non-conversion — chrM", "conversion_chrM_violin")
-make("noncpg_auto", "Bisulfite non-conversion — chr21 (human) / chr19 (mouse)",
+make("noncpg_chrM", "Bisulfite non-conversion (TCT) — chrM", "conversion_chrM_violin")
+make("noncpg_auto", "Bisulfite non-conversion (TCT) — chr21 (human) / chr19 (mouse)",
      "conversion_chr21chr19_violin")

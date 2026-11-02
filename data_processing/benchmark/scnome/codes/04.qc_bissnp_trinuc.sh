@@ -14,7 +14,8 @@
 # -minPatConv 0.8, -minConv 1, dbSNP-aware, -nonDirectional) over all 16 N-C-N
 # contexts, then extracts the per-trinucleotide methylation summary into
 # 04.alignment/<cell>_<mate>.rmdup.RG.trinuc_methy.{chrM,chr21}.txt -- exactly the
-# files scnome_qc_per_cell.py expects (ACT=conversion control, ACG=CpG, GCT=GpC).
+# files scnome_qc_per_cell.py expects. It emits every trinucleotide; the conversion
+# proxy read downstream is NONCPG_CONTEXT (default TCT), with ACG=CpG and GCT=GpC.
 
 #   GM   : sbatch --array=1-12 --export=ALL,LISTFILE=acc_list.txt             codes/04.qc_bissnp_trinuc.sh
 #   K562 : sbatch --array=1-11 --export=ALL,LISTFILE=acc_list_k562_cellids.txt codes/04.qc_bissnp_trinuc.sh

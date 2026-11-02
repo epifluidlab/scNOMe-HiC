@@ -5,7 +5,9 @@ across the 6 methylation methods, and folds **snmCAT** into the readcount/mapq30
 panels (metrics 2 & 3). All wired into `qc.ipynb` and regenerated end-to-end.
 
 ## Conversion proxy
-`noncpg = ACT%`, `endo = ACG%`, `exo = GCT%` (trinucleotide methylation rates).
+`noncpg = TCT%`, `endo = ACG%`, `exo = GCT%` (trinucleotide methylation rates).
+The context is selectable: every producer reads `NONCPG_CONTEXT`, default `TCT`.
+Set `NONCPG_CONTEXT=ACT` to reproduce the pre-2026-11 tables.
 `noncpg` (non-CpG, non-GpC) = bisulfite non-conversion proxy. Reported for two
 contexts: **chrM** and an **autosome** (chr21 human / chr19 mouse).
 
@@ -38,5 +40,5 @@ contexts: **chrM** and an **autosome** (chr21 human / chr19 mouse).
 snmCAT's MappingSummary has **no MapQ30 columns** (unlike snmCseq3), so its
 "% uniquely-mapped" is the unique mapping rate (mean R1/R2 `MappingRate`), NOT
 MapQ30-filtered — it therefore reads slightly higher than the MapQ30-based methods.
-snmCAT conversion is position-level (allc Σmc/Σcov); the others are read-level ACT%.
-Same ACT/ACG/GCT proxy, slightly different weighting.
+snmCAT conversion is position-level (allc Σmc/Σcov); the others are read-level TCT%.
+Same TCT/ACG/GCT proxy, slightly different weighting.

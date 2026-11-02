@@ -8,7 +8,7 @@ _sys.path.insert(0, _r)
 from paths import DATA, REFERENCE, SOFTWARE, WORK, TMP, CONDA_SH, CONDA_ENVS
 
 """
-Collect per-cell bisulfite-conversion proxy (non-CpG methylation %, = trinuc ACT%)
+Collect per-cell bisulfite-conversion proxy (non-CpG methylation %, = trinuc TCT%)
 for the 6 methylation datasets, for two genomic contexts:
   - chrM   (mitochondrial, naked DNA -> residual mC = non-conversion proxy)
   - autosome (chr21 for human / chr19 for mouse) -> autosomal non-CpG proxy

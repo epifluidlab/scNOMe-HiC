@@ -94,7 +94,7 @@ DATASETS = [
 # ---------------------------------------------------------------------------
 METRIC_COLS = ["#", "Metric", "Definition (held constant across methods)", "Applies to"]
 METRICS = [
-    ["1", "Bisulfite conversion", "Non-CpG methylation % in ACT trinucleotide context (H=A/C/T), for chrM and an autosome (chr21 human / chr19 mouse). Lower = better conversion.", "All bisulfite methods"],
+    ["1", "Bisulfite conversion", "Non-CpG methylation % in the TCT trinucleotide context, for chrM and an autosome (chr21 human / chr19 mouse). Lower = better conversion. TCT is one of the six WCH contexts Bis-QC reports; the choice is uniform across all methods and is set by NONCPG_CONTEXT.", "All bisulfite methods"],
     ["2", "Uniquely-mapped count", "Fragments (R1+R2 collapsed to one read-name) uniquely mapped; reported both pre- and post-dedup.", "All"],
     ["3", "MapQ30 mapping rate", "MapQ>=30 fragments / mapped fragments; reported pre- and post-dedup.", "All"],
     ["4", "Per-cell cis contacts", "MapQ>=30, deduplicated cis Hi-C contacts (cis_n = all cis).", "Hi-C methods"],

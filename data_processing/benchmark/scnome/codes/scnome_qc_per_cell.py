@@ -308,10 +308,10 @@ def collect_site_and_trinuc_stats(project_dir, prefix):
     Collect:
       - HCG_site_count : rows in R1+R2 HCG.6plus2.bed  (covered CpG sites)
       - GCH_site_count : rows in R1+R2 GCH.6plus2.bed  (NOMe accessibility sites)
-      - chrM_noncpg    : ACT rate on chrM (bisulfite conversion proxy)
+      - chrM_noncpg    : NONCPG_CTX rate on chrM (bisulfite conversion proxy, default TCT)
       - chrM_endo      : ACG rate on chrM
       - chrM_exo       : GCT rate on chrM (GCH, NOMe)
-      - chr21_noncpg   : ACT rate on chr21
+      - chr21_noncpg   : NONCPG_CTX rate on chr21 (default TCT)
       - chr21_endo     : ACG rate on chr21
       - chr21_exo      : GCT rate on chr21 (GCH, NOMe)
     """

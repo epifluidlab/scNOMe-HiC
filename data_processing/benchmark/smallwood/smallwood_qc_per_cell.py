@@ -224,7 +224,7 @@ def collect_conversion_stats(project_dir, prefix):
     """
     Extract noncpg / endo / exo rates from chrM and chr19 trinuc files.
 
-      noncpg  — ACT rate (non-CG, bisulfite conversion proxy)
+      noncpg  — NONCPG_CTX rate (non-CG, bisulfite conversion proxy, default TCT)
       endo    — ACG rate (endogenous CpG methylation proxy)
       exo     — GCT rate (GCH, NOMe accessibility proxy)
     """

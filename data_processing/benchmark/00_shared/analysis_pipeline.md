@@ -12,7 +12,7 @@ Master QC notebook: `summary/qc.ipynb` (regenerates all figures in `figures/`).
 
 ## Consistency conventions (biological definitions held constant across methods)
 
-- **Bisulfite conversion (metric 1):** non-CpG methylation % in the **ACT**
+- **Bisulfite conversion (metric 1):** non-CpG methylation % in the **TCT**
   trinucleotide context (H=A/C/T, non-CpG & non-GpC), reported for **chrM** and an
   **autosome** (chr21 for human / chr19 for mouse). Process may differ (read-level
   trinuc vs allc position-level) — the biological quantity is the same.
